@@ -1,0 +1,14 @@
+# Main requirements of your plugin application.
+-c constraints.txt
+
+Django
+six
+djangorestframework
+django-crum
+django-mysql
+jsonfield
+edx-opaque-keys[django]
+openedx_filters
+social-auth-core
+edx-drf-extensions
+edx-organizations
