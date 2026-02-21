@@ -1,0 +1,13 @@
+<div class="<%- jsHook %> status submission-success mf-reset-sent-card">
+  <div class="mf-success-icon">✓</div>
+  <h2>Email envoyé !</h2>
+  <p>Nous avons envoyé un email à l'adresse suivante.<br>Cliquez sur le lien dans l'email pour continuer.</p>
+  <div class="mf-email-pill js-reset-email-value">votre@email.com</div>
+  <p class="mf-reset-help">Vous ne trouvez pas l'email ? Vérifiez votre dossier spam ou courrier indésirable.</p>
+  <button type="button" class="action action-primary js-back-login">Retour à la connexion</button>
+  <div class="form-bottom">Besoin d'aide ? <a class="help-link" href="mailto:contact@missionformations.com">Contactez-nous</a></div>
+  <div class="form-footer">
+    <a href="#">Mentions légales</a> · <a href="#">RGPD</a> · <a href="#">Aide</a><br>
+    © 2026 Académie Mission Formations
+  </div>
+</div>

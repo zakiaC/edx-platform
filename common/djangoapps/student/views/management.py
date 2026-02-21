@@ -275,7 +275,11 @@ def compose_and_send_activation_email(
     )
 
     try:
-        send_activation_email.delay(str(msg), from_address)
+        # Pass the current site explicitly so Celery renders ACE templates
+        # with the right site theme instead of falling back to SITE_ID.
+        current_site = theming_helpers.get_current_site()
+        site_id = current_site.id if current_site else None
+        send_activation_email.delay(str(msg), from_address, site_id=site_id)
     except Exception:  # pylint: disable=broad-except
         log.exception(f'Activation email task failed for user {user.id}.')
 

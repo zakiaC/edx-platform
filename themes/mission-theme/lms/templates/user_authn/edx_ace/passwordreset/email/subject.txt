@@ -1,0 +1,1 @@
+{% autoescape off %}Réinitialisation du mot de passe - {{ platform_name }}{% endautoescape %}

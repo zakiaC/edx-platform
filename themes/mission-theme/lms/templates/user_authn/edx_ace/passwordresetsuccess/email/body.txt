@@ -1,0 +1,10 @@
+{% autoescape off %}
+Bonjour {{ name }},
+
+Votre mot de passe {{ platform_name }} a été modifié avec succès.
+
+Vous pouvez vous connecter ici :
+{{ login_link }}
+
+Si vous n'êtes pas à l'origine de cette modification, contactez immédiatement Académie Mission Formations.
+{% endautoescape %}

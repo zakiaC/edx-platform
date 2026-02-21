@@ -1,0 +1,288 @@
+<%page expression_filter="h"/>
+<%!
+    import json
+%>
+<%namespace name='static' file='/static_content.html'/>
+<%inherit file="main.html" />
+
+<%block name="pagetitle">Mon espace — Académie Mission Formations</%block>
+<%block name="bodyclass">view-dashboard is-authenticated</%block>
+
+<%block name="head_extra">
+  <link rel="stylesheet" href="${static.url('css/mf-dashboard.css')}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</%block>
+
+<%block name="js_extra">
+  <script>
+    window.MF_DASHBOARD = {
+      username: "${user.username | h}",
+      firstName: "${(user.first_name or user.username) | h}",
+      csrfToken: "${csrf_token | h}",
+      totalEnrollments: ${len(course_enrollments)},
+      completedEnrollments: ${len([e for e in course_enrollments if cert_statuses.get(e.course_id)])},
+      onlyObtainedMenu: ${'true' if getattr(settings, 'MF_CERTIFICATES_MENU_ONLY_OBTAINED', False) else 'false'}
+    };
+  </script>
+  <script src="${static.url('js/mf-dashboard.js')}"></script>
+</%block>
+
+<div class="mf-dash-wrapper">
+  <%include file="_mf_dashboard_sidebar.html" />
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <a href="/dashboard">Académie Mission Formations</a>
+        <svg class="ic" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <strong>Tableau de bord</strong>
+      </div>
+      <div class="topbar-r">
+        <button class="top-btn" title="Rechercher"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+        <button class="top-btn" title="Notifications"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="cnt">
+      <%include file="_mf_dashboard_hero.html" />
+
+      <div class="reco an d2">
+        <div class="reco-h">
+          <div class="reco-spark"><svg class="ic" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="reco-title">Recommandé pour vous, ${user.first_name or user.username}</div>
+          <div class="reco-sub">Basé sur votre parcours</div>
+        </div>
+        <div class="reco-cards">
+          <div class="reco-card">
+            <div class="reco-card-tag">Suggéré</div>
+            <div class="reco-card-n">Réglementation VTC 2026</div>
+            <div class="reco-card-d">Mise à jour obligatoire. Complète votre formation classique.</div>
+            <div class="reco-card-cta">Découvrir <svg class="ic" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+          </div>
+          <div class="reco-card">
+            <div class="reco-card-tag">Populaire</div>
+            <div class="reco-card-n">Stage Pratique VTC — 5 jours</div>
+            <div class="reco-card-d">Conduite réelle avec mentor. Idéal après l'examen T3C.</div>
+            <div class="reco-card-cta">Découvrir <svg class="ic" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+          </div>
+          <div class="reco-card">
+            <div class="reco-card-tag">Complémentaire</div>
+            <div class="reco-card-n">Comptabilité VTC</div>
+            <div class="reco-card-d">Gérez vos finances après la création de votre entreprise.</div>
+            <div class="reco-card-cta">Découvrir <svg class="ic" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g5 an d3">
+        <div class="sc">
+          <div class="sc-i bl"><svg class="ic ic-lg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <div><div class="sc-v" id="mf-stat-formations">${len(course_enrollments)}</div><div class="sc-l">Formations</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc-i gr"><svg class="ic ic-lg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div><div class="sc-v" id="mf-stat-modules">--</div><div class="sc-l">Modules OK</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc-i or"><svg class="ic ic-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><div class="sc-v" id="mf-stat-restant">--</div><div class="sc-l">Restantes</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc-i rd"><svg class="ic ic-lg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div><div class="sc-v">2</div><div class="sc-l">Sessions</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc-i vi"><svg class="ic ic-lg" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div><div class="sc-v" id="mf-stat-taux">--%</div><div class="sc-l">Taux réussite</div></div>
+        </div>
+      </div>
+
+      <div class="g3 an d4" id="formations">
+        <div class="card">
+          <div class="card-h">
+            <div class="card-t">Mes formations en cours</div>
+            <div class="filters" id="mf-filters">
+              <button class="flt on" data-filter="all">Toutes</button>
+              <button class="flt" data-filter="active">En cours</button>
+              <button class="flt" data-filter="done">Terminées</button>
+              <button class="flt" data-filter="presentiel">Présentiel</button>
+              <button class="flt" data-filter="distanciel">Distanciel</button>
+            </div>
+          </div>
+
+          % if course_enrollments:
+            % for enrollment in course_enrollments:
+              <% course_name = enrollment.course_overview.display_name_with_default if getattr(enrollment, 'course_overview', None) else str(enrollment.course_id) %>
+              <div class="ci" data-course-id="${enrollment.course_id}" data-status="${'done' if cert_statuses.get(enrollment.course_id) else 'active'}" data-mode="distanciel">
+                <div class="ci-th t1"><svg class="ic ic-xl" viewBox="0 0 24 24" style="stroke:rgba(255,255,255,.5)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+                <div class="ci-body">
+                  <div class="ci-row1">
+                    <div class="ci-n">${course_name}</div>
+                    % if show_courseware_links_for.get(enrollment.course_id):
+                      <a href="/courses/${enrollment.course_id}/courseware" class="btn-cont"><svg class="ic" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Continuer</a>
+                    % endif
+                  </div>
+                  <div class="ci-team">
+                    <span class="ci-person"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><strong>Formateur Mission</strong></span>
+                    <span class="ci-person"><span class="role">Resp. Pédago</span><strong>Mission Formations</strong></span>
+                  </div>
+                  <div class="ci-meta">
+                    <span><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Inscription</span>
+                    <span class="ci-dates"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${enrollment.created.strftime('%d/%m/%Y')}</span>
+                  </div>
+                  <div class="pb"><div class="pf" style="width:0%"></div></div>
+                  <div class="pt"><span class="lbl">Chargement...</span><span class="pct">0%</span></div>
+                </div>
+              </div>
+            % endfor
+          % else:
+            <p style="font-size:12px;color:var(--gris2)">Aucune formation en cours.</p>
+          % endif
+        </div>
+
+        <div class="card" id="mf-schedule-card">
+          <div class="card-h"><div class="card-t">Prochains événements</div></div>
+
+          <div class="si">
+            <div class="si-d"><div class="dy">22</div><div class="mo">Fév</div></div>
+            <div class="si-c">
+              <div class="si-t">Session live — Gestion de flotte</div>
+              <div class="si-dt">10h00 - 12h30 · Salle Haussmann</div>
+              <div class="si-actions">
+                <span class="tag t-live"><svg class="ic" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Présentiel</span>
+                <button class="cal-btn">Google</button>
+                <button class="cal-btn">Outlook</button>
+                <button class="cal-btn">iCal</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="si">
+            <div class="si-d"><div class="dy">25</div><div class="mo">Fév</div></div>
+            <div class="si-c">
+              <div class="si-t">Examen blanc T3C</div>
+              <div class="si-dt">14h00 - 16h00 · En ligne</div>
+              <div class="si-actions">
+                <span class="tag t-exam"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Examen</span>
+                <button class="cal-btn">Google</button>
+                <button class="cal-btn">Outlook</button>
+                <button class="cal-btn">iCal</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="si">
+            <div class="si-d"><div class="dy">03</div><div class="mo">Mar</div></div>
+            <div class="si-c">
+              <div class="si-t">Webinaire — Marketing VTC</div>
+              <div class="si-dt">18h00 - 19h30 · Zoom</div>
+              <div class="si-actions">
+                <span class="tag t-vid"><svg class="ic" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Visio</span>
+                <button class="cal-btn">Google</button>
+                <button class="cal-btn">Outlook</button>
+                <button class="cal-btn">iCal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g2 an d5">
+        <div class="card" id="mf-activity-card">
+          <div class="card-h">
+            <div class="card-t">Activité cette semaine</div>
+            <span style="font-family:var(--mono);font-size:10.5px;color:var(--vert2);font-weight:700">+12%</span>
+          </div>
+          <div class="bars">
+            <div class="bw"><div class="br" style="height:35%"></div><div class="bl-l">Lun</div></div>
+            <div class="bw"><div class="br" style="height:60%"></div><div class="bl-l">Mar</div></div>
+            <div class="bw"><div class="br" style="height:80%"></div><div class="bl-l">Mer</div></div>
+            <div class="bw"><div class="br" style="height:45%"></div><div class="bl-l">Jeu</div></div>
+            <div class="bw"><div class="br" style="height:90%"></div><div class="bl-l">Ven</div></div>
+            <div class="bw"><div class="br" style="height:20%"></div><div class="bl-l">Sam</div></div>
+            <div class="bw"><div class="br" style="height:10%"></div><div class="bl-l">Dim</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:10.5px;color:var(--gris2)">
+            <span>Total : <strong style="color:var(--dark)">6h 42min</strong></span>
+            <span>Objectif : 8h/sem</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--fond)">
+            <div class="prw">
+              <svg class="pr" viewBox="0 0 64 64" width="64" height="64">
+                <defs><linearGradient id="grd" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0965D0"/><stop offset="100%" stop-color="#01E8AE"/></linearGradient></defs>
+                <circle class="pr-bg" cx="32" cy="32" r="26"/>
+                <circle class="pr-f" cx="32" cy="32" r="26" stroke="url(#grd)" stroke-dasharray="163.4" stroke-dashoffset="44.1" id="mf-small-progress-ring"/>
+              </svg>
+              <div class="pr-txt" id="mf-small-progress-txt">73%</div>
+            </div>
+            <div>
+              <div style="font-family:var(--heading);font-size:12.5px;font-weight:700;color:var(--dark)">Progression globale</div>
+              <div style="font-size:10.5px;color:var(--gris2);margin-top:1px" id="mf-modules-summary">18 modules sur 24 complétés</div>
+              <div style="font-size:10.5px;color:var(--vert2);font-weight:600;margin-top:3px;display:flex;align-items:center;gap:3px">
+                <svg class="ic ic-sm" viewBox="0 0 24 24" style="stroke:var(--vert2)"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>En avance sur le planning
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div class="card" style="flex:1" id="mf-certificates">
+            <div class="card-h"><div class="card-t">Mes certificats</div></div>
+            <div id="mf-certificates-list">
+              <div class="crt">
+                <div class="crt-i"><svg class="ic" viewBox="0 0 24 24" style="stroke:#fff"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div>
+                <div class="crt-inf">
+                  <div class="crt-n">Aucun certificat disponible pour le moment</div>
+                  <div class="crt-dt">Les certificats apparaîtront ici quand une formation sera terminée.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="flex:1">
+            <div class="card-h"><div class="card-t">Notifications</div><a class="card-a">Tout marquer lu</a></div>
+            <div class="ni"><div class="ni-dot"></div><div class="ni-txt"><strong>Nouveau module disponible</strong> - Votre nouvel espace dashboard est actif.</div><div class="ni-t">Maintenant</div></div>
+            <div class="ni"><div class="ni-dot"></div><div class="ni-txt"><strong>Rappel</strong> - Vérifiez vos emails d'activation et de réinitialisation.</div><div class="ni-t">1j</div></div>
+            <div class="ni"><div class="ni-dot rd"></div><div class="ni-txt"><strong>Info</strong> - Vos formations en cours sont affichées en direct depuis Open edX.</div><div class="ni-t">2j</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card an d6">
+        <div class="card-h">
+          <div class="card-t">Mes badges</div>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--bleu);font-weight:700">4/12 obtenus</span>
+        </div>
+        <div class="bg">
+          <div class="bi">
+            <div class="bi-c sp"><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div><div class="bi-n">Premier pas</div><div class="bi-d">Terminé son premier module</div></div>
+          </div>
+          <div class="bi">
+            <div class="bi-c go"><svg class="ic" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div><div class="bi-n">Assidu</div><div class="bi-d">7 jours consécutifs</div></div>
+          </div>
+          <div class="bi">
+            <div class="bi-c si"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <div><div class="bi-n">Quiz Master</div><div class="bi-d">Score > 90% sur 3 quiz</div></div>
+          </div>
+          <div class="bi">
+            <div class="bi-c br"><svg class="ic" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+            <div><div class="bi-n">Rapide</div><div class="bi-d">Module terminé en avance</div></div>
+          </div>
+          <div class="bi" style="opacity:.3">
+            <div class="bi-c lk"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div><div class="bi-n" style="color:var(--gris2)">Expert VTC</div><div class="bi-d">Terminer la formation classique</div></div>
+          </div>
+          <div class="bi" style="opacity:.3">
+            <div class="bi-c lk"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div><div class="bi-n" style="color:var(--gris2)">Entrepreneur</div><div class="bi-d">Terminer Création d'entreprise</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<%
+  firstname = user.first_name or user.username
+%>
+
+<div class="hero an d1">
+  <div class="hero-grid"></div>
+  <div class="hero-top">
+    <div class="hero-text">
+      <h1>Bonjour <em>${firstname}</em> !</h1>
+      <p id="mf-hero-subtitle">Vous avez ${len(course_enrollments)} formation(s) en cours. Continuez, votre progression est excellente !</p>
+      <a href="#formations" class="hero-cta">
+        <svg class="ic" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Reprendre mes formations
+      </a>
+    </div>
+    <div class="hero-ring" id="mf-hero-ring">
+      <svg viewBox="0 0 90 90" width="90" height="90">
+        <defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0965D0"/><stop offset="100%" stop-color="#01E8AE"/></linearGradient></defs>
+        <circle class="bg" cx="45" cy="45" r="40"/>
+        <circle class="fg" cx="45" cy="45" r="40" stroke="url(#hg)" stroke-dasharray="251.3" stroke-dashoffset="67.9" id="mf-hero-ring-fg"/>
+      </svg>
+      <div class="hero-ring-txt">
+        <div class="hero-ring-val" id="mf-hero-ring-val">73%</div>
+        <div class="hero-ring-lab">Global</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-acad" id="mf-hero-acad">
+    <div class="ha">
+      <div class="ha-ring">
+        <svg viewBox="0 0 42 42" width="42" height="42">
+          <circle class="bg" cx="21" cy="21" r="18"/>
+          <circle class="fg" cx="21" cy="21" r="18" stroke="var(--vert)" stroke-dasharray="113.1" stroke-dashoffset="30.5" stroke-width="4" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="ha-ring-txt">73%</div>
+      </div>
+      <div class="ha-info"><div class="ha-n">Académie Mission Formations</div><div class="ha-d">${len(course_enrollments)} formation(s)</div></div>
+    </div>
+    <div class="ha">
+      <div class="ha-ring">
+        <svg viewBox="0 0 42 42" width="42" height="42">
+          <circle class="bg" cx="21" cy="21" r="18"/>
+          <circle class="fg" cx="21" cy="21" r="18" stroke="var(--bleu)" stroke-dasharray="113.1" stroke-dashoffset="65.6" stroke-width="4" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="ha-ring-txt">42%</div>
+      </div>
+      <div class="ha-info"><div class="ha-n">Académie IT</div><div class="ha-d">1 formation · 8h</div></div>
+    </div>
+    <div class="ha">
+      <div class="ha-ring">
+        <svg viewBox="0 0 42 42" width="42" height="42">
+          <circle class="bg" cx="21" cy="21" r="18"/>
+          <circle class="fg" cx="21" cy="21" r="18" stroke="url(#hg)" stroke-dasharray="113.1" stroke-dashoffset="36.2" stroke-width="4" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="ha-ring-txt" id="mf-hero-global-mini">68%</div>
+      </div>
+      <div class="ha-info"><div class="ha-n">Global</div><div class="ha-d" id="mf-hero-global-desc">--</div></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+{% autoescape off %}
+Bonjour,
+
+Une demande de réinitialisation du mot de passe a été reçue pour votre compte sur {{ platform_name }}.
+
+{% if failed %}
+Aucun compte n'est associé à l'adresse email : {{ email_address }}.
+Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.
+{% else %}
+Pour choisir un nouveau mot de passe, cliquez sur ce lien :
+{{ reset_link }}
+
+Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.
+Votre mot de passe actuel n'a pas encore été modifié.
+{% endif %}
+
+Académie Mission Formations
+{% endautoescape %}

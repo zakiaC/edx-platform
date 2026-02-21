@@ -1,0 +1,22 @@
+<div class="js-form-feedback" aria-live="assertive" tabindex="-1"></div>
+
+<div class="form-head">
+    <h1>Inscription</h1>
+    <p>Créez votre compte apprenant pour accéder à vos cours et certifications.</p>
+</div>
+
+<form id="register" class="register-form" autocomplete="off" tabindex="-1" method="POST">
+    <div class="form-fields <% if (context.is_require_third_party_auth_enabled) { %>hidden<% } %>">
+        <%= context.fields /* xss-lint: disable=underscore-not-escaped */ %>
+        <button type="submit" class="action action-primary action-update js-register register-button btn-submit"><span>Créer un compte</span></button>
+    </div>
+</form>
+
+<div class="form-bottom">
+    <button type="button" class="form-toggle" data-type="login">Déjà inscrit ? Se connecter</button>
+</div>
+
+<div class="form-footer">
+    <a href="#">Mentions légales</a> · <a href="#">RGPD</a> · <a href="#">Aide</a><br>
+    © 2026 Académie Mission Formations · 5 rue des Catalpas, 94320 Thiais
+</div>
