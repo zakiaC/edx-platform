@@ -6,7 +6,7 @@
 <%inherit file="main.html" />
 
 <%block name="pagetitle">Mon espace — Académie Mission Formations</%block>
-<%block name="bodyclass">view-dashboard is-authenticated</%block>
+<%block name="bodyclass">${'view-dashboard-formateur is-authenticated' if user.is_staff else 'view-dashboard is-authenticated'}</%block>
 
 <%block name="head_extra">
   <link rel="stylesheet" href="${static.url('css/mf-dashboard.css')}" />
@@ -16,19 +16,26 @@
 </%block>
 
 <%block name="js_extra">
-  <script>
-    window.MF_DASHBOARD = {
-      username: "${user.username | h}",
-      firstName: "${(user.first_name or user.username) | h}",
-      csrfToken: "${csrf_token | h}",
-      totalEnrollments: ${len(course_enrollments)},
-      completedEnrollments: ${len([e for e in course_enrollments if cert_statuses.get(e.course_id)])},
-      onlyObtainedMenu: ${'true' if getattr(settings, 'MF_CERTIFICATES_MENU_ONLY_OBTAINED', False) else 'false'}
-    };
-  </script>
-  <script src="${static.url('js/mf-dashboard.js')}"></script>
+  % if not user.is_staff:
+    <script>
+      window.MF_DASHBOARD = {
+        username: "${user.username | h}",
+        firstName: "${(user.first_name or user.username) | h}",
+        csrfToken: "${csrf_token | h}",
+        totalEnrollments: ${len(course_enrollments)},
+        completedEnrollments: ${len([e for e in course_enrollments if cert_statuses.get(e.course_id)])},
+        onlyObtainedMenu: ${'true' if getattr(settings, 'MF_CERTIFICATES_MENU_ONLY_OBTAINED', False) else 'false'}
+      };
+    </script>
+    <script src="${static.url('js/mf-dashboard.js')}"></script>
+  % endif
 </%block>
 
+% if user.is_superuser:
+  <%include file="_mf_dashboard_admin.html" />
+% elif user.is_staff:
+  <%include file="_mf_dashboard_formateur.html" />
+% else:
 <div class="mf-dash-wrapper">
   <%include file="_mf_dashboard_sidebar.html" />
 
@@ -290,3 +297,4 @@
     </div>
   </div>
 </div>
+% endif

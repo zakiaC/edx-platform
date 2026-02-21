@@ -517,6 +517,14 @@ def student_dashboard(request):  # lint-amnesty, pylint: disable=too-many-statem
 
     """
     user = request.user
+
+    # Keep admin and formateur dashboards strictly separated.
+    # Superadmins always use the dedicated central admin dashboard route.
+    if user.is_superuser:
+        try:
+            return redirect(reverse("mission-central-dashboard"))
+        except Exception:  # lint-amnesty, pylint: disable=broad-except
+            return redirect("/admin/mission-dashboard/")
     if not UserProfile.objects.filter(user=user).exists():
         return redirect(settings.ACCOUNT_MICROFRONTEND_URL)
 

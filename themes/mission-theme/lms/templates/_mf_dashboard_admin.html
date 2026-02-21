@@ -1,0 +1,343 @@
+<%!
+  from django.db.models import Count
+  from django.utils import timezone
+  from django.utils.timesince import timesince
+%>
+<%
+  from common.djangoapps.student.models import CourseEnrollment
+  from lms.djangoapps.certificates.data import CertificateStatuses
+  from lms.djangoapps.certificates.models import GeneratedCertificate
+  from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+
+  now = timezone.now()
+  full_name = getattr(user.profile, 'name', '') if hasattr(user, 'profile') else ''
+  display_name = full_name or (user.first_name or user.username)
+  initials_source = (full_name or user.username).strip()
+  initials = ''.join([part[0] for part in initials_source.split()[:2]]).upper() if initials_source else (user.username[:2] or 'MF').upper()
+  initials = initials[:2]
+
+  # Admin view: global list of sold trainings.
+  dedup_course_ids = []
+  seen_course_ids = set()
+  for enrollment_course_id in CourseEnrollment.objects.filter(
+    is_active=True
+  ).values_list('course_id', flat=True).distinct()[:500]:
+    course_id_str = str(enrollment_course_id).strip()
+    if not course_id_str or course_id_str in seen_course_ids:
+      continue
+    seen_course_ids.add(course_id_str)
+    dedup_course_ids.append(enrollment_course_id)
+
+  if not dedup_course_ids:
+    for overview in CourseOverview.objects.order_by('-start')[:300]:
+      course_id_str = str(overview.id).strip()
+      if not course_id_str or course_id_str in seen_course_ids:
+        continue
+      seen_course_ids.add(course_id_str)
+      dedup_course_ids.append(overview.id)
+
+  enrollment_counts = {
+    str(item['course_id']): item['total']
+    for item in CourseEnrollment.objects.filter(
+      course_id__in=dedup_course_ids,
+      is_active=True
+    ).values('course_id').annotate(total=Count('id'))
+  }
+  certificate_counts = {
+    str(item['course_id']): item['total']
+    for item in GeneratedCertificate.objects.filter(
+      course_id__in=dedup_course_ids,
+      status=CertificateStatuses.downloadable
+    ).values('course_id').annotate(total=Count('id'))
+  }
+
+  formateur_courses = []
+  for course_id in dedup_course_ids:
+    try:
+      overview = CourseOverview.get_from_id(course_id)
+    except Exception:
+      continue
+    if not overview:
+      continue
+
+    course_key = str(overview.id)
+    enrolled_count = int(enrollment_counts.get(course_key, 0) or 0)
+    certified_count = int(certificate_counts.get(course_key, 0) or 0)
+    progress_pct = int(round((100.0 * certified_count / enrolled_count), 0)) if enrolled_count > 0 else 0
+    progress_pct = max(0, min(progress_pct, 100))
+
+    start_date = getattr(overview, 'start', None)
+    end_date = getattr(overview, 'end', None)
+    if end_date and now > end_date:
+      status_label = 'Terminee'
+      status_class = 'status-archived'
+    elif start_date and now < start_date:
+      status_label = 'A venir'
+      status_class = 'status-draft'
+    else:
+      status_label = 'En cours'
+      status_class = 'status-live'
+
+    formateur_courses.append({
+      'course_id': course_key,
+      'course_name': getattr(overview, 'display_name_with_default', None) or getattr(overview, 'display_name', None) or course_key,
+      'status_label': status_label,
+      'status_class': status_class,
+      'enrolled_count': enrolled_count,
+      'progress_pct': progress_pct,
+      'course_about_url': '/courses/{}/about'.format(course_key),
+    })
+
+  total_formations = len(formateur_courses)
+  total_apprenants = CourseEnrollment.objects.filter(
+    course_id__in=dedup_course_ids,
+    is_active=True
+  ).values('user_id').distinct().count() if dedup_course_ids else 0
+  active_formations = len([course for course in formateur_courses if course['status_class'] == 'status-live'])
+  average_progress = int(round(sum(course['progress_pct'] for course in formateur_courses) / total_formations, 0)) if total_formations else 0
+
+  course_name_by_id = {course['course_id']: course['course_name'] for course in formateur_courses}
+  recent_activities = []
+  if dedup_course_ids:
+    recent_enrollments = CourseEnrollment.objects.filter(
+      course_id__in=dedup_course_ids,
+      is_active=True
+    ).exclude(user_id=user.id).select_related('user').order_by('-created')[:20]
+    for enrollment in recent_enrollments:
+      learner = enrollment.user
+      learner_profile = getattr(learner, 'profile', None)
+      learner_name = (
+        getattr(learner_profile, 'name', '') or
+        learner.get_full_name().strip() or
+        learner.username
+      )
+      created_ts = enrollment.created or now
+      course_key = str(enrollment.course_id)
+      recent_activities.append({
+        'kind': 'enrollment',
+        'user_name': learner_name,
+        'course_name': course_name_by_id.get(course_key, course_key),
+        'timestamp': created_ts,
+        'time_ago': 'Il y a {}'.format(timesince(created_ts, now).split(',')[0]),
+      })
+
+    recent_certs = GeneratedCertificate.objects.filter(
+      course_id__in=dedup_course_ids,
+      status=CertificateStatuses.downloadable
+    ).exclude(user_id=user.id).select_related('user').order_by('-modified_date')[:20]
+    for cert in recent_certs:
+      learner = cert.user
+      learner_profile = getattr(learner, 'profile', None)
+      learner_name = (
+        getattr(learner_profile, 'name', '') or
+        learner.get_full_name().strip() or
+        learner.username
+      )
+      cert_ts = cert.modified_date or cert.created_date or now
+      course_key = str(cert.course_id)
+      recent_activities.append({
+        'kind': 'certificate',
+        'user_name': learner_name,
+        'course_name': course_name_by_id.get(course_key, course_key),
+        'timestamp': cert_ts,
+        'time_ago': 'Il y a {}'.format(timesince(cert_ts, now).split(',')[0]),
+      })
+
+  recent_activities.sort(key=lambda row: row['timestamp'], reverse=True)
+  recent_activities = recent_activities[:6]
+
+  apprenants_rows = []
+  apprenants_link = '#apprenants-panel'
+  calendrier_link = '#'
+  if dedup_course_ids:
+    recent_apprenants = CourseEnrollment.objects.filter(
+      course_id__in=dedup_course_ids,
+      is_active=True
+    ).exclude(user_id=user.id).select_related('user').order_by('-created')[:12]
+
+    for enrollment in recent_apprenants:
+      learner = enrollment.user
+      learner_profile = getattr(learner, 'profile', None)
+      learner_name = (
+        getattr(learner_profile, 'name', '') or
+        learner.get_full_name().strip() or
+        learner.username
+      )
+      course_key = str(enrollment.course_id)
+      apprenants_rows.append({
+        'name': learner_name,
+        'email': learner.email or '',
+        'course_name': course_name_by_id.get(course_key, course_key),
+        'created_text': (enrollment.created or now).strftime('%d/%m/%Y'),
+      })
+
+  if formateur_courses:
+    apprenants_link = '/courses/{}/instructor#membership'.format(formateur_courses[0]['course_id'])
+    calendrier_link = '/courses/{}/dates'.format(formateur_courses[0]['course_id'])
+%>
+
+<div class="mf-formateur">
+  <div class="lms-layout">
+    <aside class="lms-sidebar">
+      <div class="lms-sidebar-logo">
+        <div class="lms-logo-icon">M</div>
+        <div>
+          <div class="lms-logo-text">Mon dashboard</div>
+          <div class="lms-logo-sub">Espace admin</div>
+        </div>
+      </div>
+      <nav class="lms-nav">
+        <div class="lms-nav-group">
+          <div class="lms-nav-label">Tableau de bord</div>
+          <a class="lms-nav-item active" href="/dashboard"><span class="nav-icon">◉</span>Vue d'ensemble</a>
+          <a class="lms-nav-item" href="/admin/mission-dashboard/"><span class="nav-icon">◈</span>Dashboard central admin</a>
+          <a class="lms-nav-item" href="#mes-formations"><span class="nav-icon">◈</span>Mes formations<span class="nav-badge">${total_formations}</span></a>
+          <a class="lms-nav-item" href="${calendrier_link}"><span class="nav-icon">◇</span>Calendrier</a>
+        </div>
+        <div class="lms-nav-group">
+          <div class="lms-nav-label">Gestion</div>
+          <a class="lms-nav-item" href="${apprenants_link}"><span class="nav-icon">◻</span>Apprenants</a>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◎</span>Evaluations</a>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◆</span>Notes & resultats</a>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◐</span>Forums</a>
+        </div>
+        <div class="lms-nav-group">
+          <div class="lms-nav-label">Contenu</div>
+          <a class="lms-nav-item" href="http://studio.local.openedx.io/home/"><span class="nav-icon">◰</span>Studio (edition)</a>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◫</span>Bibliotheque</a>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◧</span>Certificats</a>
+        </div>
+        <div class="lms-nav-group">
+          <div class="lms-nav-label">Analytics</div>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◔</span>Statistiques</a>
+          <a class="lms-nav-item" href="#"><span class="nav-icon">◕</span>Rapports</a>
+        </div>
+        <div class="lms-nav-group">
+          <div class="lms-nav-label">Espace interne</div>
+          <a class="lms-nav-item" href="https://missionformations.com/formateur/login/index.html"><span class="nav-icon">◍</span>Espace formateur web</a>
+        </div>
+        <div class="lms-nav-group">
+          <div class="lms-nav-label">Session</div>
+          <a class="lms-nav-item" href="/logout"><span class="nav-icon">◉</span>Se deconnecter</a>
+        </div>
+      </nav>
+      <div class="lms-sidebar-user">
+        <div class="lms-user-avatar">${initials}</div>
+        <div>
+          <div class="lms-user-name">${display_name}</div>
+          <div class="lms-user-role">Administrateur Mission</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="lms-main">
+      <div class="lms-topbar">
+        <h2>Vue d'ensemble</h2>
+        <div class="lms-topbar-right">
+          <input class="lms-search" placeholder="Rechercher un apprenant, une formation...">
+          <button class="lms-notif" type="button" title="Notifications"><span class="dot"></span></button>
+        </div>
+      </div>
+
+      <div class="lms-content">
+        <div class="dash-stats">
+          <div class="dash-stat"><div class="ds-label">Apprenants actifs</div><div class="ds-value">${total_apprenants}</div><div class="ds-change">Comptes inscrits sur vos cours</div></div>
+          <div class="dash-stat"><div class="ds-label">Formations en cours</div><div class="ds-value">${active_formations}</div><div class="ds-change">${total_formations} formation(s) rattachee(s)</div></div>
+          <div class="dash-stat"><div class="ds-label">Taux de completion</div><div class="ds-value">${average_progress}%</div><div class="ds-change">Base certificats telechargeables</div></div>
+          <div class="dash-stat"><div class="ds-label">Note moyenne</div><div class="ds-value">4.6<span style="font-size:14px;color:#999">/5</span></div><div class="ds-change ds-up">Excellent</div></div>
+        </div>
+
+        <div class="quick-actions">
+          <a class="qa-btn" href="#"><div class="qa-icon">+</div><div class="qa-text"><h4>Nouvelle session</h4><p>Planifier une session de formation</p></div></a>
+          <a class="qa-btn" href="http://studio.local.openedx.io/home/"><div class="qa-icon">✎</div><div class="qa-text"><h4>Editer un cours</h4><p>Ouvrir Studio pour modifier un contenu</p></div></a>
+          <a class="qa-btn" href="#"><div class="qa-icon">↓</div><div class="qa-text"><h4>Exporter les resultats</h4><p>Telecharger les notes au format CSV</p></div></a>
+          <a class="qa-btn" href="#"><div class="qa-icon">✉</div><div class="qa-text"><h4>Envoyer un message</h4><p>Contacter un groupe d'apprenants</p></div></a>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-panel" id="mes-formations">
+            <div class="dash-panel-head"><h3>Toutes les formations vendues</h3><button class="panel-action">Voir tout -></button></div>
+            <table class="dash-table">
+              <thead><tr><th>Formation</th><th>Statut</th><th>Apprenants</th><th>Progression moy.</th></tr></thead>
+              <tbody>
+                % if formateur_courses:
+                  % for course in formateur_courses:
+                    <tr>
+                      <td><div class="course-name"><span class="course-dot ${'live' if course['status_class'] == 'status-live' else ('draft' if course['status_class'] == 'status-draft' else 'archived')}"></span><a class="course-title" href="${course['course_about_url']}">${course['course_name']}</a></div></td>
+                      <td><span class="status-badge ${course['status_class']}">${course['status_label']}</span></td>
+                      <td>${course['enrolled_count']}</td>
+                      <td><span class="prog-bar"><span class="prog-fill" style="width:${course['progress_pct']}%"></span></span>${course['progress_pct']}%</td>
+                    </tr>
+                  % endfor
+                % else:
+                  <tr>
+                    <td colspan="4">Aucune formation vendue n'est encore affectee a ce formateur. Affectez le formateur dans Studio (Course Team).</td>
+                  </tr>
+                % endif
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <div class="dash-panel" style="margin-bottom:14px">
+              <div class="dash-panel-head"><h3>Activite recente</h3></div>
+              <div class="activity-list">
+                % if recent_activities:
+                  % for activity in recent_activities:
+                    <div class="activity-item">
+                      <div class="activity-dot"${' style="background:var(--accent)"' if activity['kind'] == 'certificate' else ''}></div>
+                      <div>
+                        % if activity['kind'] == 'certificate':
+                          <div class="activity-text"><strong>${activity['user_name']}</strong> a obtenu un certificat sur "${activity['course_name']}"</div>
+                        % else:
+                          <div class="activity-text"><strong>${activity['user_name']}</strong> s'est inscrit(e) a "${activity['course_name']}"</div>
+                        % endif
+                        <div class="activity-time">${activity['time_ago']}</div>
+                      </div>
+                    </div>
+                  % endfor
+                % else:
+                  <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text">Aucune activite recente disponible pour ce compte.</div><div class="activity-time">Mise a jour lors des prochaines inscriptions/certificats</div></div></div>
+                % endif
+              </div>
+            </div>
+
+            <div class="dash-panel" id="apprenants-panel" style="margin-bottom:14px">
+              <div class="dash-panel-head"><h3>Apprenants recents</h3><a class="panel-action" href="${apprenants_link}">Gerer dans Open edX -></a></div>
+              % if apprenants_rows:
+                <table class="dash-table">
+                  <thead><tr><th>Apprenant</th><th>Formation</th><th>Inscription</th></tr></thead>
+                  <tbody>
+                    % for row in apprenants_rows:
+                      <tr>
+                        <td><strong>${row['name']}</strong><div style="font-size:11px;color:#999">${row['email']}</div></td>
+                        <td>${row['course_name']}</td>
+                        <td>${row['created_text']}</td>
+                      </tr>
+                    % endfor
+                  </tbody>
+                </table>
+              % else:
+                <div class="activity-list">
+                  <div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text">Aucun apprenant inscrit sur vos formations.</div><div class="activity-time">La liste se met a jour automatiquement</div></div></div>
+                </div>
+              % endif
+            </div>
+
+            <div class="dash-panel">
+              <div class="dash-panel-head"><h3>Fevrier 2026</h3><a class="panel-action" href="${calendrier_link}">calendrier de formation =></a></div>
+              <div class="cal-grid">
+                <div class="cal-day head">Lu</div><div class="cal-day head">Ma</div><div class="cal-day head">Me</div><div class="cal-day head">Je</div><div class="cal-day head">Ve</div><div class="cal-day head">Sa</div><div class="cal-day head">Di</div>
+                <div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day">1</div>
+                <div class="cal-day">2</div><div class="cal-day has-event">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day has-event">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+                <div class="cal-day">9</div><div class="cal-day has-event">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
+                <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day today">19</div><div class="cal-day has-event">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+                <div class="cal-day has-event">23</div><div class="cal-day">24</div><div class="cal-day has-event">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,779 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='/static_content.html'/>
+<%inherit file="main.html" />
+
+<%block name="pagetitle">Super Admin — Académie Mission Formations</%block>
+<%block name="bodyclass">view-dashboard-formateur is-authenticated</%block>
+
+<%block name="head_extra">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;
+  --vert:#01E8AE;--vert2:#00c494;--vert-pale:#e6faf4;
+  --dark:#0a1628;--dark2:#0f1f3a;--dark3:#162d50;
+  --noir:#3B3B3B;--gris:#6b6b6b;--gris2:#999;--gris3:#ccc;--gris4:#e8e8e8;
+  --fond:#f5f7fa;--blanc:#ffffff;
+  --rouge:#e74c3c;--orange:#e67e22;--jaune:#f1c40f;
+  --violet:#8e44ad;--violet-pale:#f3e8fd;
+  --heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace;
+  --sidebar-w:260px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--noir);background:var(--fond);-webkit-font-smoothing:antialiased;line-height:1.6;min-height:100vh}
+a{text-decoration:none}
+svg.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+svg.ic-sm{width:14px;height:14px}
+svg.ic-lg{width:20px;height:20px}
+svg.ic-xl{width:22px;height:22px}
+
+/* ======= SIDEBAR ======= */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--dark);z-index:100;display:flex;flex-direction:column;overflow-y:auto;transition:transform .3s}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.sb-logo{padding:18px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-logo-m{width:36px;height:36px;background:linear-gradient(135deg,var(--bleu),var(--vert));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:18px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-logo-t{font-family:var(--heading);font-size:10px;font-weight:700;color:#fff;letter-spacing:.8px;line-height:1.3}
+.sb-logo-t span{display:block;font-size:8px;font-weight:500;color:rgba(255,255,255,.3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
+.sb-badge{margin:0 12px 10px;padding:7px 10px;border-radius:7px;background:linear-gradient(135deg,rgba(231,76,60,.1),rgba(230,126,34,.08));border:1px solid rgba(231,76,60,.12);display:flex;align-items:center;gap:7px}
+.sb-badge svg{width:13px;height:13px;stroke:var(--rouge);fill:none;stroke-width:2;flex-shrink:0}
+.sb-badge span{font-family:var(--heading);font-size:8.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--rouge)}
+.sb-nav{flex:1;padding:8px 8px}
+.sb-sec{margin-bottom:14px}
+.sb-sec-t{font-family:var(--heading);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.15);padding:0 10px;margin-bottom:4px}
+.sb-lk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.38);cursor:pointer;border:1px solid transparent;transition:all .15s}
+.sb-lk:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
+.sb-lk.active{color:#fff;background:linear-gradient(135deg,rgba(9,101,208,.18),rgba(1,232,174,.08));border-color:rgba(9,101,208,.12)}
+.sb-lk .sb-ic{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);flex-shrink:0;transition:all .15s}
+.sb-lk.active .sb-ic{background:linear-gradient(135deg,var(--bleu),var(--vert))}
+.sb-lk.active .sb-ic svg{stroke:#fff}
+.sb-lk .sb-ic svg{width:14px;height:14px}
+.sb-bdg{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:700;background:var(--rouge);color:#fff;padding:1px 6px;border-radius:8px}
+.sb-bdg.g{background:var(--vert2)}.sb-bdg.o{background:var(--orange)}.sb-bdg.b{background:var(--bleu)}
+.sb-user{padding:12px 14px;border-top:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:9px}
+.sb-av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--rouge),var(--orange));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-uname{font-family:var(--heading);font-size:11px;font-weight:700;color:#fff}
+.sb-urole{font-size:9px;color:rgba(255,255,255,.25)}
+.sb-out{width:24px;height:24px;border-radius:5px;border:none;background:rgba(255,255,255,.04);color:rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.sb-out:hover{background:rgba(231,76,60,.15);color:var(--rouge)}
+.sb-out svg{width:12px;height:12px}
+
+/* ======= MAIN ======= */
+.mf-admin-main{margin-left:var(--sidebar-w);min-height:100vh}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--gris4);padding:0 28px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-family:var(--heading);font-size:11.5px;color:var(--gris2)}
+.breadcrumb .sep{color:var(--gris3);font-size:10px}
+.breadcrumb strong{color:var(--dark);font-weight:700}
+.topbar-r{display:flex;align-items:center;gap:8px}
+.top-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--gris4);background:var(--blanc);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--gris);position:relative}
+.top-btn:hover{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-pale)}
+.top-btn svg{width:15px;height:15px}
+.notif-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--rouge);border:2px solid var(--blanc)}
+.mf-admin-cnt{padding:22px 28px 50px}
+
+/* ======= PAGE SECTIONS (show/hide) ======= */
+.mf-admin-page{display:none;animation:pageIn .35s ease}
+.mf-admin-page.is-active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ======= HERO ======= */
+.hero{background:var(--dark);border-radius:14px;padding:24px 28px;position:relative;overflow:hidden;margin-bottom:20px}
+.hero::before{content:'';position:absolute;top:-40%;right:-8%;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(231,76,60,.08) 0%,transparent 70%);animation:ho 12s ease-in-out infinite}
+.hero::after{content:'';position:absolute;bottom:-30%;left:8%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(1,232,174,.06) 0%,transparent 70%);animation:ho 15s ease-in-out infinite reverse}
+@keyframes ho{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-15px) scale(1.05)}}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.01) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+.hero-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}
+.hero h1{font-family:var(--heading);font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--rouge),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:12px;color:rgba(255,255,255,.35);max-width:500px;margin-bottom:12px}
+.hero-btns{display:flex;gap:8px;flex-wrap:wrap}
+.h-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;font-family:var(--heading);font-size:11.5px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+.h-btn.primary{background:linear-gradient(135deg,var(--bleu),var(--vert));color:#fff}
+.h-btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(1,232,174,.2)}
+.h-btn.ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.08)}
+.h-btn.ghost:hover{color:#fff;background:rgba(255,255,255,.1)}
+.h-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Hero live stats */
+.hero-stats{position:relative;z-index:1;display:flex;gap:10px;flex-wrap:wrap}
+.hs{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex:1;min-width:130px}
+.hs-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hs-ic svg{width:14px;height:14px;stroke-width:2}
+.hs-ic.bl{background:rgba(9,101,208,.12)}.hs-ic.gr{background:rgba(1,232,174,.1)}.hs-ic.or{background:rgba(230,126,34,.1)}.hs-ic.rd{background:rgba(231,76,60,.1)}.hs-ic.vi{background:rgba(142,68,173,.1)}
+.hs-v{font-family:var(--heading);font-size:16px;font-weight:700;color:#fff}
+.hs-l{font-size:9px;color:rgba(255,255,255,.28)}
+.hs-trend{font-family:var(--mono);font-size:8.5px;font-weight:700;margin-left:auto;padding:2px 5px;border-radius:4px}
+.hs-trend.up{color:var(--vert);background:rgba(1,232,174,.1)}
+.hs-trend.dn{color:var(--rouge);background:rgba(231,76,60,.1)}
+
+/* ======= GRIDS ======= */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.g3{display:grid;grid-template-columns:5fr 3fr;gap:16px;margin-bottom:18px}
+.g4{display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:18px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.g6{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.g7{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+
+/* ======= CARD ======= */
+.card{background:var(--blanc);border:1px solid var(--gris4);border-radius:12px;padding:16px;transition:all .2s}
+.card:hover{border-color:rgba(9,101,208,.08);box-shadow:0 4px 14px rgba(9,101,208,.03)}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
+.card-t{font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)}
+.card-a{font-size:11px;font-weight:600;color:var(--bleu);cursor:pointer;white-space:nowrap}
+.card-a:hover{text-decoration:underline}
+
+/* ======= STAT CARDS ======= */
+.sc{background:var(--blanc);border:1px solid var(--gris4);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;transition:all .15s}
+.sc:hover{border-color:rgba(9,101,208,.1);box-shadow:0 4px 14px rgba(9,101,208,.03)}
+.sc-i{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-i.bl{background:var(--bleu-pale);color:var(--bleu)}.sc-i.gr{background:var(--vert-pale);color:var(--vert2)}.sc-i.or{background:#fef3e2;color:var(--orange)}.sc-i.rd{background:#fde8e8;color:var(--rouge)}.sc-i.vi{background:var(--violet-pale);color:var(--violet)}
+.sc-v{font-family:var(--heading);font-size:17px;font-weight:700;color:var(--dark)}
+.sc-l{font-size:10px;color:var(--gris2)}
+.sc-tr{font-family:var(--mono);font-size:8.5px;font-weight:700;margin-left:auto;padding:2px 5px;border-radius:4px}
+.sc-tr.up{color:var(--vert2);background:var(--vert-pale)}.sc-tr.dn{color:var(--rouge);background:#fde8e8}
+
+/* ======= FILTERS / BUTTONS ======= */
+.filters{display:flex;gap:5px;flex-wrap:wrap}
+.flt{font-family:var(--heading);font-size:9.5px;font-weight:600;padding:4px 11px;border-radius:6px;border:1px solid var(--gris4);background:var(--blanc);color:var(--gris);cursor:pointer;transition:all .15s}
+.flt:hover,.flt.on{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-pale)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:var(--heading);font-size:11px;font-weight:700;border:none;cursor:pointer;transition:all .15s}
+.btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn.primary{background:linear-gradient(135deg,var(--bleu),var(--vert));color:#fff}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(1,232,174,.2)}
+.btn.outline{background:var(--blanc);color:var(--noir);border:1px solid var(--gris4)}
+.btn.outline:hover{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-pale)}
+.btn.danger{background:#fde8e8;color:var(--rouge)}
+.btn.danger:hover{background:#fcc;color:#c0392b}
+.btn.success{background:var(--vert-pale);color:var(--vert2)}
+.btn.success:hover{background:#ccf5e8;color:#00a67d}
+
+/* ======= TABLE ======= */
+.tbl{width:100%;border-collapse:collapse}
+.tbl thead th{font-family:var(--heading);font-size:9px;font-weight:700;color:var(--gris2);text-transform:uppercase;letter-spacing:.8px;text-align:left;padding:7px 8px;border-bottom:1px solid var(--gris4)}
+.tbl tbody tr{transition:all .1s;cursor:pointer}
+.tbl tbody tr:hover{background:var(--fond)}
+.tbl td{padding:9px 8px;border-bottom:1px solid var(--fond);font-size:11.5px;vertical-align:middle}
+.tbl-user{display:flex;align-items:center;gap:9px}
+.tbl-av{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.tbl-name{font-family:var(--heading);font-size:11.5px;font-weight:700;color:var(--dark)}
+.tbl-sub{font-size:9.5px;color:var(--gris2)}
+.status{font-family:var(--heading);font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+.status::before{content:'';width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.status.active{background:var(--vert-pale);color:var(--vert2)}.status.active::before{background:var(--vert2)}
+.status.pending{background:#fef3e2;color:var(--orange)}.status.pending::before{background:var(--orange)}
+.status.inactive{background:#fde8e8;color:var(--rouge)}.status.inactive::before{background:var(--rouge)}
+.status.draft{background:var(--fond);color:var(--gris2)}.status.draft::before{background:var(--gris3)}
+.status.paid{background:var(--bleu-pale);color:var(--bleu)}.status.paid::before{background:var(--bleu)}
+.tbl-actions{display:flex;gap:3px}
+.tbl-btn{width:26px;height:26px;border-radius:5px;border:1px solid var(--gris4);background:var(--blanc);color:var(--gris);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.tbl-btn:hover{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-pale)}
+.tbl-btn.danger:hover{border-color:var(--rouge);color:var(--rouge);background:#fde8e8}
+.tbl-btn svg{width:12px;height:12px;stroke-width:2}
+
+/* ======= PROGRESS BAR ======= */
+.pb{width:100%;height:4px;border-radius:2px;background:var(--fond)}
+.pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--bleu),var(--vert))}
+
+/* ======= CHART BARS ======= */
+.chart-area{height:160px;display:flex;align-items:flex-end;gap:6px;padding:0 2px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.chart-bar{width:100%;border-radius:5px 5px 1px 1px;transition:height .5s ease;position:relative;min-height:3px;cursor:pointer}
+.chart-bar:hover{opacity:.85}
+.chart-bar .tip{display:none;position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:4px;white-space:nowrap;z-index:5}
+.chart-bar:hover .tip{display:block}
+.chart-lbl{font-family:var(--heading);font-size:8.5px;color:var(--gris2);font-weight:600}
+
+/* ======= DONUT ======= */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:16px;padding:8px 0}
+.donut{position:relative;width:100px;height:100px}
+.donut svg{transform:rotate(-90deg)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-val{font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)}
+.donut-lab{font-size:8px;color:var(--gris2);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--noir)}
+.leg-dot{width:7px;height:7px;border-radius:3px;flex-shrink:0}
+.leg-val{font-family:var(--mono);font-size:9.5px;font-weight:700;margin-left:auto;color:var(--dark)}
+
+/* ======= ITEM ROWS ======= */
+.item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--fond)}
+.item:last-child{border:none}
+.item-ic{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.item-ic svg{width:13px;height:13px;stroke-width:2}
+.item-info{flex:1;min-width:0}
+.item-name{font-family:var(--heading);font-size:11.5px;font-weight:700;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-meta{font-size:9.5px;color:var(--gris2)}
+.item-val{font-family:var(--mono);font-size:11px;font-weight:700;text-align:right;flex-shrink:0}
+.item-val.blue{color:var(--bleu)}.item-val.green{color:var(--vert2)}.item-val.red{color:var(--rouge)}.item-val.orange{color:var(--orange)}
+
+/* ======= ACTIVITY ======= */
+.act{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--fond)}
+.act:last-child{border:none}
+.act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.act-dot.bl{background:var(--bleu)}.act-dot.gr{background:var(--vert2)}.act-dot.or{background:var(--orange)}.act-dot.rd{background:var(--rouge)}.act-dot.vi{background:var(--violet)}
+.act-text{flex:1;font-size:11px;color:var(--gris);line-height:1.5}
+.act-text strong{color:var(--dark);font-weight:600}
+.act-time{font-family:var(--mono);font-size:9px;color:var(--gris3);flex-shrink:0}
+
+/* ======= CALENDAR ======= */
+.cal{width:100%;border-collapse:collapse}
+.cal th{font-family:var(--heading);font-size:9px;font-weight:700;color:var(--gris2);text-transform:uppercase;letter-spacing:1px;padding:6px 4px;text-align:center}
+.cal td{padding:3px;text-align:center;vertical-align:top;height:70px;border:1px solid var(--fond)}
+.cal td.other{opacity:.3}
+.cal .day-num{font-family:var(--heading);font-size:10px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.cal .day-num.today{background:linear-gradient(135deg,var(--bleu),var(--vert));color:#fff;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%}
+.cal-ev{font-family:var(--heading);font-size:7.5px;font-weight:700;padding:2px 4px;border-radius:3px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;cursor:pointer}
+.cal-ev.bl{background:var(--bleu-pale);color:var(--bleu)}.cal-ev.gr{background:var(--vert-pale);color:var(--vert2)}.cal-ev.or{background:#fef3e2;color:var(--orange)}.cal-ev.vi{background:var(--violet-pale);color:var(--violet)}.cal-ev.rd{background:#fde8e8;color:var(--rouge)}
+
+/* ======= NOTIFICATION ITEMS ======= */
+.notif{display:flex;gap:10px;padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid var(--gris4);background:var(--blanc);cursor:pointer;transition:all .15s}
+.notif:hover{border-color:var(--bleu);box-shadow:0 2px 10px rgba(9,101,208,.05)}
+.notif.unread{background:var(--bleu-pale);border-color:rgba(9,101,208,.1)}
+.notif-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-ic svg{width:15px;height:15px;stroke-width:2}
+.notif-body{flex:1}
+.notif-title{font-family:var(--heading);font-size:12px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.notif-desc{font-size:10.5px;color:var(--gris2);line-height:1.4}
+.notif-time{font-family:var(--mono);font-size:9px;color:var(--gris3);flex-shrink:0;margin-top:2px}
+
+/* ======= SETTINGS ======= */
+.set-sec{margin-bottom:24px}
+.set-sec-t{font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.set-sec-t svg{width:16px;height:16px}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--fond)}
+.set-row:last-child{border:none}
+.set-label{font-family:var(--heading);font-size:12px;font-weight:600;color:var(--dark)}
+.set-desc{font-size:10px;color:var(--gris2);margin-top:1px}
+.toggle{width:36px;height:20px;border-radius:10px;background:var(--gris3);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--vert2)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle.on::after{transform:translateX(16px)}
+.set-input{font-family:var(--body);font-size:11.5px;padding:7px 12px;border-radius:7px;border:1px solid var(--gris4);background:var(--blanc);color:var(--dark);width:220px;transition:border-color .15s}
+.set-input:focus{outline:none;border-color:var(--bleu);box-shadow:0 0 0 3px rgba(9,101,208,.08)}
+.set-select{font-family:var(--body);font-size:11.5px;padding:7px 12px;border-radius:7px;border:1px solid var(--gris4);background:var(--blanc);color:var(--dark);cursor:pointer}
+
+/* ======= ALERT ======= */
+.alert{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:9px;margin-bottom:16px;font-size:11.5px}
+.alert.warn{background:#fef3e2;border:1px solid rgba(230,126,34,.12);color:var(--orange)}
+.alert.info{background:var(--bleu-pale);border:1px solid rgba(9,101,208,.08);color:var(--bleu)}
+.alert.success{background:var(--vert-pale);border:1px solid rgba(0,196,148,.1);color:var(--vert2)}
+.alert svg{flex-shrink:0;width:16px;height:16px}
+.alert strong{font-weight:700}
+.alert .close{margin-left:auto;cursor:pointer;opacity:.5;transition:opacity .15s}
+.alert .close:hover{opacity:1}
+
+/* ======= FORMATION CARDS ======= */
+.formation-card{background:var(--blanc);border:1px solid var(--gris4);border-radius:12px;overflow:hidden;transition:all .15s;cursor:pointer}
+.formation-card:hover{border-color:var(--bleu);box-shadow:0 6px 20px rgba(9,101,208,.06);transform:translateY(-2px)}
+.fc-header{height:80px;display:flex;align-items:center;justify-content:center;position:relative}
+.fc-header svg{width:28px;height:28px;stroke:rgba(255,255,255,.4);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fc-badge{position:absolute;top:8px;right:8px}
+.fc-body{padding:12px}
+.fc-name{font-family:var(--heading);font-size:12px;font-weight:700;color:var(--dark);margin-bottom:3px}
+.fc-meta{font-size:9.5px;color:var(--gris2);margin-bottom:8px}
+.fc-stats{display:flex;gap:12px}
+.fc-stat{text-align:center}
+.fc-stat-v{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--dark)}
+.fc-stat-l{font-size:8px;color:var(--gris2);text-transform:uppercase;letter-spacing:.5px}
+
+/* ======= LIVE PULSE ======= */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--vert);animation:pulse 2s ease-in-out infinite;display:inline-block}
+
+/* ======= RESPONSIVE ======= */
+@media(max-width:1200px){.g5{grid-template-columns:repeat(3,1fr)}.g6{grid-template-columns:repeat(2,1fr)}.g7{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.mf-admin-main{margin-left:0}.g2,.g3,.g4{grid-template-columns:1fr}.g5,.g6,.g7{grid-template-columns:1fr}.cnt{padding:14px}.hero-top{flex-direction:column}.hero-stats{flex-direction:column}.cal td{height:50px}}
+
+/* Guard against Open edX global style collisions */
+#mf-super-admin-root{position:relative !important;display:block !important;z-index:100000 !important}
+#mf-super-admin-root .mf-admin-main{display:block !important;min-height:100vh !important;position:relative !important;z-index:100001 !important;opacity:1 !important;visibility:visible !important;background:var(--fond) !important}
+#mf-super-admin-root .mf-admin-cnt{display:block !important;opacity:1 !important;visibility:visible !important}
+#mf-super-admin-root .mf-admin-page{display:none !important}
+#mf-super-admin-root .mf-admin-page.is-active{display:block !important}
+</style>
+</%block>
+
+<div id="mf-super-admin-root">
+<!-- ===================== SIDEBAR ===================== -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-m">M</div>
+    <div class="sb-logo-t">MISSION FORMATIONS<span>Académie en ligne</span></div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Super Admin</span></div>
+
+    <div class="sb-sec">
+      <div class="sb-sec-t">Tableau de bord</div>
+      <div class="sb-lk active" data-page="overview">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/></svg></span>Vue d'ensemble
+      </div>
+      <div class="sb-lk" data-page="analytics">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>Analytics
+      </div>
+    </div>
+
+    <div class="sb-sec">
+      <div class="sb-sec-t">Gestion</div>
+      <div class="sb-lk" data-page="formateurs">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Formateurs<span class="sb-bdg g">8</span>
+      </div>
+      <div class="sb-lk" data-page="apprenants">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Apprenants<span class="sb-bdg g">156</span>
+      </div>
+      <div class="sb-lk" data-page="formations">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>Formations<span class="sb-bdg b">12</span>
+      </div>
+      <div class="sb-lk" data-page="academies">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>Académies
+      </div>
+      <div class="sb-lk" data-page="planning">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Planning<span class="sb-bdg o">5</span>
+      </div>
+    </div>
+
+    <div class="sb-sec">
+      <div class="sb-sec-t">Finances</div>
+      <div class="sb-lk" data-page="revenus">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Revenus
+      </div>
+      <div class="sb-lk" data-page="frais">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>Frais formateurs<span class="sb-bdg">3</span>
+      </div>
+      <div class="sb-lk" data-page="factures">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Factures
+      </div>
+    </div>
+
+    <div class="sb-sec">
+      <div class="sb-sec-t">Système</div>
+      <div class="sb-lk" data-page="notifications">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>Notifications<span class="sb-bdg">7</span>
+      </div>
+      <div class="sb-lk" data-page="parametres">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Paramètres
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-av">AD</div>
+    <div style="flex:1;min-width:0"><div class="sb-uname">Abdel Diouf</div><div class="sb-urole">Super Administrateur</div></div>
+    <a class="sb-out" href="/logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></a>
+  </div>
+</nav>
+
+<!-- ===================== MAIN ===================== -->
+<div class="mf-admin-main">
+  <header class="topbar">
+    <div class="breadcrumb"><span>Administration</span><span class="sep">›</span><strong id="page-title">Vue d'ensemble</strong></div>
+    <div class="topbar-r">
+      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></button>
+      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+    </div>
+  </header>
+
+  <div class="mf-admin-cnt">
+
+<!-- ===================== PAGE: OVERVIEW ===================== -->
+<div class="mf-admin-page is-active" id="page-overview" style="display:block !important;visibility:visible !important;opacity:1 !important;">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-top">
+      <div>
+        <h1>Bienvenue <em>Abdel</em> !</h1>
+        <p>3 notes de frais en attente, 2 nouvelles inscriptions et 5 sessions cette semaine.</p>
+        <div class="hero-btns">
+          <button class="h-btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un formateur</button>
+          <button class="h-btn ghost"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Rapport mensuel</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-ic bl"><svg viewBox="0 0 24 24" style="stroke:var(--bleu)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="hs-v">156</div><div class="hs-l">Apprenants</div></div><span class="hs-trend up">+12</span></div>
+      <div class="hs"><div class="hs-ic gr"><svg viewBox="0 0 24 24" style="stroke:var(--vert)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="hs-v">8</div><div class="hs-l">Formateurs</div></div><span class="hs-trend up">+1</span></div>
+      <div class="hs"><div class="hs-ic or"><svg viewBox="0 0 24 24" style="stroke:var(--orange)"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="hs-v">47 280 €</div><div class="hs-l">CA ce mois</div></div><span class="hs-trend up">+18%</span></div>
+      <div class="hs"><div class="hs-ic rd"><svg viewBox="0 0 24 24" style="stroke:var(--rouge)"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div><div class="hs-v">3</div><div class="hs-l">Frais en attente</div></div><span class="hs-trend dn">1 240€</span></div>
+      <div class="hs"><div class="hs-ic vi"><svg viewBox="0 0 24 24" style="stroke:var(--violet)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="hs-v">5</div><div class="hs-l">Sessions/sem</div></div><div class="live-dot" style="margin-left:auto"></div></div>
+    </div>
+  </div>
+
+  <div class="alert warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span><strong>3 notes de frais</strong> en attente depuis +48h — <a href="#" class="js-nav-link" data-target-page="frais" style="color:var(--orange);font-weight:700">Traiter maintenant →</a></span></div>
+
+  <div class="g4">
+    <div class="card">
+      <div class="card-h"><div class="card-t">Revenus mensuels</div><div class="filters"><button class="flt on">6 mois</button><button class="flt">12 mois</button></div></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <div><div style="font-family:var(--heading);font-size:20px;font-weight:700;color:var(--dark)">284 600 €</div><div style="font-size:10px;color:var(--gris2)">Total 6 mois</div></div>
+        <div style="text-align:right"><div style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--vert2)">+23.4%</div><div style="font-size:10px;color:var(--gris2)">vs précédent</div></div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-col"><div class="chart-bar" style="height:55%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.3))"><div class="tip">32 400€</div></div><div class="chart-lbl">Sep</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:65%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.3))"><div class="tip">38 200€</div></div><div class="chart-lbl">Oct</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:72%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.3))"><div class="tip">42 100€</div></div><div class="chart-lbl">Nov</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:85%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.3))"><div class="tip">49 800€</div></div><div class="chart-lbl">Déc</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:68%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.3))"><div class="tip">39 900€</div></div><div class="chart-lbl">Jan</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:95%;background:linear-gradient(180deg,var(--vert),var(--bleu))"><div class="tip">47 280€</div></div><div class="chart-lbl" style="color:var(--bleu);font-weight:700">Fév</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Répartition apprenants</div></div>
+      <div class="donut-wrap">
+        <div class="donut">
+          <svg viewBox="0 0 100 100" width="100" height="100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--gris4)" stroke-width="10"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--vert)" stroke-width="10" stroke-dasharray="163.4 251.3" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bleu)" stroke-width="10" stroke-dasharray="50.3 251.3" stroke-dashoffset="-163.4" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--violet)" stroke-width="10" stroke-dasharray="37.7 251.3" stroke-dashoffset="-213.7" stroke-linecap="round"/>
+          </svg>
+          <div class="donut-center"><div class="donut-val">156</div><div class="donut-lab">Total</div></div>
+        </div>
+        <div class="donut-legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--vert)"></div>Académie VTC<div class="leg-val">101</div></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--bleu)"></div>Académie IT<div class="leg-val">32</div></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--violet)"></div>Marketing<div class="leg-val">23</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-h"><div class="card-t">Dernières inscriptions</div><a href="#" class="card-a js-nav-link" data-target-page="apprenants">Voir tous →</a></div>
+      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--bleu),var(--vert))"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Léa Rousseau</div><div class="item-meta">Marketing digital · Il y a 2h</div></div><div class="item-val blue">2%</div></div>
+      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--vert2),#27ae60)"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Omar Cissé</div><div class="item-meta">IT DevOps · Il y a 1 jour</div></div><div class="item-val blue">5%</div></div>
+      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--orange),#d35400)"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Sophie Bertrand</div><div class="item-meta">VTC Classique · Il y a 6 jours</div></div><div class="item-val blue">12%</div></div>
+      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--violet),#6c3483)"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Thomas Martin</div><div class="item-meta">Création entreprise · Il y a 18 jours</div></div><div class="item-val blue">45%</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Activité récente</div></div>
+      <div class="act"><div class="act-dot gr"></div><div class="act-text"><strong>Léa Rousseau</strong> inscrite en Marketing digital</div><div class="act-time">2m</div></div>
+      <div class="act"><div class="act-dot or"></div><div class="act-text"><strong>Mme Traoré</strong> a soumis une note de frais (340€)</div><div class="act-time">45m</div></div>
+      <div class="act"><div class="act-dot bl"></div><div class="act-text"><strong>Karim Diallo</strong> — Module 6 terminé</div><div class="act-time">1h</div></div>
+      <div class="act"><div class="act-dot vi"></div><div class="act-text"><strong>M. Benhamed</strong> nouveau quiz ajouté</div><div class="act-time">2h</div></div>
+      <div class="act"><div class="act-dot rd"></div><div class="act-text"><strong>Amina M.</strong> certificat VTC obtenu</div><div class="act-time">3h</div></div>
+      <div class="act"><div class="act-dot gr"></div><div class="act-text"><strong>Omar Cissé</strong> inscrit en IT DevOps</div><div class="act-time">5h</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: ANALYTICS ===================== -->
+<div class="mf-admin-page" id="page-analytics">
+  <div class="g5" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc"><div class="sc-i bl"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="sc-v">156</div><div class="sc-l">Apprenants actifs</div></div><span class="sc-tr up">+8.3%</span></div>
+    <div class="sc"><div class="sc-i gr"><svg class="ic" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="sc-v">78%</div><div class="sc-l">Taux de complétion</div></div><span class="sc-tr up">+5%</span></div>
+    <div class="sc"><div class="sc-i or"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="sc-v">4.2h</div><div class="sc-l">Temps moyen/jour</div></div><span class="sc-tr up">+12%</span></div>
+    <div class="sc"><div class="sc-i vi"><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="sc-v">4.5/5</div><div class="sc-l">Satisfaction moyenne</div></div><span class="sc-tr up">+0.2</span></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-h"><div class="card-t">Inscriptions mensuelles</div><div class="filters"><button class="flt on">2026</button><button class="flt">2025</button></div></div>
+      <div class="chart-area" style="height:180px">
+        <div class="chart-col"><div class="chart-bar" style="height:40%;background:linear-gradient(180deg,var(--vert),rgba(1,232,174,.3))"><div class="tip">18</div></div><div class="chart-lbl">Sep</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:55%;background:linear-gradient(180deg,var(--vert),rgba(1,232,174,.3))"><div class="tip">24</div></div><div class="chart-lbl">Oct</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:48%;background:linear-gradient(180deg,var(--vert),rgba(1,232,174,.3))"><div class="tip">21</div></div><div class="chart-lbl">Nov</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:62%;background:linear-gradient(180deg,var(--vert),rgba(1,232,174,.3))"><div class="tip">28</div></div><div class="chart-lbl">Déc</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:75%;background:linear-gradient(180deg,var(--vert),rgba(1,232,174,.3))"><div class="tip">33</div></div><div class="chart-lbl">Jan</div></div>
+        <div class="chart-col"><div class="chart-bar" style="height:70%;background:linear-gradient(180deg,var(--bleu),var(--vert))"><div class="tip">32</div></div><div class="chart-lbl" style="color:var(--vert2);font-weight:700">Fév</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Taux de complétion par formation</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">VTC Classique</div><div style="margin-top:4px"><div class="pb" style="width:100%"><div class="pf" style="width:82%"></div></div></div></div><div class="item-val green">82%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">VTC Continue 2025</div><div style="margin-top:4px"><div class="pb" style="width:100%"><div class="pf" style="width:91%"></div></div></div></div><div class="item-val green">91%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Réglementation 2026</div><div style="margin-top:4px"><div class="pb" style="width:100%"><div class="pf" style="width:58%"></div></div></div></div><div class="item-val orange">58%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Création entreprise</div><div style="margin-top:4px"><div class="pb" style="width:100%"><div class="pf" style="width:45%"></div></div></div></div><div class="item-val orange">45%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">IT DevOps</div><div style="margin-top:4px"><div class="pb" style="width:100%"><div class="pf" style="width:34%"></div></div></div></div><div class="item-val red">34%</div></div>
+    </div>
+  </div>
+
+  <div class="g7">
+    <div class="card">
+      <div class="card-h"><div class="card-t">Top formateurs</div></div>
+      <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,#0f3460,#16213e);width:28px;height:28px;font-size:9px">MN</div><div class="item-info"><div class="item-name">M. Nabil</div><div class="item-meta">4.8/5 · 31 apprenants</div></div><div class="item-val green">98%</div></div>
+      <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e);width:28px;height:28px;font-size:9px">ML</div><div class="item-info"><div class="item-name">Mme Leclerc</div><div class="item-meta">4.6/5 · 42 apprenants</div></div><div class="item-val green">92%</div></div>
+      <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert));width:28px;height:28px;font-size:9px">MB</div><div class="item-info"><div class="item-name">M. Benhamed</div><div class="item-meta">4.4/5 · 38 apprenants</div></div><div class="item-val blue">88%</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Pics d'activité</div></div>
+      <div style="display:flex;gap:8px;height:100px;align-items:flex-end;padding-top:10px">
+        <div style="flex:1;text-align:center"><div style="height:30%;background:var(--bleu-pale);border-radius:3px"></div><div style="font-size:8px;color:var(--gris2);margin-top:3px">Lun</div></div>
+        <div style="flex:1;text-align:center"><div style="height:55%;background:var(--bleu-pale);border-radius:3px"></div><div style="font-size:8px;color:var(--gris2);margin-top:3px">Mar</div></div>
+        <div style="flex:1;text-align:center"><div style="height:80%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2));border-radius:3px"></div><div style="font-size:8px;color:var(--bleu);font-weight:700;margin-top:3px">Mer</div></div>
+        <div style="flex:1;text-align:center"><div style="height:45%;background:var(--bleu-pale);border-radius:3px"></div><div style="font-size:8px;color:var(--gris2);margin-top:3px">Jeu</div></div>
+        <div style="flex:1;text-align:center"><div style="height:70%;background:var(--bleu-pale);border-radius:3px"></div><div style="font-size:8px;color:var(--gris2);margin-top:3px">Ven</div></div>
+        <div style="flex:1;text-align:center"><div style="height:20%;background:var(--fond);border-radius:3px"></div><div style="font-size:8px;color:var(--gris2);margin-top:3px">Sam</div></div>
+        <div style="flex:1;text-align:center"><div style="height:10%;background:var(--fond);border-radius:3px"></div><div style="font-size:8px;color:var(--gris2);margin-top:3px">Dim</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Taux d'abandon</div></div>
+      <div style="text-align:center;padding:10px 0">
+        <div style="font-family:var(--heading);font-size:36px;font-weight:700;color:var(--vert2)">4.2%</div>
+        <div style="font-size:10px;color:var(--gris2);margin-bottom:8px">Ce mois · Objectif &lt; 5%</div>
+        <div class="pb"><div class="pf" style="width:96%;background:var(--vert)"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: FORMATEURS ===================== -->
+<div class="mf-admin-page" id="page-formateurs">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div class="filters"><button class="flt on">Tous (8)</button><button class="flt">Actifs (6)</button><button class="flt">En attente (1)</button><button class="flt">Inactifs (1)</button></div>
+    <div style="display:flex;gap:8px"><button class="btn outline"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter</button><button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter</button></div>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Formateur</th><th>Spécialité</th><th>Formations</th><th>Apprenants</th><th>Satisfaction</th><th>Heures ce mois</th><th>Frais</th><th>Statut</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">ML</div><div><div class="tbl-name">Mme Leclerc</div><div class="tbl-sub">leclerc@mission.fr</div></div></div></td><td>Réglementation VTC</td><td style="font-family:var(--mono);font-weight:700">3</td><td style="font-family:var(--mono);font-weight:700">42</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:92%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.6</span></div></td><td style="font-family:var(--mono);font-weight:700">28h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--orange)">380€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">MB</div><div><div class="tbl-name">M. Benhamed</div><div class="tbl-sub">benhamed@mission.fr</div></div></div></td><td>Gestion de flotte</td><td style="font-family:var(--mono);font-weight:700">2</td><td style="font-family:var(--mono);font-weight:700">38</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:88%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.4</span></div></td><td style="font-family:var(--mono);font-weight:700">32h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--orange)">520€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#0f3460,#16213e)">MN</div><div><div class="tbl-name">M. Nabil</div><div class="tbl-sub">nabil@mission.fr</div></div></div></td><td>Création entreprise</td><td style="font-family:var(--mono);font-weight:700">2</td><td style="font-family:var(--mono);font-weight:700">31</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:96%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.8</span></div></td><td style="font-family:var(--mono);font-weight:700">24h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--violet),#6c3483)">ST</div><div><div class="tbl-name">Mme Traoré</div><div class="tbl-sub">traore@mission.fr</div></div></div></td><td>Marketing digital</td><td style="font-family:var(--mono);font-weight:700">1</td><td style="font-family:var(--mono);font-weight:700">24</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:84%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.2</span></div></td><td style="font-family:var(--mono);font-weight:700">18h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--orange)">340€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--orange),#d35400)">PD</div><div><div class="tbl-name">M. Dupont</div><div class="tbl-sub">dupont@mission.fr</div></div></div></td><td>Comptabilité</td><td style="font-family:var(--mono);font-weight:700">2</td><td style="font-family:var(--mono);font-weight:700">21</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:78%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--bleu)">3.9</span></div></td><td style="font-family:var(--mono);font-weight:700">12h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status pending">En attente</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--rouge),#c0392b)">FK</div><div><div class="tbl-name">M. Konaté</div><div class="tbl-sub">konate@mission.fr</div></div></div></td><td>Sécurité routière</td><td style="font-family:var(--mono);font-weight:700">1</td><td style="font-family:var(--mono);font-weight:700">15</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:90%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.5</span></div></td><td style="font-family:var(--mono);font-weight:700">20h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        <tr style="opacity:.5"><td><div class="tbl-user"><div class="tbl-av" style="background:var(--gris3)">AR</div><div><div class="tbl-name">M. Roche</div><div class="tbl-sub">roche@mission.fr</div></div></div></td><td>Anglais VTC</td><td style="font-family:var(--mono);font-weight:700">1</td><td style="font-family:var(--mono);font-weight:700">8</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:72%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--gris2)">3.6</span></div></td><td style="font-family:var(--mono);font-weight:700">0h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status inactive">Inactif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== PAGE: APPRENANTS ===================== -->
+<div class="mf-admin-page" id="page-apprenants">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div class="filters"><button class="flt on">Tous (156)</button><button class="flt">VTC (101)</button><button class="flt">IT (32)</button><button class="flt">Marketing (23)</button></div>
+    <div style="display:flex;gap:8px"><button class="btn outline"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter CSV</button><button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Inscrire</button></div>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Apprenant</th><th>Formation</th><th>Académie</th><th>Progression</th><th>Dernière connexion</th><th>Quiz moyen</th><th>Statut</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">KD</div><div><div class="tbl-name">Karim Diallo</div><div class="tbl-sub">karim.diallo@gmail.com</div></div></div></td><td>VTC Classique</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:73%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">73%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Il y a 2h</td><td style="font-family:var(--mono);font-weight:700">16.2/20</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">AM</div><div><div class="tbl-name">Amina Moussaoui</div><div class="tbl-sub">amina.m@outlook.fr</div></div></div></td><td>VTC Continue</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:91%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">91%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Il y a 5h</td><td style="font-family:var(--mono);font-weight:700">18.5/20</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--violet),#6c3483)">TM</div><div><div class="tbl-name">Thomas Martin</div><div class="tbl-sub">t.martin@free.fr</div></div></div></td><td>Création entreprise</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:45%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">45%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Hier</td><td style="font-family:var(--mono);font-weight:700">14.0/20</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--orange),#d35400)">SB</div><div><div class="tbl-name">Sophie Bertrand</div><div class="tbl-sub">sophie.b@laposte.net</div></div></div></td><td>VTC Classique</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:12%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">12%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Il y a 3j</td><td style="font-family:var(--mono);font-weight:700">—</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--vert2),#27ae60)">OC</div><div><div class="tbl-name">Omar Cissé</div><div class="tbl-sub">omar.cisse@gmail.com</div></div></div></td><td>IT DevOps</td><td><span style="font-size:10px;font-weight:700;color:var(--bleu);background:var(--bleu-pale);padding:2px 6px;border-radius:4px">IT</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:5%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">5%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Aujourd'hui</td><td style="font-family:var(--mono);font-weight:700">—</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--rouge),#c0392b)">LR</div><div><div class="tbl-name">Léa Rousseau</div><div class="tbl-sub">lea.r@icloud.com</div></div></div></td><td>Marketing digital</td><td><span style="font-size:10px;font-weight:700;color:var(--violet);background:var(--violet-pale);padding:2px 6px;border-radius:4px">MKT</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:2%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">2%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Aujourd'hui</td><td style="font-family:var(--mono);font-weight:700">—</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:10.5px;color:var(--gris2)">Affichage 1-6 sur 156</div><div style="display:flex;gap:4px"><button class="btn outline" style="padding:5px 10px;font-size:10px">← Précédent</button><button class="btn outline" style="padding:5px 10px;font-size:10px">Suivant →</button></div></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: FORMATIONS ===================== -->
+<div class="mf-admin-page" id="page-formations">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div class="filters"><button class="flt on">Toutes (12)</button><button class="flt">VTC (6)</button><button class="flt">IT (3)</button><button class="flt">Marketing (2)</button><button class="flt">Compta (1)</button></div>
+    <button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer une formation</button>
+  </div>
+  <div class="g6">
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Formation VTC Classique</div><div class="fc-meta">Mme Leclerc · 42h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">38</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">82%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.6</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--dark),var(--bleu))"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">VTC Continue 2025</div><div class="fc-meta">Mme Leclerc · 14h · 6 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">91%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.7</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#0f3460,#16213e)"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Création entreprise VTC</div><div class="fc-meta">M. Nabil · 8h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">31</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">45%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.8</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--violet),#6c3483)"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Marketing digital VTC</div><div class="fc-meta">Mme Traoré · 6h · 5 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">32%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.2</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--bleu2),var(--dark))"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">IT DevOps Fondamentaux</div><div class="fc-meta">Externe · 20h · 12 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">18</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">34%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.1</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--orange),#d35400)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Comptabilité VTC</div><div class="fc-meta">M. Dupont · 12h · 8 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">21</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">58%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">3.9</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--rouge),#c0392b)"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Sécurité routière</div><div class="fc-meta">M. Konaté · 10h · 7 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">15</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">67%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.5</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:180px;opacity:.5"><div style="text-align:center;padding:20px"><svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--gris3);fill:none;stroke-width:1.5;margin-bottom:8px;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><div style="font-family:var(--heading);font-size:11px;font-weight:700;color:var(--gris2)">Nouvelle formation</div></div></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: ACADEMIES ===================== -->
+<div class="mf-admin-page" id="page-academies">
+  <div class="g7">
+    <div class="card" style="border:2px solid rgba(1,232,174,.15)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--vert2),var(--vert));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:700;color:#fff">V</div><div><div style="font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark)">Académie VTC</div><div style="font-size:10px;color:var(--gris2)">vtc.missionformations.com</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">101</div><div style="font-size:9px;color:var(--gris2)">Apprenants</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">6</div><div style="font-size:9px;color:var(--gris2)">Formations</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">4</div><div style="font-size:9px;color:var(--gris2)">Formateurs</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--vert2)">32 400€</div><div style="font-size:9px;color:var(--gris2)">CA/mois</div></div>
+      </div>
+      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:78%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:9.5px"><span style="color:var(--gris2)">Complétion moy.</span><span style="font-family:var(--mono);font-weight:700;color:var(--vert2)">78%</span></div>
+    </div>
+    <div class="card" style="border:2px solid rgba(9,101,208,.12)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--bleu),var(--bleu2));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:700;color:#fff">I</div><div><div style="font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark)">Académie IT</div><div style="font-size:10px;color:var(--gris2)">it.missionformations.com</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">32</div><div style="font-size:9px;color:var(--gris2)">Apprenants</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">3</div><div style="font-size:9px;color:var(--gris2)">Formations</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">2</div><div style="font-size:9px;color:var(--gris2)">Formateurs</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--bleu)">9 800€</div><div style="font-size:9px;color:var(--gris2)">CA/mois</div></div>
+      </div>
+      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:42%;background:var(--bleu)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:9.5px"><span style="color:var(--gris2)">Complétion moy.</span><span style="font-family:var(--mono);font-weight:700;color:var(--bleu)">42%</span></div>
+    </div>
+    <div class="card" style="border:2px solid rgba(142,68,173,.12)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--violet),#6c3483);display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:700;color:#fff">M</div><div><div style="font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark)">Marketing</div><div style="font-size:10px;color:var(--gris2)">mkt.missionformations.com</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">23</div><div style="font-size:9px;color:var(--gris2)">Apprenants</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">2</div><div style="font-size:9px;color:var(--gris2)">Formations</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">1</div><div style="font-size:9px;color:var(--gris2)">Formateurs</div></div>
+        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--violet)">5 080€</div><div style="font-size:9px;color:var(--gris2)">CA/mois</div></div>
+      </div>
+      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:32%;background:var(--violet)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:9.5px"><span style="color:var(--gris2)">Complétion moy.</span><span style="font-family:var(--mono);font-weight:700;color:var(--violet)">32%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: PLANNING ===================== -->
+<div class="mf-admin-page" id="page-planning">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div style="font-family:var(--heading);font-size:16px;font-weight:700;color:var(--dark)">Février 2026</div><div style="display:flex;gap:8px"><button class="btn outline" style="padding:5px 12px;font-size:10px">← Précédent</button><button class="btn outline" style="padding:5px 12px;font-size:10px">Suivant →</button><button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Planifier</button></div></div>
+  <div class="card" style="padding:10px;overflow-x:auto">
+    <table class="cal">
+      <thead><tr><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr></thead>
+      <tbody>
+        <tr><td class="other"><div class="day-num">26</div></td><td class="other"><div class="day-num">27</div></td><td class="other"><div class="day-num">28</div></td><td class="other"><div class="day-num">29</div></td><td class="other"><div class="day-num">30</div></td><td class="other"><div class="day-num">31</div></td><td><div class="day-num">1</div></td></tr>
+        <tr><td><div class="day-num">2</div></td><td><div class="day-num">3</div><span class="cal-ev vi">Webinaire MKT</span></td><td><div class="day-num">4</div></td><td><div class="day-num">5</div><span class="cal-ev bl">Formation VTC</span></td><td><div class="day-num">6</div></td><td><div class="day-num">7</div></td><td><div class="day-num">8</div></td></tr>
+        <tr><td><div class="day-num">9</div></td><td><div class="day-num">10</div></td><td><div class="day-num">11</div><span class="cal-ev gr">Atelier Nabil</span></td><td><div class="day-num">12</div></td><td><div class="day-num">13</div><span class="cal-ev bl">Quiz T3C</span></td><td><div class="day-num">14</div></td><td><div class="day-num">15</div></td></tr>
+        <tr><td><div class="day-num">16</div></td><td><div class="day-num">17</div><span class="cal-ev or">Session Flotte</span></td><td><div class="day-num">18</div></td><td><div class="day-num">19</div></td><td><div class="day-num">20</div><span class="cal-ev vi">Webinaire IT</span></td><td><div class="day-num today">21</div></td><td><div class="day-num">22</div><span class="cal-ev gr">Live Benhamed</span></td></tr>
+        <tr><td><div class="day-num">23</div></td><td><div class="day-num">24</div></td><td><div class="day-num">25</div><span class="cal-ev rd">Examen T3C</span></td><td><div class="day-num">26</div></td><td><div class="day-num">27</div><span class="cal-ev gr">Atelier BP</span></td><td><div class="day-num">28</div><span class="cal-ev rd">Deadline BP</span></td><td class="other"><div class="day-num">1</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== PAGE: REVENUS ===================== -->
+<div class="mf-admin-page" id="page-revenus">
+  <div class="g5" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc"><div class="sc-i gr"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="sc-v">47 280 €</div><div class="sc-l">CA ce mois</div></div><span class="sc-tr up">+18%</span></div>
+    <div class="sc"><div class="sc-i bl"><svg class="ic" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div><div class="sc-v">284 600 €</div><div class="sc-l">CA annuel</div></div><span class="sc-tr up">+23%</span></div>
+    <div class="sc"><div class="sc-i or"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="sc-v">303 €</div><div class="sc-l">Panier moyen</div></div><span class="sc-tr up">+5%</span></div>
+    <div class="sc"><div class="sc-i rd"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div><div class="sc-v">8 640 €</div><div class="sc-l">Charges formateurs</div></div><span class="sc-tr dn">+12%</span></div>
+  </div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-h"><div class="card-t">Évolution du chiffre d'affaires</div><div class="filters"><button class="flt on">Mensuel</button><button class="flt">Trimestriel</button></div></div>
+    <div class="chart-area" style="height:200px">
+      <div class="chart-col"><div class="chart-bar" style="height:35%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">22 100€</div></div><div class="chart-lbl">Jul</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:42%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">26 500€</div></div><div class="chart-lbl">Aoû</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:52%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">32 400€</div></div><div class="chart-lbl">Sep</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:60%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">38 200€</div></div><div class="chart-lbl">Oct</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:67%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">42 100€</div></div><div class="chart-lbl">Nov</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:80%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">49 800€</div></div><div class="chart-lbl">Déc</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:64%;background:linear-gradient(180deg,var(--bleu),rgba(9,101,208,.2))"><div class="tip">39 900€</div></div><div class="chart-lbl">Jan</div></div>
+      <div class="chart-col"><div class="chart-bar" style="height:95%;background:linear-gradient(180deg,var(--vert),var(--bleu))"><div class="tip">47 280€</div></div><div class="chart-lbl" style="color:var(--bleu);font-weight:700">Fév</div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-h"><div class="card-t">Par académie</div></div>
+      <div class="item"><div class="item-ic" style="background:var(--vert-pale)"><svg viewBox="0 0 24 24" style="stroke:var(--vert2)"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg></div><div class="item-info"><div class="item-name">Académie VTC</div><div class="item-meta">101 apprenants · 6 formations</div></div><div class="item-val green">32 400€</div></div>
+      <div class="item"><div class="item-ic" style="background:var(--bleu-pale)"><svg viewBox="0 0 24 24" style="stroke:var(--bleu)"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="item-info"><div class="item-name">Académie IT</div><div class="item-meta">32 apprenants · 3 formations</div></div><div class="item-val blue">9 800€</div></div>
+      <div class="item"><div class="item-ic" style="background:var(--violet-pale)"><svg viewBox="0 0 24 24" style="stroke:var(--violet)"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><div class="item-info"><div class="item-name">Marketing</div><div class="item-meta">23 apprenants · 2 formations</div></div><div class="item-val" style="color:var(--violet)">5 080€</div></div>
+    </div>
+    <div class="card"><div class="card-h"><div class="card-t">Modes de paiement</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">CPF</div></div><div class="item-val green">62%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Carte bancaire</div></div><div class="item-val blue">24%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Virement</div></div><div class="item-val orange">10%</div></div>
+      <div class="item"><div class="item-info"><div class="item-name">Pôle Emploi</div></div><div class="item-val" style="color:var(--violet)">4%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: FRAIS FORMATEURS ===================== -->
+<div class="mf-admin-page" id="page-frais">
+  <div class="alert warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><strong>3 notes de frais</strong> en attente de validation — Total : <strong>1 240€</strong></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div class="filters"><button class="flt on">En attente (3)</button><button class="flt">Validés (12)</button><button class="flt">Refusés (1)</button><button class="flt">Tous</button></div>
+    <div style="display:flex;gap:8px"><button class="btn outline"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter</button><button class="btn success"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Tout valider</button></div>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Formateur</th><th>Type</th><th>Description</th><th>Date</th><th>Montant</th><th>Justificatif</th><th>Statut</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">ML</div><div><div class="tbl-name">Mme Leclerc</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--bleu);background:var(--bleu-pale);padding:2px 6px;border-radius:4px">Transport</span></td><td style="font-size:11px">Déplacement Paris — Lyon (TGV A/R)</td><td style="font-family:var(--mono);font-size:10px">18/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">380,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">MB</div><div><div class="tbl-name">M. Benhamed</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--orange);background:#fef3e2;padding:2px 6px;border-radius:4px">Repas</span></td><td style="font-size:11px">Repas session formation (18 pers.)</td><td style="font-family:var(--mono);font-size:10px">17/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">520,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--violet),#6c3483)">ST</div><div><div class="tbl-name">Mme Traoré</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--violet);background:var(--violet-pale);padding:2px 6px;border-radius:4px">Matériel</span></td><td style="font-size:11px">Matériel pédagogique (manuels, supports)</td><td style="font-family:var(--mono);font-size:10px">15/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">340,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
+      </tbody>
+    </table>
+    <div style="border-top:1px solid var(--gris4);margin-top:10px;padding-top:12px;display:flex;justify-content:flex-end;gap:10px;align-items:center"><span style="font-size:11px;color:var(--gris2)">Total en attente :</span><span style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--rouge)">1 240,00 €</span></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: FACTURES ===================== -->
+<div class="mf-admin-page" id="page-factures">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div class="filters"><button class="flt on">Toutes</button><button class="flt">Payées</button><button class="flt">En attente</button><button class="flt">En retard</button></div>
+    <button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle facture</button>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>N° Facture</th><th>Client</th><th>Formation</th><th>Date</th><th>Échéance</th><th>Montant</th><th>Statut</th><th></th></tr></thead>
+      <tbody>
+        <tr><td style="font-family:var(--mono);font-weight:700;font-size:11px">FAC-2026-0089</td><td><div class="tbl-name">Karim Diallo</div></td><td style="font-size:11px">VTC Classique</td><td style="font-family:var(--mono);font-size:10px">10/01/26</td><td style="font-family:var(--mono);font-size:10px">10/02/26</td><td style="font-family:var(--mono);font-weight:700">1 490,00 €</td><td><span class="status paid">Payée</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;font-size:11px">FAC-2026-0090</td><td><div class="tbl-name">Amina Moussaoui</div></td><td style="font-size:11px">VTC Continue</td><td style="font-family:var(--mono);font-size:10px">12/01/26</td><td style="font-family:var(--mono);font-size:10px">12/02/26</td><td style="font-family:var(--mono);font-weight:700">890,00 €</td><td><span class="status paid">Payée</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;font-size:11px">FAC-2026-0094</td><td><div class="tbl-name">Sophie Bertrand</div></td><td style="font-size:11px">VTC Classique</td><td style="font-family:var(--mono);font-size:10px">15/02/26</td><td style="font-family:var(--mono);font-size:10px">15/03/26</td><td style="font-family:var(--mono);font-weight:700">1 490,00 €</td><td><span class="status pending">En attente</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;font-size:11px">FAC-2026-0095</td><td><div class="tbl-name">Omar Cissé</div></td><td style="font-size:11px">IT DevOps</td><td style="font-family:var(--mono);font-size:10px">19/02/26</td><td style="font-family:var(--mono);font-size:10px">19/03/26</td><td style="font-family:var(--mono);font-weight:700">1 200,00 €</td><td><span class="status pending">En attente</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;font-size:11px;color:var(--rouge)">FAC-2026-0082</td><td><div class="tbl-name" style="color:var(--rouge)">Marc Petit</div></td><td style="font-size:11px">Comptabilité VTC</td><td style="font-family:var(--mono);font-size:10px">20/12/25</td><td style="font-family:var(--mono);font-size:10px;color:var(--rouge)">20/01/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--rouge)">790,00 €</td><td><span class="status inactive">En retard</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== PAGE: NOTIFICATIONS ===================== -->
+<div class="mf-admin-page" id="page-notifications">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="filters"><button class="flt on">Toutes (7)</button><button class="flt">Non lues (4)</button><button class="flt">Urgentes</button></div><button class="btn outline">Tout marquer lu</button></div>
+
+  <div class="notif unread"><div class="notif-ic" style="background:#fde8e8;color:var(--rouge)"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="notif-body"><div class="notif-title">Note de frais en attente depuis 48h</div><div class="notif-desc">Mme Leclerc — Déplacement Paris-Lyon (380€). Action requise.</div></div><div class="notif-time">2h</div></div>
+  <div class="notif unread"><div class="notif-ic" style="background:var(--vert-pale);color:var(--vert2)"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div><div class="notif-body"><div class="notif-title">Nouvelle inscription</div><div class="notif-desc">Léa Rousseau s'est inscrite à "Marketing digital VTC".</div></div><div class="notif-time">2h</div></div>
+  <div class="notif unread"><div class="notif-ic" style="background:var(--vert-pale);color:var(--vert2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div><div class="notif-body"><div class="notif-title">Certificat délivré</div><div class="notif-desc">Amina Moussaoui a obtenu le certificat "VTC Continue 2025".</div></div><div class="notif-time">3h</div></div>
+  <div class="notif unread"><div class="notif-ic" style="background:#fef3e2;color:var(--orange)"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="notif-body"><div class="notif-title">Note de frais soumise</div><div class="notif-desc">Mme Traoré — Matériel pédagogique (340€).</div></div><div class="notif-time">5h</div></div>
+  <div class="notif"><div class="notif-ic" style="background:var(--bleu-pale);color:var(--bleu)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="notif-body"><div class="notif-title">Contenu mis à jour</div><div class="notif-desc">Mme Leclerc a mis à jour le module "Réglementation 2026".</div></div><div class="notif-time">1j</div></div>
+  <div class="notif"><div class="notif-ic" style="background:var(--violet-pale);color:var(--violet)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="notif-body"><div class="notif-title">Évaluation formateur</div><div class="notif-desc">M. Nabil a reçu 3 nouvelles évaluations (moy. 4.9/5).</div></div><div class="notif-time">2j</div></div>
+  <div class="notif"><div class="notif-ic" style="background:#fde8e8;color:var(--rouge)"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><div class="notif-title">Facture en retard</div><div class="notif-desc">FAC-2026-0082 — Marc Petit — 790€ · Échue depuis 32 jours.</div></div><div class="notif-time">3j</div></div>
+</div>
+
+<!-- ===================== PAGE: PARAMETRES ===================== -->
+<div class="mf-admin-page" id="page-parametres">
+  <div class="g2" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="set-sec">
+          <div class="set-sec-t"><svg viewBox="0 0 24 24" fill="none" stroke="var(--bleu)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil administrateur</div>
+          <div class="set-row"><div><div class="set-label">Nom complet</div></div><input class="set-input" value="Abdel Diouf"/></div>
+          <div class="set-row"><div><div class="set-label">Email</div></div><input class="set-input" value="abdel@missionformations.com"/></div>
+          <div class="set-row"><div><div class="set-label">Téléphone</div></div><input class="set-input" value="+33 6 12 34 56 78"/></div>
+          <div class="set-row"><div><div class="set-label">Mot de passe</div></div><button class="btn outline" style="font-size:10px">Modifier</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="set-sec">
+          <div class="set-sec-t"><svg viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Sécurité</div>
+          <div class="set-row"><div><div class="set-label">Authentification 2FA</div><div class="set-desc">Ajouter une couche de sécurité supplémentaire</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="set-row"><div><div class="set-label">Sessions actives</div><div class="set-desc">3 sessions ouvertes</div></div><button class="btn danger" style="font-size:10px;padding:5px 10px">Déconnecter tout</button></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="set-sec">
+          <div class="set-sec-t"><svg viewBox="0 0 24 24" fill="none" stroke="var(--vert2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications</div>
+          <div class="set-row"><div><div class="set-label">Nouvelles inscriptions</div><div class="set-desc">Email + notification push</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="set-row"><div><div class="set-label">Notes de frais</div><div class="set-desc">Alerte immédiate</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="set-row"><div><div class="set-label">Factures en retard</div><div class="set-desc">Rappel quotidien</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="set-row"><div><div class="set-label">Rapports hebdomadaires</div><div class="set-desc">Résumé par email chaque lundi</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="set-sec">
+          <div class="set-sec-t"><svg viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg>Plateforme</div>
+          <div class="set-row"><div><div class="set-label">Langue</div></div><select class="set-select"><option>Français</option><option>English</option><option>العربية</option></select></div>
+          <div class="set-row"><div><div class="set-label">Fuseau horaire</div></div><select class="set-select"><option>Europe/Paris (UTC+1)</option><option>Africa/Dakar (UTC+0)</option></select></div>
+          <div class="set-row"><div><div class="set-label">Mode maintenance</div><div class="set-desc">Désactiver l'accès public temporairement</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- .mf-admin-cnt -->
+</div><!-- .mf-admin-main -->
+</div><!-- #mf-super-admin-root -->
+
+<%block name="js_extra">
+<script src="${static.url('js/mf-super-admin-tabs.js')}"></script>
+</%block>

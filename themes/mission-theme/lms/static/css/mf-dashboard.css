@@ -384,3 +384,557 @@ body.view-dashboard .cal-btn{
 @keyframes fs{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .an{animation:fs .45s ease both}
 .d1{animation-delay:.04s}.d2{animation-delay:.08s}.d3{animation-delay:.12s}.d4{animation-delay:.16s}.d5{animation-delay:.2s}.d6{animation-delay:.24s}
+
+/* ============================================================ FORMATEUR DASHBOARD */
+body.view-dashboard-formateur .global-header,
+body.view-dashboard-formateur .wrapper-footer,
+body.view-dashboard-formateur .nav-skip,
+body.view-dashboard-formateur #dashboard-main,
+body.view-dashboard-formateur .dashboard-notifications,
+body.view-dashboard-formateur .marketing-hero {
+  display: none !important;
+}
+
+body.view-dashboard-formateur .content-wrapper.main-container,
+body.view-dashboard-formateur .window-wrap,
+body.view-dashboard-formateur #main,
+body.view-dashboard-formateur #content {
+  margin: 0 !important;
+  max-width: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+body.view-dashboard-formateur {
+  background: #f0f0f0;
+  color: #3b3b3b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+body.view-dashboard-formateur .mf-formateur {
+  --primary: #0965d0;
+  --accent: #01e8ae;
+  --grad: linear-gradient(135deg, #0965d0 0%, #01e8ae 100%);
+  --dark: #3b3b3b;
+  --white: #ffffff;
+  --sidebar: #0a1628;
+  font-family: "Raleway", sans-serif;
+}
+
+body.view-dashboard-formateur .mf-formateur * {
+  box-sizing: border-box;
+}
+
+body.view-dashboard-formateur .mf-formateur .lms-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+body.view-dashboard-formateur .mf-formateur .lms-sidebar {
+  background: var(--sidebar);
+  padding: 0;
+  color: var(--white);
+  position: relative;
+}
+body.view-dashboard-formateur .mf-formateur .lms-sidebar-logo {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+body.view-dashboard-formateur .mf-formateur .lms-logo-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--grad);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+}
+body.view-dashboard-formateur .mf-formateur .lms-logo-text {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+body.view-dashboard-formateur .mf-formateur .lms-logo-sub {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav {
+  padding: 16px 0 84px;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-group {
+  padding: 0 16px;
+  margin-bottom: 20px;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.2);
+  margin-bottom: 10px;
+  padding: 0 8px;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 2px;
+  text-decoration: none;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 45%),
+    linear-gradient(135deg, #0f7dca 0%, #0a57b2 45%, #0a2f8f 100%);
+  border-color: rgba(29, 140, 255, 0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 24px rgba(2, 19, 58, 0.35);
+  color: #fff;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item.active:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 45%),
+    linear-gradient(135deg, #0f7dca 0%, #0a57b2 45%, #0a2f8f 100%);
+  border-color: rgba(29, 140, 255, 0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 24px rgba(2, 19, 58, 0.35);
+  color: #fff;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item.active {
+  background: rgba(9, 101, 208, 0.2);
+  color: var(--accent);
+  font-weight: 700;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item .nav-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.6;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item:hover .nav-icon {
+  opacity: 1;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item.active .nav-icon {
+  opacity: 1;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item.active:hover .nav-icon {
+  opacity: 1;
+}
+body.view-dashboard-formateur .mf-formateur .lms-nav-item .nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: var(--dark);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+}
+body.view-dashboard-formateur .mf-formateur .lms-sidebar-user {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 240px;
+  background: var(--sidebar);
+}
+body.view-dashboard-formateur .mf-formateur .lms-user-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--grad);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+body.view-dashboard-formateur .mf-formateur .lms-user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+}
+body.view-dashboard-formateur .mf-formateur .lms-user-role {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+body.view-dashboard-formateur .mf-formateur .lms-main {
+  background: #f4f6f9;
+  overflow-y: auto;
+}
+body.view-dashboard-formateur .mf-formateur .lms-topbar {
+  background: var(--white);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+}
+body.view-dashboard-formateur .mf-formateur .lms-topbar h2 {
+  margin: 0;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark);
+}
+body.view-dashboard-formateur .mf-formateur .lms-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+body.view-dashboard-formateur .mf-formateur .lms-search {
+  background: #f4f6f9;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  width: 240px;
+  outline: none;
+}
+body.view-dashboard-formateur .mf-formateur .lms-search:focus {
+  border-color: var(--primary);
+}
+body.view-dashboard-formateur .mf-formateur .lms-notif {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: var(--white);
+  position: relative;
+  cursor: pointer;
+}
+body.view-dashboard-formateur .mf-formateur .lms-notif .dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+}
+body.view-dashboard-formateur .mf-formateur .lms-content {
+  padding: 28px;
+}
+
+body.view-dashboard-formateur .mf-formateur .dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+body.view-dashboard-formateur .mf-formateur .dash-stat {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
+}
+body.view-dashboard-formateur .mf-formateur .dash-stat::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--grad);
+}
+body.view-dashboard-formateur .mf-formateur .ds-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+body.view-dashboard-formateur .mf-formateur .ds-value {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--dark);
+}
+body.view-dashboard-formateur .mf-formateur .ds-change {
+  font-size: 11px;
+  margin-top: 4px;
+}
+body.view-dashboard-formateur .mf-formateur .ds-up {
+  color: #059669;
+}
+
+body.view-dashboard-formateur .mf-formateur .quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+body.view-dashboard-formateur .mf-formateur .qa-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: var(--white);
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+body.view-dashboard-formateur .mf-formateur .qa-btn:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(9, 101, 208, 0.06);
+}
+body.view-dashboard-formateur .mf-formateur .qa-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--grad);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+body.view-dashboard-formateur .mf-formateur .qa-text h4 {
+  margin: 0 0 2px;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark);
+}
+body.view-dashboard-formateur .mf-formateur .qa-text p {
+  margin: 0;
+  font-size: 10px;
+  color: #999;
+}
+
+body.view-dashboard-formateur .mf-formateur .dash-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+}
+body.view-dashboard-formateur .mf-formateur .dash-panel {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+body.view-dashboard-formateur .mf-formateur .dash-panel-head {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0f0f0;
+}
+body.view-dashboard-formateur .mf-formateur .dash-panel-head h3 {
+  margin: 0;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark);
+}
+body.view-dashboard-formateur .mf-formateur .panel-action {
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: "Ubuntu", sans-serif;
+}
+
+body.view-dashboard-formateur .mf-formateur .dash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+body.view-dashboard-formateur .mf-formateur .dash-table th {
+  padding: 10px 16px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+body.view-dashboard-formateur .mf-formateur .dash-table td {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #666;
+  border-bottom: 1px solid #f5f5f5;
+}
+body.view-dashboard-formateur .mf-formateur .course-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+body.view-dashboard-formateur .mf-formateur .course-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+body.view-dashboard-formateur .mf-formateur .course-dot.live {
+  background: var(--accent);
+}
+body.view-dashboard-formateur .mf-formateur .course-dot.draft {
+  background: #f59e0b;
+}
+body.view-dashboard-formateur .mf-formateur .course-dot.archived {
+  background: #d1d5db;
+}
+body.view-dashboard-formateur .mf-formateur .course-title {
+  font-weight: 600;
+  color: var(--dark);
+}
+body.view-dashboard-formateur .mf-formateur .status-badge {
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: "Ubuntu", sans-serif;
+}
+body.view-dashboard-formateur .mf-formateur .status-live {
+  background: rgba(1, 232, 174, 0.12);
+  color: #059669;
+}
+body.view-dashboard-formateur .mf-formateur .status-draft {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+body.view-dashboard-formateur .mf-formateur .status-archived {
+  background: #f5f5f5;
+  color: #aaa;
+}
+body.view-dashboard-formateur .mf-formateur .prog-bar {
+  width: 80px;
+  height: 5px;
+  background: #eee;
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+body.view-dashboard-formateur .mf-formateur .prog-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--grad);
+  display: block;
+}
+
+body.view-dashboard-formateur .mf-formateur .activity-item {
+  padding: 14px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.15s;
+}
+body.view-dashboard-formateur .mf-formateur .activity-item:hover {
+  background: #fafafa;
+}
+body.view-dashboard-formateur .mf-formateur .activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+body.view-dashboard-formateur .mf-formateur .activity-text {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+}
+body.view-dashboard-formateur .mf-formateur .activity-text strong {
+  color: var(--dark);
+}
+body.view-dashboard-formateur .mf-formateur .activity-time {
+  font-size: 10px;
+  color: #ccc;
+  margin-top: 2px;
+}
+
+body.view-dashboard-formateur .mf-formateur .cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: 16px 20px;
+}
+body.view-dashboard-formateur .mf-formateur .cal-day {
+  text-align: center;
+  padding: 6px;
+  font-size: 10px;
+  color: #999;
+  border-radius: 4px;
+  font-family: "Ubuntu", sans-serif;
+}
+body.view-dashboard-formateur .mf-formateur .cal-day.head {
+  font-weight: 700;
+  color: #ccc;
+  font-size: 9px;
+}
+body.view-dashboard-formateur .mf-formateur .cal-day.today {
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 700;
+  border-radius: 50%;
+}
+body.view-dashboard-formateur .mf-formateur .cal-day.has-event {
+  position: relative;
+}
+body.view-dashboard-formateur .mf-formateur .cal-day.has-event::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (max-width: 900px) {
+  body.view-dashboard-formateur .mf-formateur .lms-layout {
+    grid-template-columns: 1fr;
+  }
+  body.view-dashboard-formateur .mf-formateur .lms-sidebar {
+    display: none;
+  }
+  body.view-dashboard-formateur .mf-formateur .dash-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  body.view-dashboard-formateur .mf-formateur .dash-grid {
+    grid-template-columns: 1fr;
+  }
+  body.view-dashboard-formateur .mf-formateur .quick-actions {
+    grid-template-columns: 1fr;
+  }
+}

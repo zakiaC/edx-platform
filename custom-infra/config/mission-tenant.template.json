@@ -1,0 +1,40 @@
+{
+  "lms_configs": {
+    "EDNX_USE_SIGNAL": true,
+    "PLATFORM_NAME": "Mission Formations",
+    "platform_name": "Mission Formations",
+    "SITE_NAME": "lms.missionformations.com",
+    "LMS_BASE": "lms.missionformations.com",
+    "CMS_BASE": "studio.missionformations.com",
+    "DEFAULT_SITE_THEME": "mission-theme",
+    "ENABLE_COMPREHENSIVE_THEMING": true,
+    "COMPREHENSIVE_THEME_DIRS": [
+      "/openedx/edx-platform/themes"
+    ],
+    "MKTG_URLS": {
+      "ROOT": "https://missionformations.com"
+    },
+    "FEATURES": {
+      "PREVIEW_LMS_BASE": "preview.lms.missionformations.com"
+    }
+  },
+  "studio_configs": {
+    "EDNX_USE_SIGNAL": true,
+    "PLATFORM_NAME": "Mission Formations",
+    "SITE_NAME": "studio.missionformations.com",
+    "LMS_BASE": "lms.missionformations.com",
+    "CMS_BASE": "studio.missionformations.com",
+    "DEFAULT_SITE_THEME": "mission-theme",
+    "ENABLE_COMPREHENSIVE_THEMING": true,
+    "COMPREHENSIVE_THEME_DIRS": [
+      "/openedx/edx-platform/themes"
+    ],
+    "FEATURES": {
+      "PREVIEW_LMS_BASE": "preview.lms.missionformations.com"
+    }
+  },
+  "theming_configs": {},
+  "meta": {
+    "owner": "mission-formation"
+  }
+}

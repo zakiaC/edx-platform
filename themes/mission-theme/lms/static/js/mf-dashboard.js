@@ -73,6 +73,46 @@
     return date && !Number.isNaN(date.getTime()) ? date.toLocaleDateString('fr-FR') : 'Date non disponible';
   }
 
+  function sanitizeUrl(value) {
+    var raw = (value || '').toString().trim();
+    if (!raw || raw === '#') {
+      return '#';
+    }
+    if (raw.charAt(0) === '/') {
+      return raw;
+    }
+
+    try {
+      var parsed = new URL(raw, window.location.origin);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return parsed.href;
+      }
+    } catch (error) {
+      return '#';
+    }
+
+    return '#';
+  }
+
+  function createSvgNode(tag, attrs) {
+    var node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.keys(attrs).forEach(function (key) {
+      node.setAttribute(key, attrs[key]);
+    });
+    return node;
+  }
+
+  function createCertificateIcon() {
+    var svg = createSvgNode('svg', {
+      class: 'ic',
+      viewBox: '0 0 24 24',
+      style: 'stroke:#fff'
+    });
+    svg.appendChild(createSvgNode('circle', { cx: '12', cy: '8', r: '7' }));
+    svg.appendChild(createSvgNode('polyline', { points: '8.21 13.89 7 23 12 20 17 23 15.79 13.88' }));
+    return svg;
+  }
+
   function buildSidebarCertificateItems() {
     var onlyObtained = dashboard.onlyObtainedMenu === true || dashboard.onlyObtainedMenu === 'true';
     var items = [];
@@ -81,7 +121,7 @@
 
     if (onlyObtained) {
       fetchedCertificates.forEach(function (cert) {
-        var certUrl = cert.download_url || cert.url || '#';
+        var certUrl = sanitizeUrl(cert.download_url || cert.url || '#');
         if (!certUrl || certUrl === '#') {
           return;
         }
@@ -127,7 +167,7 @@
         title: title,
         status: status,
         dateText: cert ? getCertificateDateText(cert) : '',
-        certUrl: cert ? (cert.download_url || cert.url || '#') : '#'
+        certUrl: cert ? sanitizeUrl(cert.download_url || cert.url || '#') : '#'
       });
     });
 
@@ -141,7 +181,7 @@
         title: cert.course_display_name || courseId || 'Certificat',
         status: 'obtenu',
         dateText: getCertificateDateText(cert),
-        certUrl: cert.download_url || cert.url || '#'
+        certUrl: sanitizeUrl(cert.download_url || cert.url || '#')
       });
     });
 
@@ -739,34 +779,70 @@
         return;
       }
 
-      var html = '';
+      target.textContent = '';
       certs.forEach(function (cert) {
         var title = cert.course_display_name || cert.course_key || 'Certificat';
         var date = cert.created_date ? new Date(cert.created_date) : null;
         var dateText = date && !Number.isNaN(date.getTime()) ? date.toLocaleDateString('fr-FR') : 'Date non disponible';
-        var downloadUrl = cert.download_url || cert.url || '#';
+        var downloadUrl = sanitizeUrl(cert.download_url || cert.url || '#');
 
-        html += '<div class="crt">' +
-          '<div class="crt-i"><svg class="ic" viewBox="0 0 24 24" style="stroke:#fff"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg></div>' +
-          '<div class="crt-inf">' +
-          '<div class="crt-n">' + title + '</div>' +
-          '<div class="crt-dt">Délivré le ' + dateText + '</div>' +
-          '</div>' +
-          '<div class="crt-acts">' +
-          '<a class="crt-btn" href="' + downloadUrl + '" target="_blank" rel="noopener">PDF</a>' +
-          '<button class="crt-btn linkedin" type="button" data-cert-url="' + downloadUrl + '">LinkedIn</button>' +
-          '</div>' +
-          '</div>';
-      });
+        var row = document.createElement('div');
+        row.className = 'crt';
 
-      target.innerHTML = html;
+        var iconWrap = document.createElement('div');
+        iconWrap.className = 'crt-i';
+        iconWrap.appendChild(createCertificateIcon());
+        row.appendChild(iconWrap);
 
-      qsa('.crt-btn.linkedin', target).forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var certUrl = btn.getAttribute('data-cert-url') || '';
+        var info = document.createElement('div');
+        info.className = 'crt-inf';
+
+        var name = document.createElement('div');
+        name.className = 'crt-n';
+        name.textContent = title;
+        info.appendChild(name);
+
+        var issuedDate = document.createElement('div');
+        issuedDate.className = 'crt-dt';
+        issuedDate.textContent = 'Délivré le ' + dateText;
+        info.appendChild(issuedDate);
+
+        row.appendChild(info);
+
+        var actions = document.createElement('div');
+        actions.className = 'crt-acts';
+
+        var pdfLink = document.createElement('a');
+        pdfLink.className = 'crt-btn';
+        pdfLink.href = downloadUrl;
+        pdfLink.target = '_blank';
+        pdfLink.rel = 'noopener';
+        pdfLink.textContent = 'PDF';
+        if (downloadUrl === '#') {
+          pdfLink.setAttribute('aria-disabled', 'true');
+        }
+        actions.appendChild(pdfLink);
+
+        var linkedinBtn = document.createElement('button');
+        linkedinBtn.className = 'crt-btn linkedin';
+        linkedinBtn.type = 'button';
+        linkedinBtn.textContent = 'LinkedIn';
+        linkedinBtn.setAttribute('data-cert-url', downloadUrl);
+        if (downloadUrl === '#') {
+          linkedinBtn.disabled = true;
+        }
+        linkedinBtn.addEventListener('click', function () {
+          var certUrl = linkedinBtn.getAttribute('data-cert-url') || '';
+          if (!certUrl || certUrl === '#') {
+            return;
+          }
           var liUrl = 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&certUrl=' + encodeURIComponent(certUrl);
           window.open(liUrl, '_blank', 'noopener');
         });
+        actions.appendChild(linkedinBtn);
+
+        row.appendChild(actions);
+        target.appendChild(row);
       });
     }).catch(function () {
       fetchedCertificates = [];
