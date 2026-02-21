@@ -4,6 +4,10 @@
   var dashboard = window.MF_DASHBOARD || {};
   var courseProgressById = {};
   var fetchedCertificates = [];
+  var ACTIVITY_STORAGE_KEY = 'mf_activity_tracker_v2';
+  var ACTIVITY_ESTIMATED_MINUTES_PER_MODULE = 30;
+  var ACTIVITY_WEEK_GOAL_MINUTES = 8 * 60;
+  var ACTIVITY_DAY_NAMES = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
@@ -70,7 +74,7 @@
   }
 
   function buildSidebarCertificateItems() {
-    var onlyObtained = Boolean(dashboard.onlyObtainedMenu);
+    var onlyObtained = dashboard.onlyObtainedMenu === true || dashboard.onlyObtainedMenu === 'true';
     var items = [];
     var certByCourseId = {};
     var seenCourseIds = {};
@@ -294,6 +298,230 @@
     }
   }
 
+  function formatHoursMinutes(totalMinutes) {
+    var safeMinutes = Math.max(numberOr(totalMinutes, 0), 0);
+    var hours = Math.floor(safeMinutes / 60);
+    var minutes = safeMinutes % 60;
+    var paddedMinutes = minutes < 10 ? '0' + minutes : String(minutes);
+    return hours + 'h ' + paddedMinutes + 'min';
+  }
+
+  function getDayKey(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    var mm = m < 10 ? '0' + m : String(m);
+    var dd = d < 10 ? '0' + d : String(d);
+    return y + '-' + mm + '-' + dd;
+  }
+
+  function parseDayKey(dayKey) {
+    var parts = (dayKey || '').split('-');
+    if (parts.length !== 3) {
+      return null;
+    }
+    var year = Number(parts[0]);
+    var month = Number(parts[1]);
+    var day = Number(parts[2]);
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+      return null;
+    }
+    return new Date(year, month - 1, day);
+  }
+
+  function getMonday(date) {
+    var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var day = (d.getDay() + 6) % 7;
+    d.setDate(d.getDate() - day);
+    return d;
+  }
+
+  function getDayDiff(a, b) {
+    var d1 = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+    var d2 = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+    var msPerDay = 24 * 60 * 60 * 1000;
+    return Math.floor((d1.getTime() - d2.getTime()) / msPerDay);
+  }
+
+  function loadActivityState() {
+    var fallback = {
+      lastTotalComplete: null,
+      dailyModules: {}
+    };
+    try {
+      var raw = window.localStorage.getItem(ACTIVITY_STORAGE_KEY);
+      if (!raw) {
+        return fallback;
+      }
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') {
+        return fallback;
+      }
+      return {
+        lastTotalComplete: Number.isFinite(parsed.lastTotalComplete) ? parsed.lastTotalComplete : null,
+        dailyModules: parsed.dailyModules && typeof parsed.dailyModules === 'object' ? parsed.dailyModules : {}
+      };
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function saveActivityState(state) {
+    try {
+      window.localStorage.setItem(ACTIVITY_STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      // Ignore storage failures (private mode/full quota).
+    }
+  }
+
+  function pruneActivityState(state, today) {
+    Object.keys(state.dailyModules || {}).forEach(function (key) {
+      var asDate = parseDayKey(key);
+      if (!asDate) {
+        delete state.dailyModules[key];
+        return;
+      }
+      if (getDayDiff(today, asDate) > 60) {
+        delete state.dailyModules[key];
+      }
+    });
+  }
+
+  function renderActivityFromState(state, today) {
+    var barsRoot = qs('#mf-activity-bars');
+    var deltaEl = qs('#mf-activity-delta');
+    var totalEl = qs('#mf-activity-total');
+    var goalEl = qs('#mf-activity-goal');
+    if (!barsRoot) {
+      return;
+    }
+
+    var weekStart = getMonday(today);
+    var currentMinutes = [];
+    for (var i = 0; i < 7; i += 1) {
+      var d = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate());
+      d.setDate(d.getDate() + i);
+      var key = getDayKey(d);
+      var dayModules = numberOr(state.dailyModules[key], 0);
+      currentMinutes.push(Math.max(dayModules, 0) * ACTIVITY_ESTIMATED_MINUTES_PER_MODULE);
+    }
+
+    var previousWeekStart = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate());
+    previousWeekStart.setDate(previousWeekStart.getDate() - 7);
+    var previousTotalMinutes = 0;
+    for (var j = 0; j < 7; j += 1) {
+      var pd = new Date(previousWeekStart.getFullYear(), previousWeekStart.getMonth(), previousWeekStart.getDate());
+      pd.setDate(pd.getDate() + j);
+      var pkey = getDayKey(pd);
+      previousTotalMinutes += Math.max(numberOr(state.dailyModules[pkey], 0), 0) * ACTIVITY_ESTIMATED_MINUTES_PER_MODULE;
+    }
+
+    var currentTotalMinutes = currentMinutes.reduce(function (acc, value) {
+      return acc + value;
+    }, 0);
+
+    var maxDayMinutes = currentMinutes.reduce(function (acc, value) {
+      return value > acc ? value : acc;
+    }, 0);
+
+    barsRoot.innerHTML = '';
+    currentMinutes.forEach(function (minutes, index) {
+      var height = 0;
+      if (maxDayMinutes > 0 && minutes > 0) {
+        height = Math.max(Math.round((minutes / maxDayMinutes) * 100), 8);
+      }
+
+      var col = document.createElement('div');
+      col.className = 'bw';
+
+      var bar = document.createElement('div');
+      bar.className = 'br';
+      bar.style.height = height + '%';
+
+      var label = document.createElement('div');
+      label.className = 'bl-l';
+      label.textContent = ACTIVITY_DAY_NAMES[index];
+
+      col.appendChild(bar);
+      col.appendChild(label);
+      barsRoot.appendChild(col);
+    });
+
+    if (totalEl) {
+      totalEl.textContent = formatHoursMinutes(currentTotalMinutes);
+    }
+    if (goalEl) {
+      goalEl.textContent = (ACTIVITY_WEEK_GOAL_MINUTES / 60) + 'h/sem';
+    }
+    if (deltaEl) {
+      var delta = 0;
+      if (previousTotalMinutes > 0) {
+        delta = Math.round(((currentTotalMinutes - previousTotalMinutes) / previousTotalMinutes) * 100);
+      } else if (currentTotalMinutes > 0) {
+        delta = 100;
+      }
+      deltaEl.textContent = (delta >= 0 ? '+' : '') + delta + '%';
+      deltaEl.style.color = delta < 0 ? 'var(--rouge)' : 'var(--vert2)';
+    }
+  }
+
+  function updateActivityWidget(totalCompleteModules) {
+    var card = qs('#mf-activity-card');
+    if (!card) {
+      return;
+    }
+
+    var modules = Math.max(numberOr(totalCompleteModules, 0), 0);
+    var today = new Date();
+    var todayKey = getDayKey(today);
+    var state = loadActivityState();
+
+    if (!Number.isFinite(state.lastTotalComplete)) {
+      state.lastTotalComplete = modules;
+    }
+
+    var deltaModules = modules - state.lastTotalComplete;
+    if (deltaModules > 0) {
+      state.dailyModules[todayKey] = Math.max(numberOr(state.dailyModules[todayKey], 0), 0) + deltaModules;
+    }
+
+    state.lastTotalComplete = modules;
+    pruneActivityState(state, today);
+    saveActivityState(state);
+    renderActivityFromState(state, today);
+  }
+
+  function updatePlanningStatus(globalPct, totalModules) {
+    var statusEl = qs('#mf-planning-status');
+    var textEl = qs('#mf-planning-status-text');
+    var iconEl = qs('#mf-planning-status-icon');
+    if (!statusEl || !textEl) {
+      return;
+    }
+
+    var text = 'Planning en attente';
+    var color = 'var(--gris2)';
+
+    if (totalModules > 0) {
+      if (globalPct >= 70) {
+        text = 'En avance sur le planning';
+        color = 'var(--vert2)';
+      } else if (globalPct >= 40) {
+        text = 'Dans le planning';
+        color = 'var(--bleu)';
+      } else {
+        text = 'En retard sur le planning';
+        color = 'var(--rouge)';
+      }
+    }
+
+    textEl.textContent = text;
+    statusEl.style.color = color;
+    if (iconEl) {
+      iconEl.style.stroke = color;
+    }
+  }
+
   function updateHeroAndStats(globalPct, completeModules, totalModules) {
     var circumference = 251.3;
     var offset = circumference - ((globalPct / 100) * circumference);
@@ -334,6 +562,8 @@
     if (heroDesc) {
       heroDesc.textContent = (dashboard.totalEnrollments || qsa('.ci[data-course-id]').length) + ' formation(s) · ' + totalModules + ' modules';
     }
+
+    updatePlanningStatus(globalPct, totalModules);
   }
 
   function applyFilters() {
@@ -363,10 +593,45 @@
     });
   }
 
+  function setupCourseCardsNavigation() {
+    qsa('.ci[data-course-url]').forEach(function (card) {
+      var courseUrl = card.getAttribute('data-course-url');
+      if (!courseUrl) {
+        return;
+      }
+
+      card.setAttribute('role', 'link');
+      card.setAttribute('tabindex', '0');
+
+      function isInteractiveTarget(target) {
+        return Boolean(target && target.closest('a,button,input,select,textarea,label'));
+      }
+
+      card.addEventListener('click', function (event) {
+        if (isInteractiveTarget(event.target)) {
+          return;
+        }
+        window.location.href = courseUrl;
+      });
+
+      card.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+        if (isInteractiveTarget(event.target) && event.target !== card) {
+          return;
+        }
+        event.preventDefault();
+        window.location.href = courseUrl;
+      });
+    });
+  }
+
   function loadProgress() {
     var cards = qsa('.ci[data-course-id]');
     if (!cards.length) {
       updateHeroAndStats(0, 0, 0);
+      updateActivityWidget(0);
       return;
     }
 
@@ -443,6 +708,7 @@
     sequence.finally(function () {
       var computedPct = totalModules > 0 ? Math.round((totalComplete / totalModules) * 100) : 0;
       updateHeroAndStats(computedPct, totalComplete, totalModules);
+      updateActivityWidget(totalComplete);
       renderSidebarCertificates();
     });
   }
@@ -511,6 +777,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     setupSidebarCertificatesDropdown();
+    setupCourseCardsNavigation();
     ensureCertificatePreviewModal();
     renderSidebarCertificates();
     applyFilters();

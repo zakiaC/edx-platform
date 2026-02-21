@@ -115,13 +115,16 @@
           % if course_enrollments:
             % for enrollment in course_enrollments:
               <% course_name = enrollment.course_overview.display_name_with_default if getattr(enrollment, 'course_overview', None) else str(enrollment.course_id) %>
-              <div class="ci" data-course-id="${enrollment.course_id}" data-status="${'done' if cert_statuses.get(enrollment.course_id) else 'active'}" data-mode="distanciel">
+              <% course_url = '/courses/{}/courseware'.format(enrollment.course_id) if show_courseware_links_for.get(enrollment.course_id) else '/courses/{}/about'.format(enrollment.course_id) %>
+              <div class="ci" data-course-id="${enrollment.course_id}" data-course-url="${course_url}" data-status="${'done' if cert_statuses.get(enrollment.course_id) else 'active'}" data-mode="distanciel">
                 <div class="ci-th t1"><svg class="ic ic-xl" viewBox="0 0 24 24" style="stroke:rgba(255,255,255,.5)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
                 <div class="ci-body">
                   <div class="ci-row1">
-                    <div class="ci-n">${course_name}</div>
+                    <a class="ci-n ci-n-link" href="${course_url}">${course_name}</a>
                     % if show_courseware_links_for.get(enrollment.course_id):
-                      <a href="/courses/${enrollment.course_id}/courseware" class="btn-cont"><svg class="ic" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Continuer</a>
+                      <a href="/courses/${enrollment.course_id}/courseware" class="btn-cont"><svg class="ic" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Reprendre la formation</a>
+                    % else:
+                      <a href="/courses/${enrollment.course_id}/about" class="btn-cont"><svg class="ic" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Reprendre la formation</a>
                     % endif
                   </div>
                   <div class="ci-team">
@@ -193,20 +196,20 @@
         <div class="card" id="mf-activity-card">
           <div class="card-h">
             <div class="card-t">Activité cette semaine</div>
-            <span style="font-family:var(--mono);font-size:10.5px;color:var(--vert2);font-weight:700">+12%</span>
+            <span id="mf-activity-delta" style="font-family:var(--mono);font-size:10.5px;color:var(--vert2);font-weight:700">+0%</span>
           </div>
-          <div class="bars">
-            <div class="bw"><div class="br" style="height:35%"></div><div class="bl-l">Lun</div></div>
-            <div class="bw"><div class="br" style="height:60%"></div><div class="bl-l">Mar</div></div>
-            <div class="bw"><div class="br" style="height:80%"></div><div class="bl-l">Mer</div></div>
-            <div class="bw"><div class="br" style="height:45%"></div><div class="bl-l">Jeu</div></div>
-            <div class="bw"><div class="br" style="height:90%"></div><div class="bl-l">Ven</div></div>
-            <div class="bw"><div class="br" style="height:20%"></div><div class="bl-l">Sam</div></div>
-            <div class="bw"><div class="br" style="height:10%"></div><div class="bl-l">Dim</div></div>
+          <div class="bars" id="mf-activity-bars">
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Lun</div></div>
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Mar</div></div>
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Mer</div></div>
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Jeu</div></div>
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Ven</div></div>
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Sam</div></div>
+            <div class="bw"><div class="br" style="height:0%"></div><div class="bl-l">Dim</div></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:10.5px;color:var(--gris2)">
-            <span>Total : <strong style="color:var(--dark)">6h 42min</strong></span>
-            <span>Objectif : 8h/sem</span>
+            <span>Total : <strong id="mf-activity-total" style="color:var(--dark)">0h 00min</strong></span>
+            <span>Objectif : <span id="mf-activity-goal">8h/sem</span></span>
           </div>
           <div style="display:flex;align-items:center;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--fond)">
             <div class="prw">
@@ -220,8 +223,9 @@
             <div>
               <div style="font-family:var(--heading);font-size:12.5px;font-weight:700;color:var(--dark)">Progression globale</div>
               <div style="font-size:10.5px;color:var(--gris2);margin-top:1px" id="mf-modules-summary">18 modules sur 24 complétés</div>
-              <div style="font-size:10.5px;color:var(--vert2);font-weight:600;margin-top:3px;display:flex;align-items:center;gap:3px">
-                <svg class="ic ic-sm" viewBox="0 0 24 24" style="stroke:var(--vert2)"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>En avance sur le planning
+              <div id="mf-planning-status" style="font-size:10.5px;color:var(--vert2);font-weight:600;margin-top:3px;display:flex;align-items:center;gap:3px">
+                <svg id="mf-planning-status-icon" class="ic ic-sm" viewBox="0 0 24 24" style="stroke:var(--vert2)"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                <span id="mf-planning-status-text">En avance sur le planning</span>
               </div>
             </div>
           </div>
