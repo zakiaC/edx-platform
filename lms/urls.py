@@ -95,6 +95,10 @@ notification_prefs_urls = [
 
 urlpatterns = [
     path('', branding_views.index, name='root'),  # Main marketing page, or redirect to courseware
+    # Backward-compat aliases used by some header/account links.
+    # Prevent 404 by routing legacy password URLs to the login/reset entrypoint.
+    path('password_change', RedirectView.as_view(url='/login', permanent=False)),
+    path('account/password/reset/', RedirectView.as_view(url='/login', permanent=False)),
 
     path('', include('common.djangoapps.student.urls')),
     # TODO: Move lms specific student views out of common code

@@ -38,16 +38,44 @@ svg.ic-xl{width:22px;height:22px}
 .sb-logo-t span{display:block;font-size:8px;font-weight:500;color:rgba(255,255,255,.3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
 .sb-badge{margin:0 12px 10px;padding:7px 10px;border-radius:7px;background:linear-gradient(135deg,rgba(231,76,60,.1),rgba(230,126,34,.08));border:1px solid rgba(231,76,60,.12);display:flex;align-items:center;gap:7px}
 .sb-badge svg{width:13px;height:13px;stroke:var(--rouge);fill:none;stroke-width:2;flex-shrink:0}
-.sb-badge span{font-family:var(--heading);font-size:8.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--rouge)}
+.sb-badge span{
+  font-family:var(--body);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.6px;
+  line-height:1;
+  text-transform:uppercase;
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+  text-shadow:none;
+  -webkit-text-stroke:0;
+  filter:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:geometricPrecision;
+}
 .sb-nav{flex:1;padding:8px 8px}
 .sb-sec{margin-bottom:14px}
 .sb-sec-t{font-family:var(--heading);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.15);padding:0 10px;margin-bottom:4px}
-.sb-lk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.38);cursor:pointer;border:1px solid transparent;transition:all .15s}
-.sb-lk:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
-.sb-lk.active{color:#fff;background:linear-gradient(135deg,rgba(9,101,208,.18),rgba(1,232,174,.08));border-color:rgba(9,101,208,.12)}
+.sb-lk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.38);cursor:pointer;border:1px solid transparent;transition:all .2s}
+.sb-lk:hover,
+.sb-lk.active{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,0) 48%),
+    linear-gradient(180deg,#0f7dca 0%,#0a57b2 48%,#0a2f8f 100%);
+  border-color:rgba(29,140,255,.75);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 24px rgba(2,19,58,.35);
+  color:#fff;
+}
+.sb-lk:hover > span,
+.sb-lk.active > span{color:#fff}
 .sb-lk .sb-ic{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);flex-shrink:0;transition:all .15s}
-.sb-lk.active .sb-ic{background:linear-gradient(135deg,var(--bleu),var(--vert))}
+.sb-lk:hover .sb-ic,
+.sb-lk.active .sb-ic{background:rgba(255,255,255,.18)}
+.sb-lk:hover .sb-ic svg,
 .sb-lk.active .sb-ic svg{stroke:#fff}
+.sb-lk:hover .sb-bdg,
+.sb-lk.active .sb-bdg{background:#fff;color:var(--bleu2)}
 .sb-lk .sb-ic svg{width:14px;height:14px}
 .sb-bdg{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:700;background:var(--rouge);color:#fff;padding:1px 6px;border-radius:8px}
 .sb-bdg.g{background:var(--vert2)}.sb-bdg.o{background:var(--orange)}.sb-bdg.b{background:var(--bleu)}
@@ -55,8 +83,14 @@ svg.ic-xl{width:22px;height:22px}
 .sb-av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--rouge),var(--orange));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
 .sb-uname{font-family:var(--heading);font-size:11px;font-weight:700;color:#fff}
 .sb-urole{font-size:9px;color:rgba(255,255,255,.25)}
-.sb-out{width:24px;height:24px;border-radius:5px;border:none;background:rgba(255,255,255,.04);color:rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.sb-out:hover{background:rgba(231,76,60,.15);color:var(--rouge)}
+.sb-out{width:24px;height:24px;border-radius:5px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.sb-out:hover{
+  background:linear-gradient(135deg,var(--vert),var(--vert2));
+  border-color:rgba(1,232,174,.75);
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 8px 18px rgba(1,232,174,.35);
+  transform:translateY(-1px);
+}
 .sb-out svg{width:12px;height:12px}
 
 /* ======= MAIN ======= */
@@ -65,11 +99,51 @@ svg.ic-xl{width:22px;height:22px}
 .breadcrumb{display:flex;align-items:center;gap:5px;font-family:var(--heading);font-size:11.5px;color:var(--gris2)}
 .breadcrumb .sep{color:var(--gris3);font-size:10px}
 .breadcrumb strong{color:var(--dark);font-weight:700}
-.topbar-r{display:flex;align-items:center;gap:8px}
-.top-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--gris4);background:var(--blanc);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--gris);position:relative}
-.top-btn:hover{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-pale)}
-.top-btn svg{width:15px;height:15px}
+.topbar-r{display:flex;align-items:center;gap:10px}
+.top-btn{
+  width:40px;
+  height:40px;
+  border-radius:11px;
+  border:1px solid rgba(9,101,208,.35);
+  background:linear-gradient(180deg,#1e4f8f 0%, #12396f 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .15s;
+  color:#fff;
+  position:relative;
+  box-shadow:0 6px 14px rgba(11,47,95,.25);
+}
+.top-btn:hover{
+  border-color:rgba(1,232,174,.75);
+  color:#fff;
+  background:linear-gradient(135deg,var(--bleu),var(--vert2));
+  box-shadow:0 8px 18px rgba(1,232,174,.25);
+  transform:translateY(-1px);
+}
+.top-btn .top-ic{
+  width:22px;
+  height:22px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  shape-rendering:geometricPrecision;
+  vector-effect:non-scaling-stroke;
+}
+.top-btn[data-action="export"] .top-ic{
+  width:23px;
+  height:23px;
+}
 .notif-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--rouge);border:2px solid var(--blanc)}
+.mf-hit{
+  background:rgba(9,101,208,.12);
+  outline:2px solid rgba(9,101,208,.35);
+  border-radius:6px;
+}
 .mf-admin-cnt{padding:22px 28px 50px}
 
 /* ======= PAGE SECTIONS (show/hide) ======= */
@@ -369,9 +443,26 @@ svg.ic-xl{width:22px;height:22px}
   <header class="topbar">
     <div class="breadcrumb"><span>Administration</span><span class="sep">›</span><strong id="page-title">Vue d'ensemble</strong></div>
     <div class="topbar-r">
-      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></button>
-      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      <button class="top-btn" type="button" data-action="search" aria-label="Recherche" title="Recherche">
+        <svg class="top-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="20" y1="20" x2="16.4" y2="16.4"></line>
+        </svg>
+      </button>
+      <button class="top-btn" type="button" data-action="notifications" aria-label="Notifications" title="Notifications">
+        <svg class="top-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9z"></path>
+          <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
+        </svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="top-btn" type="button" data-action="export" aria-label="Exporter" title="Exporter CSV">
+        <svg class="top-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+          <polyline points="7 10 12 15 17 10"></polyline>
+        </svg>
+      </button>
     </div>
   </header>
 

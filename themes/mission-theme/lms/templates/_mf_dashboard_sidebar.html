@@ -4,6 +4,8 @@
   initials_source = (full_name or user.username).strip()
   initials = ''.join([part[0] for part in initials_source.split()[:2]]).upper() if initials_source else (user.username[:2] or 'MF').upper()
   initials = initials[:2]
+  sidebar_vtc_progress = int(locals().get('vtc_progress_pct', 0) or 0)
+  sidebar_it_progress = int(locals().get('it_progress_pct', 0) or 0)
 %>
 
 <nav class="sidebar">
@@ -29,10 +31,10 @@
       </a>
       <div class="sb-acad">
         <a class="sb-acad-item" href="#">
-          <span class="sb-acad-dot" style="background:var(--vert)"></span>VTC<span class="sb-acad-pct">73%</span>
+          <span class="sb-acad-dot" style="background:var(--vert)"></span>VTC<span class="sb-acad-pct">${sidebar_vtc_progress}%</span>
         </a>
         <a class="sb-acad-item" href="#">
-          <span class="sb-acad-dot" style="background:var(--bleu)"></span>IT<span class="sb-acad-pct">42%</span>
+          <span class="sb-acad-dot" style="background:var(--bleu)"></span>IT<span class="sb-acad-pct">${sidebar_it_progress}%</span>
         </a>
       </div>
       <a class="sb-lk" href="#mf-schedule-card">

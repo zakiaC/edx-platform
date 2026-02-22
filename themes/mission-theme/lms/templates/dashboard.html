@@ -8,6 +8,75 @@
 <%block name="pagetitle">Mon espace — Académie Mission Formations</%block>
 <%block name="bodyclass">${'view-dashboard-formateur is-authenticated' if user.is_staff else 'view-dashboard is-authenticated'}</%block>
 
+<%
+  enrollments_for_analytics = []
+  try:
+    enrollments_for_analytics = list(course_enrollments or [])
+  except Exception:
+    enrollments_for_analytics = []
+
+  cert_statuses_map = {}
+  try:
+    cert_statuses_map = cert_statuses or {}
+  except Exception:
+    cert_statuses_map = {}
+
+  def _academy_bucket(course_name):
+    name_l = (course_name or '').lower()
+    if 'vtc' in name_l:
+      return 'vtc'
+
+    it_tokens = ('devops', 'python', 'data', 'cloud', 'cyber', 'informatique', 'it ')
+    if name_l.startswith('it ') or name_l.startswith('it-') or any(token in name_l for token in it_tokens):
+      return 'it'
+    return None
+
+  def _percent(done_count, total_count):
+    if not total_count:
+      return 0
+    return int(round((100.0 * done_count) / float(total_count)))
+
+  def _offset(circumference, progress_pct):
+    return round(circumference - ((float(progress_pct) / 100.0) * circumference), 1)
+
+  academy_stats = {
+    'vtc': {'total': 0, 'done': 0},
+    'it': {'total': 0, 'done': 0},
+  }
+
+  global_done_count = 0
+  for enrollment in enrollments_for_analytics:
+    course_id = getattr(enrollment, 'course_id', None)
+    course_name = str(course_id or '')
+    overview = getattr(enrollment, 'course_overview', None)
+    if overview:
+      course_name = getattr(overview, 'display_name_with_default', None) or getattr(overview, 'display_name', None) or course_name
+
+    is_done = bool(cert_statuses_map.get(course_id))
+    if is_done:
+      global_done_count += 1
+
+    bucket = _academy_bucket(course_name)
+    if bucket:
+      academy_stats[bucket]['total'] += 1
+      if is_done:
+        academy_stats[bucket]['done'] += 1
+
+  vtc_total = academy_stats['vtc']['total']
+  it_total = academy_stats['it']['total']
+
+  vtc_progress_pct = _percent(academy_stats['vtc']['done'], vtc_total)
+  it_progress_pct = _percent(academy_stats['it']['done'], it_total)
+  global_progress_pct = _percent(global_done_count, len(enrollments_for_analytics))
+
+  hero_ring_offset = _offset(251.3, global_progress_pct)
+  academy_ring_circumference = 113.1
+  vtc_ring_offset = _offset(academy_ring_circumference, vtc_progress_pct)
+  it_ring_offset = _offset(academy_ring_circumference, it_progress_pct)
+  global_mini_ring_offset = _offset(academy_ring_circumference, global_progress_pct)
+  small_progress_ring_offset = _offset(163.4, global_progress_pct)
+%>
+
 <%block name="head_extra">
   <link rel="stylesheet" href="${static.url('css/mf-dashboard.css')}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,6 +93,7 @@
         csrfToken: "${csrf_token | h}",
         totalEnrollments: ${len(course_enrollments)},
         completedEnrollments: ${len([e for e in course_enrollments if cert_statuses.get(e.course_id)])},
+        academyProgress: {"vtc": ${vtc_progress_pct}, "it": ${it_progress_pct}, "global": ${global_progress_pct}},
         onlyObtainedMenu: ${'true' if getattr(settings, 'MF_CERTIFICATES_MENU_ONLY_OBTAINED', False) else 'false'}
       };
     </script>
@@ -223,9 +293,9 @@
               <svg class="pr" viewBox="0 0 64 64" width="64" height="64">
                 <defs><linearGradient id="grd" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0965D0"/><stop offset="100%" stop-color="#01E8AE"/></linearGradient></defs>
                 <circle class="pr-bg" cx="32" cy="32" r="26"/>
-                <circle class="pr-f" cx="32" cy="32" r="26" stroke="url(#grd)" stroke-dasharray="163.4" stroke-dashoffset="44.1" id="mf-small-progress-ring"/>
+                <circle class="pr-f" cx="32" cy="32" r="26" stroke="url(#grd)" stroke-dasharray="163.4" stroke-dashoffset="${small_progress_ring_offset}" id="mf-small-progress-ring"/>
               </svg>
-              <div class="pr-txt" id="mf-small-progress-txt">73%</div>
+              <div class="pr-txt" id="mf-small-progress-txt">${global_progress_pct}%</div>
             </div>
             <div>
               <div style="font-family:var(--heading);font-size:12.5px;font-weight:700;color:var(--dark)">Progression globale</div>

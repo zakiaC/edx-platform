@@ -1,0 +1,209 @@
+scenarios:
+  - id: BANK_RELEVE_JAN
+    sender_type: BANK
+    entity_display_name: "Banque Populaire"
+    from_email: "banque.populaire@simulation.test"
+    reply_to: "service-client@simulation.test"
+    subject_template: "Releve de compte {date} - Ref {ref}"
+    body_template: |
+      Bonjour,
+      Veuillez trouver ci-joint votre relevé de compte du {date}.
+      Reference dossier: {ref}
+      Cordialement,
+      Banque Populaire
+    attachments:
+      - type: pdf
+        filename: "releve_compte.pdf"
+        size_kb: 120
+    tags: ["releve", "mensuel", "compte"]
+
+  - id: TAX_AVIS_IMPOSITION
+    sender_type: TAX
+    entity_display_name: "Direction Generale des Finances Publiques"
+    from_email: "dgfip@simulation.test"
+    reply_to: "contact-impots@simulation.test"
+    subject_template: "Avis d'imposition {date} - Ref {ref}"
+    body_template: |
+      Madame, Monsieur,
+      Votre avis d'imposition est disponible. Reference: {ref}.
+      Merci de consulter le document joint.
+      DGFIP
+    attachments:
+      - type: pdf
+        filename: "avis_imposition.pdf"
+        size_kb: 140
+    tags: ["impots", "avis"]
+
+  - id: SUPPLIER_FACTURE_MAT
+    sender_type: SUPPLIER
+    entity_display_name: "Fournitures Pro"
+    from_email: "facturation@simulation.test"
+    reply_to: "compta@simulation.test"
+    subject_template: "Facture materiel {date} - Ref {ref}"
+    body_template: |
+      Bonjour,
+      Veuillez trouver la facture relative a vos achats de materiel.
+      Montant: {amount} EUR
+      Ref: {ref}
+      Fournitures Pro
+    attachments:
+      - type: pdf
+        filename: "facture_materiel.pdf"
+        size_kb: 95
+      - type: csv
+        filename: "ligne_facture.csv"
+        size_kb: 15
+    tags: ["facture", "fournisseur"]
+
+  - id: CLIENT_COMMANDE
+    sender_type: CLIENT
+    entity_display_name: "Client Alpha"
+    from_email: "client.alpha@simulation.test"
+    reply_to: "client.alpha@simulation.test"
+    subject_template: "Commande client {date} - Ref {ref}"
+    body_template: |
+      Bonjour,
+      Merci de traiter la commande reference {ref}.
+      Montant previsionnel: {amount} EUR
+      Client Alpha
+    attachments:
+      - type: csv
+        filename: "commande.csv"
+        size_kb: 10
+    tags: ["commande", "client"]
+
+  - id: LAWYER_DOSSIER
+    sender_type: LAWYER
+    entity_display_name: "Cabinet Morel"
+    from_email: "cabinet.morel@simulation.test"
+    reply_to: "avocat@simulation.test"
+    subject_template: "Dossier juridique {ref}"
+    body_template: |
+      Bonjour,
+      Veuillez trouver la note relative au dossier {ref}.
+      Date: {date}
+      Cabinet Morel
+    attachments:
+      - type: pdf
+        filename: "note_juridique.pdf"
+        size_kb: 80
+    tags: ["juridique", "dossier"]
+
+  - id: HR_CONTRAT
+    sender_type: HR
+    entity_display_name: "RH Provence"
+    from_email: "rh@simulation.test"
+    reply_to: "rh@simulation.test"
+    subject_template: "Contrat de travail - Ref {ref}"
+    body_template: |
+      Bonjour,
+      Ci-joint le contrat de travail reference {ref}.
+      Cordialement,
+      RH Provence
+    attachments:
+      - type: pdf
+        filename: "contrat_travail.pdf"
+        size_kb: 110
+    tags: ["rh", "contrat"]
+
+  - id: INSURANCE_SINISTRE
+    sender_type: INSURANCE
+    entity_display_name: "Assurance Soleil"
+    from_email: "sinistre@simulation.test"
+    reply_to: "assurance@simulation.test"
+    subject_template: "Declaration sinistre {ref}"
+    body_template: |
+      Bonjour,
+      Nous accusons reception de votre declaration de sinistre.
+      Ref: {ref}
+      Assurance Soleil
+    attachments:
+      - type: pdf
+        filename: "declaration_sinistre.pdf"
+        size_kb: 90
+      - type: png
+        filename: "photo_sinistre.png"
+        size_kb: 60
+    tags: ["assurance", "sinistre"]
+
+  - id: BANK_PRET
+    sender_type: BANK
+    entity_display_name: "Credit Mediterranee"
+    from_email: "pret@simulation.test"
+    reply_to: "contact@simulation.test"
+    subject_template: "Offre de pret {date} - Ref {ref}"
+    body_template: |
+      Bonjour,
+      Vous trouverez notre offre de pret. Ref {ref}.
+      Montant: {amount} EUR
+      Credit Mediterranee
+    attachments:
+      - type: pdf
+        filename: "offre_pret.pdf"
+        size_kb: 130
+    tags: ["pret", "offre"]
+
+  - id: SUPPLIER_DEVIS
+    sender_type: SUPPLIER
+    entity_display_name: "Batipro"
+    from_email: "devis@simulation.test"
+    reply_to: "devis@simulation.test"
+    subject_template: "Devis travaux {ref}"
+    body_template: |
+      Bonjour,
+      Merci de trouver le devis pour travaux. Ref {ref}.
+      Batipro
+    attachments:
+      - type: pdf
+        filename: "devis_travaux.pdf"
+        size_kb: 70
+    tags: ["devis", "travaux"]
+
+  - id: CLIENT_RECLAMATION
+    sender_type: CLIENT
+    entity_display_name: "Client Beta"
+    from_email: "client.beta@simulation.test"
+    reply_to: "client.beta@simulation.test"
+    subject_template: "Reclamation client {ref}"
+    body_template: |
+      Bonjour,
+      Nous souhaitons signaler un probleme sur la facture {ref}.
+      Merci de votre retour.
+      Client Beta
+    attachments:
+      - type: png
+        filename: "capture.png"
+        size_kb: 40
+    tags: ["reclamation", "client"]
+
+  - id: TAX_RELANCE
+    sender_type: TAX
+    entity_display_name: "Tresor Public"
+    from_email: "tresor.public@simulation.test"
+    reply_to: "contact@simulation.test"
+    subject_template: "Relance de paiement {ref}"
+    body_template: |
+      Madame, Monsieur,
+      Ceci est une relance de paiement. Ref {ref}.
+      Tresor Public
+    attachments:
+      - type: pdf
+        filename: "relance_paiement.pdf"
+        size_kb: 85
+    tags: ["relance", "impots"]
+
+  - id: LAWYER_CONTRAT
+    sender_type: LAWYER
+    entity_display_name: "Notaire Lenoir"
+    from_email: "notaire.lenoir@simulation.test"
+    reply_to: "notaire@simulation.test"
+    subject_template: "Projet d'acte {ref}"
+    body_template: |
+      Bonjour,
+      Veuillez trouver le projet d'acte reference {ref}.
+      Notaire Lenoir
+    attachments:
+      - type: pdf
+        filename: "projet_acte.pdf"
+        size_kb: 105
+    tags: ["notaire", "acte"]
