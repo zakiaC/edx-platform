@@ -86,14 +86,58 @@
 
 <%block name="js_extra">
   % if not user.is_staff:
+    <%
+      _js_course_enrollments = []
+      try:
+        _js_course_enrollments = list(course_enrollments or [])
+      except Exception:
+        _js_course_enrollments = []
+
+      _js_cert_statuses = {}
+      try:
+        _js_cert_statuses = cert_statuses or {}
+      except Exception:
+        _js_cert_statuses = {}
+
+      def _js_academy_bucket(course_name):
+        name_l = (course_name or '').lower()
+        if 'vtc' in name_l:
+          return 'vtc'
+        if any(token in name_l for token in ('devops', 'python', 'data', 'cloud', 'cyber', 'informatique', 'it ')) or name_l.startswith('it ') or name_l.startswith('it-'):
+          return 'it'
+        return None
+
+      _js_totals = {'vtc': 0, 'it': 0}
+      _js_done = {'vtc': 0, 'it': 0}
+      _js_completed = 0
+      for _enrollment in _js_course_enrollments:
+        _course_id = getattr(_enrollment, 'course_id', None)
+        _course_name = str(_course_id or '')
+        _overview = getattr(_enrollment, 'course_overview', None)
+        if _overview:
+          _course_name = getattr(_overview, 'display_name_with_default', None) or getattr(_overview, 'display_name', None) or _course_name
+        _is_done = bool(_js_cert_statuses.get(_course_id))
+        if _is_done:
+          _js_completed += 1
+        _bucket = _js_academy_bucket(_course_name)
+        if _bucket:
+          _js_totals[_bucket] += 1
+          if _is_done:
+            _js_done[_bucket] += 1
+
+      _js_total = len(_js_course_enrollments)
+      _js_global_pct = int(round((100.0 * _js_completed) / float(_js_total))) if _js_total else 0
+      _js_vtc_pct = int(round((100.0 * _js_done['vtc']) / float(_js_totals['vtc']))) if _js_totals['vtc'] else 0
+      _js_it_pct = int(round((100.0 * _js_done['it']) / float(_js_totals['it']))) if _js_totals['it'] else 0
+    %>
     <script>
       window.MF_DASHBOARD = {
         username: "${user.username | h}",
         firstName: "${(user.first_name or user.username) | h}",
         csrfToken: "${csrf_token | h}",
-        totalEnrollments: ${len(course_enrollments)},
-        completedEnrollments: ${len([e for e in course_enrollments if cert_statuses.get(e.course_id)])},
-        academyProgress: {"vtc": ${vtc_progress_pct}, "it": ${it_progress_pct}, "global": ${global_progress_pct}},
+        totalEnrollments: ${_js_total},
+        completedEnrollments: ${_js_completed},
+        academyProgress: {"vtc": ${_js_vtc_pct}, "it": ${_js_it_pct}, "global": ${_js_global_pct}},
         onlyObtainedMenu: ${'true' if getattr(settings, 'MF_CERTIFICATES_MENU_ONLY_OBTAINED', False) else 'false'}
       };
     </script>

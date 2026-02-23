@@ -14,6 +14,23 @@
 
 <%block name="head_extra">
     <link rel="stylesheet" href="${static.url('css/mf-login.css')}" />
+    <style>
+      /* Critical overrides kept inline so login stays custom even before static re-build */
+      body.view-login .global-header,
+      body.view-login header.global-header,
+      body.view-login .header-global,
+      body.view-login #footer-openedx,
+      body.view-login footer#footer-openedx,
+      body.view-login .wrapper-footer,
+      body.view-login .preview-menu-wrapper,
+      body.view-login .nav-skip {
+        display: none !important;
+      }
+      #login-and-registration-container > .toggle-form,
+      #login-and-registration-container > .toggle {
+        display: none !important;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
