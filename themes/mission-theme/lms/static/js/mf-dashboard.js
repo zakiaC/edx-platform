@@ -667,6 +667,13 @@
     });
   }
 
+  function updateCourseActionLabel(card, pct) {
+    var label = pct > 0 ? 'Reprendre ma formation' : 'Débuter ma formation';
+    qsa('.btn-cont-label', card).forEach(function (node) {
+      node.textContent = label;
+    });
+  }
+
   function loadProgress() {
     var cards = qsa('.ci[data-course-id]');
     if (!cards.length) {
@@ -729,6 +736,7 @@
           if (lblEl) {
             lblEl.textContent = complete + '/' + total + ' modules';
           }
+          updateCourseActionLabel(card, pct);
 
           if (pct >= 100) {
             card.setAttribute('data-status', 'done');
@@ -741,6 +749,7 @@
           if (lbl) {
             lbl.textContent = 'Progression indisponible';
           }
+          updateCourseActionLabel(card, 0);
         });
       });
     });

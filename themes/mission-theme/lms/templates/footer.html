@@ -1,164 +1,224 @@
 ## mako
 <%page expression_filter="h"/>
 <%!
-  from django.urls import reverse
   from django.utils.translation import gettext as _
   from lms.djangoapps.branding.api import get_footer
   from openedx.core.djangoapps.lang_pref.api import footer_language_selector_is_enabled
 %>
 <% footer = get_footer(is_secure=is_secure) %>
-<% icp_license_info = getattr(settings, 'ICP_LICENSE_INFO', {})%>
+<% icp_license_info = getattr(settings, 'ICP_LICENSE_INFO', {}) %>
 <%namespace name='static' file='static_content.html'/>
 
+<style>
+  .window-wrap {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .window-wrap > .content-wrapper.main-container {
+    flex: 1 0 auto;
+  }
+  .window-wrap > .mf-footer-shell {
+    margin-top: auto;
+  }
+  .mf-footer-shell {
+    background: #0a1628;
+    border-top: 1px solid rgba(255,255,255,.06);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  .mf-footer-wrap {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: clamp(14px, 2.2vw, 24px) clamp(14px, 2.6vw, 28px) clamp(12px, 1.8vw, 18px);
+    color: rgba(255,255,255,.72);
+    font-family: 'Raleway', Helvetica, Arial, sans-serif;
+  }
+  .mf-footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .mf-footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .mf-footer-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg,#0965D0,#01E8AE);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+  }
+  .mf-footer-brand-text {
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .mf-footer-brand-text span {
+    color: rgba(255,255,255,.3);
+    font-weight: 400;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+  .mf-footer-nav,
+  .mf-footer-legal {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mf-footer-nav a,
+  .mf-footer-legal a,
+  .mf-footer-copy a {
+    color: rgba(255,255,255,.64);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: color .15s ease;
+  }
+  .mf-footer-nav a:hover,
+  .mf-footer-legal a:hover,
+  .mf-footer-copy a:hover {
+    color: #01E8AE;
+  }
+  .mf-footer-lang {
+    margin: 10px 0 12px;
+  }
+  .mf-footer-divider {
+    height: 1px;
+    background: rgba(255,255,255,.1);
+    margin: 10px 0 14px;
+  }
+  .mf-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .mf-footer-copy {
+    margin: 0;
+    color: rgba(255,255,255,.45);
+    font-size: 11px;
+    line-height: 1.7;
+    max-width: 720px;
+  }
+  @media (max-width: 980px) {
+    .mf-footer-top,
+    .mf-footer-bottom {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .mf-footer-nav,
+    .mf-footer-legal {
+      gap: 10px 14px;
+    }
+    .mf-footer-copy {
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 760px) {
+    .mf-footer-wrap {
+      padding: 16px 14px 12px;
+    }
+    .mf-footer-brand {
+      width: 100%;
+    }
+    .mf-footer-nav,
+    .mf-footer-legal {
+      width: 100%;
+    }
+    .mf-footer-nav li,
+    .mf-footer-legal li {
+      display: inline-flex;
+    }
+  }
+  @media (max-width: 520px) {
+    .mf-footer-brand-text {
+      font-size: 13px;
+    }
+    .mf-footer-brand-text span {
+      display: block;
+      margin-left: 0;
+      margin-top: 2px;
+    }
+  }
+</style>
 
-% if uses_bootstrap:
-  <div class="container-fluid wrapper-footer">
-    <footer>
-      <div class="row">
-        <div class="col-md-9">
-          <nav class="navbar site-nav navbar-expand-sm" aria-label="${_('About')}">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="https://missionformations.com/about" target="_blank">À propos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://missionformations.com/contact" target="_blank">Contact</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://missionformations.com" target="_blank">Notre site</a>
-              </li>
-            </ul>
-          </nav>
-          
-          <div class="wrapper-logo">
-            <p>
-              <a href="/">
-                ## The default logo is a placeholder.
-                ## You can either replace this link entirely or update
-                ## can be included in the footer on other sites
-                ## (e.g. a blog or marketing front-end) to provide a consistent
-                ## user experience.  See the branding app for details.
-                <img alt="${_('organization logo')}" src="${static.url('images/logo.png')}" style="max-height: 150px;">
-              </a>
-            </p>
-          </div>  
-          ## Site operators: Please do not remove this paragraph! This attributes back to edX and makes your acknowledgement of edX's trademarks clear.
-        <p class="copyright">© 2026 Académie Mission Formations. Tous droits réservés.</p>       
-	% if icp_license_info.get('icp_license'):
-                ${u" | {text}".format(text=icp_license_info.get('text'))}
-                <a href="${icp_license_info.get('icp_license_link', '#')}">
-                    ${u" {icp}".format(icp=icp_license_info.get('icp_license'))}
-                </a>
-              % endif
-          </p>
+<div class="mf-footer-shell">
+  <footer id="footer-openedx" class="mf-footer-wrap">
+    <div class="mf-footer-top">
+      <a href="https://missionformations.com" target="_blank" rel="noopener noreferrer" class="mf-footer-brand" aria-label="${_('Home')}">
+        <span class="mf-footer-logo">M</span>
+        <span class="mf-footer-brand-text">Académie Mission<span>Formations</span></span>
+      </a>
 
-          <nav class="navbar legal-nav navbar-expand-sm" aria-label="${_('Legal')}">
-            <ul class="navbar-nav">
-              % for item_num, link in enumerate(footer['legal_links'], start=1):
-                <li class="nav-item">
-                  <a class="nav-link" href="${link['url']}">${link['title']}</a>
-                </li>
-              % endfor
-              <li class="nav-item">
-                <a class="nav-link" href="${footer['edx_org_link']['url']}">${footer['edx_org_link']['text']}</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div class="col-md-3">
-          ## Please leave this link and use one of the logos provided
-          ## The OpenEdX link may be hidden when this view is served
-          ## through an API to partner sites (such as marketing sites or blogs),
-          ## which are not technically powered by Open edX.
-          % if not hide_openedx_link:
-            <div class="footer-about-mission-formations">
-              <p>
-                   <a href="https://missionformations.com">
-                <img src="${static.url('images/logo.png')}" alt="Académie Mission Formations" style="max-height: 80px; width: auto;" />
-    </a>
-  </p>
-                </a>
-              </p>
-            </div>
-          % endif
-        </div>
+      <nav aria-label="${_('About')}">
+        <ul class="mf-footer-nav">
+          % for link in footer['navigation_links']:
+            <% link_url = link['url'] %>
+            % if (link.get('name') or '').lower() == 'contact' or 'contact' in (link.get('title') or '').lower():
+              <% link_url = 'mailto:contact@missionformations.com' %>
+            % endif
+            <li><a id="${link['name']}" href="${link_url}">${link['title']}</a></li>
+          % endfor
+        </ul>
+      </nav>
+    </div>
+
+    % if context.get('include_language_selector', footer_language_selector_is_enabled()):
+      <div class="mf-footer-lang">
+        <%include file="${static.get_template_path('widgets/footer-language-selector.html')}"/>
       </div>
-    </footer>
-  </div>
-% else:
-  <div class="wrapper wrapper-footer">
-    <footer id="footer-openedx" class="grid-container"
-      ## When rendering the footer through the branding API,
-      ## the direction may not be set on the parent element,
-      ## so we set it here.
-      % if bidi:
-        dir=${bidi}
-      % endif
-    >
-      <div class="colophon">
-        <nav class="nav-colophon" aria-label="${_('About')}">
-          <ol>
-              % for item_num, link in enumerate(footer['navigation_links'], start=1):
-              <li class="nav-colophon-0${item_num}">
-                <a id="${link['name']}" href="${link['url']}">${link['title']}</a>
-              </li>
-              % endfor
-          </ol>
-        </nav>
+    % endif
 
-        % if context.get('include_language_selector', footer_language_selector_is_enabled()):
-            <%include file="${static.get_template_path('widgets/footer-language-selector.html')}"/>
+    <div class="mf-footer-divider"></div>
+
+    <div class="mf-footer-bottom">
+      <p class="mf-footer-copy">
+        © Academie Mission Formation. Tous droits exclusivement réservés à l'entreprise We Will.
+        % if icp_license_info.get('icp_license'):
+          ${u" | {text}".format(text=icp_license_info.get('text'))}
+          <a href="${icp_license_info.get('icp_license_link', '#')}">${u" {icp}".format(icp=icp_license_info.get('icp_license'))}</a>
         % endif
-        <div class="wrapper-logo">
-          <p>
-            <a href="/">
-              ## The default logo is a placeholder.
-              ## You can either replace this link entirely or update
-              ## can be included in the footer on other sites
-              ## (e.g. a blog or marketing front-end) to provide a consistent
-              ## user experience.  See the branding app for details.
-              <img alt="${_('organization logo')}" src="${static.url('images/logo.png')}" style="max-height: 50px;">
-            </a>
-          </p>
-        </div>
-        ## Site operators: Please do not remove this paragraph! This attributes back to edX and makes your acknowledgement of edX's trademarks clear.
-          <p class="copyright">© 2026 Académie Mission Formations. Tous droits réservés.
-              % if icp_license_info.get('icp_license'):
-                ${u" | {text}".format(text=icp_license_info.get('text'))}
-                <a href="${icp_license_info.get('icp_license_link', '#')}">
-                    ${u" {icp}".format(icp=icp_license_info.get('icp_license'))}
-                </a>
+      </p>
+
+      <nav aria-label="${_('Legal')}">
+        <ul class="mf-footer-legal">
+          % for link in footer['legal_links']:
+            <% legal_url = link['url'] %>
+            <% legal_title = (link.get('title') or '') %>
+            <% legal_name = (link.get('name') or '') %>
+            % if 'edx.org' not in legal_url.lower():
+              % if legal_name.lower() == 'privacy_policy' or 'privacy' in legal_title.lower():
+                <% legal_url = 'https://missionformations.com/politique-de-confidentialite/' %>
               % endif
-          </p>
+              <li><a href="${legal_url}">${legal_title}</a></li>
+            % endif
+          % endfor
+        </ul>
+      </nav>
 
-        <nav class="nav-legal" aria-label="${_('Legal')}">
-          <ul>
-            % for item_num, link in enumerate(footer['legal_links'], start=1):
-              <li class="nav-legal-0${item_num}">
-                <a href="${link['url']}">${link['title']}</a>
-              </li>
-            % endfor
-            <li><a href="${footer['edx_org_link']['url']}">${footer['edx_org_link']['text']}</a></li>
-          </ul>
-        </nav>
-      </div>
+    </div>
+  </footer>
+</div>
 
-      ## Please leave this link and use one of the logos provided
-      ## The OpenEdX link may be hidden when this view is served
-      ## through an API to partner sites (such as marketing sites or blogs),
-      ## which are not technically powered by OpenEdX.
-      % if not hide_openedx_link:
-      <div class="footer-about-openedx">
-        <p>
-          <a href="https://missionformations.com">
-            <img src="${static.url('images/logo.png')}" alt="Académie Mission Formations" style="max-height: 80px; width: auto;" />
-          </a>
-        </p>
-      </div>
-      % endif
-    </footer>
-  </div>
-% endif
 % if include_dependencies:
   <%static:js group='base_vendor'/>
   <%static:css group='style-vendor'/>

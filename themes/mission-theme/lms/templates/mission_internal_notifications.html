@@ -1,0 +1,145 @@
+<%page expression_filter="h"/>
+<%inherit file="main.html" />
+
+<%block name="pagetitle">Notifications — Mission Formations</%block>
+<%block name="bodyclass">view-mission-notifications is-authenticated</%block>
+
+<%block name="head_extra">
+  <style>
+    .mf-notif-page { min-height: calc(100vh - 140px); background: #f6f8fb; padding: 28px 16px 56px; }
+    .mf-notif-wrap { width: 100%; max-width: 1040px; margin: 0 auto; }
+    .mf-notif-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+    .mf-notif-top h1 { margin: 0; color: #0a1628; font-size: 28px; font-weight: 700; line-height: 1.2; }
+    .mf-notif-top p { margin: 6px 0 0; color: #66758a; font-size: 14px; }
+    .mf-notif-back { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 0 14px; border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #0965d0, #01e8ae); border: 1px solid rgba(9, 101, 208, 0.35); }
+
+    .mf-notif-grid { display: grid; grid-template-columns: 360px 1fr; gap: 14px; }
+    .mf-notif-list, .mf-notif-detail { background: #fff; border: 1px solid #dfe6ef; border-radius: 14px; overflow: hidden; }
+    .mf-notif-head { padding: 12px 14px; border-bottom: 1px solid #e9eef5; font-size: 12px; font-weight: 700; color: #5f6e82; text-transform: uppercase; letter-spacing: 0.4px; background: #f9fbff; }
+    .mf-notif-items { max-height: 620px; overflow: auto; }
+    .mf-notif-item { display: block; padding: 12px 14px; border-bottom: 1px solid #eef3f8; text-decoration: none; color: #223; }
+    .mf-notif-item:last-child { border-bottom: 0; }
+    .mf-notif-item.active { background: #eef6ff; }
+    .mf-notif-item.unread { background: #f4f9ff; }
+    .mf-notif-item:hover { background: #f8fbff; }
+    .mf-notif-subj { font-size: 14px; font-weight: 700; color: #0a1628; margin: 0 0 3px; }
+    .mf-notif-meta { font-size: 12px; color: #6d7c91; margin: 0; }
+    .mf-notif-time { margin-top: 4px; font-size: 11px; color: #8a97ab; }
+
+    .mf-notif-empty { padding: 16px; color: #6f7b8c; font-size: 13px; }
+    .mf-notif-content { padding: 16px; }
+    .mf-notif-content h2 { margin: 0 0 8px; font-size: 22px; color: #0a1628; line-height: 1.25; }
+    .mf-notif-content .meta { margin: 0 0 14px; color: #6f7b8c; font-size: 13px; }
+    .mf-notif-msg { padding: 12px; border: 1px solid #e4eaf3; border-radius: 10px; background: #fcfdff; color: #20324a; font-size: 14px; line-height: 1.5; white-space: pre-line; }
+    .mf-notif-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .mf-notif-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 0 12px; border-radius: 9px; text-decoration: none; font-size: 13px; font-weight: 700; }
+    .mf-notif-btn.blue { color: #fff; background: #0965d0; }
+    .mf-notif-btn.ghost { color: #5f6e82; background: #f4f7fb; border: 1px solid #dfe6ef; }
+
+    @media (max-width: 980px) { .mf-notif-grid { grid-template-columns: 1fr; } }
+  </style>
+</%block>
+
+<div class="mf-notif-page">
+  <div class="mf-notif-wrap">
+    <div class="mf-notif-top">
+      <div>
+        <h1>Notifications</h1>
+        <p>Notifications natives Open edX et messages internes Mission Formations.</p>
+      </div>
+      <a class="mf-notif-back" href="${dashboard_url}">Mon dashboard</a>
+    </div>
+
+    <div class="mf-notif-grid">
+      <section class="mf-notif-list">
+        <div class="mf-notif-head">Notifications (${len(notifications)})</div>
+        % if notifications:
+          <div class="mf-notif-items">
+            % for item in notifications:
+              <a
+                class="mf-notif-item ${'active' if selected_notification and item['id'] == selected_notification['id'] else ''} ${'unread' if item['unread'] else ''}"
+                href="${item['open_url']}"
+                data-id="${item['id']}"
+                data-open-url="${item['open_url']}"
+                data-subject="${item['subject']}"
+                data-sender="${item['sender_name']}"
+                data-source="${item.get('source') or 'Open edX'}"
+                data-created="${item['created_text']}"
+                data-message="${item['message'] or item['description']}"
+              >
+                <p class="mf-notif-subj">${item['subject']}</p>
+                <p class="mf-notif-meta">${item.get('source') or 'Open edX'} · De ${item['sender_name']}</p>
+                <div class="mf-notif-time">${item['created_text']} · ${item['time']}</div>
+              </a>
+            % endfor
+          </div>
+        % else:
+          <div class="mf-notif-empty">Aucune notification disponible.</div>
+        % endif
+      </section>
+
+      <section class="mf-notif-detail">
+        <div class="mf-notif-head">Detail notification</div>
+        % if selected_notification:
+          <div class="mf-notif-content">
+            <h2 id="mf-notif-detail-subject">${selected_notification['subject']}</h2>
+            <p class="meta" id="mf-notif-detail-meta">Source: ${selected_notification.get('source') or 'Open edX'} · Expediteur: ${selected_notification['sender_name']} · ${selected_notification['created_text']}</p>
+            <div class="mf-notif-msg" id="mf-notif-detail-message">${selected_notification['message'] or selected_notification['description']}</div>
+            <div class="mf-notif-actions">
+              <a class="mf-notif-btn blue" href="/messagerie/interne/">Ecrire un message</a>
+              <a class="mf-notif-btn ghost" href="${dashboard_url}">Retour dashboard</a>
+            </div>
+          </div>
+        % else:
+          <div class="mf-notif-empty">Selectionnez une notification pour afficher son contenu.</div>
+        % endif
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var items = Array.prototype.slice.call(document.querySelectorAll(".mf-notif-item"));
+    if (!items.length) {
+      return;
+    }
+
+    var subjectEl = document.getElementById("mf-notif-detail-subject");
+    var metaEl = document.getElementById("mf-notif-detail-meta");
+    var messageEl = document.getElementById("mf-notif-detail-message");
+
+    function activate(item) {
+      items.forEach(function (row) {
+        row.classList.remove("active");
+      });
+      item.classList.add("active");
+      item.classList.remove("unread");
+
+      if (subjectEl) {
+        subjectEl.textContent = item.getAttribute("data-subject") || "Notification";
+      }
+      if (metaEl) {
+        var source = item.getAttribute("data-source") || "Open edX";
+        var sender = item.getAttribute("data-sender") || "Equipe Mission";
+        var created = item.getAttribute("data-created") || "";
+        metaEl.textContent = "Source: " + source + " · Expediteur: " + sender + " · " + created;
+      }
+      if (messageEl) {
+        messageEl.textContent = item.getAttribute("data-message") || "";
+      }
+
+      var openUrl = item.getAttribute("data-open-url");
+      if (openUrl && window.history && window.history.replaceState) {
+        window.history.replaceState({}, "", openUrl);
+      }
+    }
+
+    items.forEach(function (item) {
+      item.addEventListener("click", function (event) {
+        event.preventDefault();
+        activate(item);
+      });
+    });
+  })();
+</script>

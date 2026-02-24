@@ -1,6 +1,21 @@
 <%page expression_filter="h"/>
-% if getattr(user, 'is_authenticated', False) and getattr(user, 'is_staff', False) and request and not request.path.startswith('/dashboard'):
-  <a class="mf-back-formateur" href="/dashboard" aria-label="Mon dashboard">Mon dashboard</a>
+<%
+  is_authenticated = bool(getattr(user, 'is_authenticated', False))
+  is_superuser = bool(getattr(user, 'is_superuser', False))
+  current_path = request.path if request else ''
+  dashboard_target = '/admin/mission-dashboard/' if is_superuser else '/dashboard'
+  hidden_prefixes = (
+    '/dashboard',
+    '/admin/mission-dashboard/',
+    '/login',
+    '/register',
+    '/password_reset',
+    '/logout',
+  )
+  show_dashboard_back = is_authenticated and current_path and not any(current_path.startswith(prefix) for prefix in hidden_prefixes)
+%>
+% if show_dashboard_back:
+  <a class="mf-back-formateur" href="${dashboard_target}" aria-label="Mon dashboard">Mon dashboard</a>
   <style>
     .mf-back-formateur {
       position: fixed;

@@ -8,6 +8,7 @@
   from lms.djangoapps.certificates.data import CertificateStatuses
   from lms.djangoapps.certificates.models import GeneratedCertificate
   from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+  from openedx.core.djangoapps.notifications.models import Notification
 
   now = timezone.now()
   full_name = getattr(user.profile, 'name', '') if hasattr(user, 'profile') else ''
@@ -40,14 +41,18 @@
     str(item['course_id']): item['total']
     for item in CourseEnrollment.objects.filter(
       course_id__in=dedup_course_ids,
-      is_active=True
+      is_active=True,
+      user__is_staff=False,
+      user__is_superuser=False
     ).values('course_id').annotate(total=Count('id'))
   }
   certificate_counts = {
     str(item['course_id']): item['total']
     for item in GeneratedCertificate.objects.filter(
       course_id__in=dedup_course_ids,
-      status=CertificateStatuses.downloadable
+      status=CertificateStatuses.downloadable,
+      user__is_staff=False,
+      user__is_superuser=False
     ).values('course_id').annotate(total=Count('id'))
   }
 
@@ -91,7 +96,9 @@
   total_formations = len(formateur_courses)
   total_apprenants = CourseEnrollment.objects.filter(
     course_id__in=dedup_course_ids,
-    is_active=True
+    is_active=True,
+    user__is_staff=False,
+    user__is_superuser=False
   ).values('user_id').distinct().count() if dedup_course_ids else 0
   active_formations = len([course for course in formateur_courses if course['status_class'] == 'status-live'])
   average_progress = int(round(sum(course['progress_pct'] for course in formateur_courses) / total_formations, 0)) if total_formations else 0
@@ -101,7 +108,9 @@
   if dedup_course_ids:
     recent_enrollments = CourseEnrollment.objects.filter(
       course_id__in=dedup_course_ids,
-      is_active=True
+      is_active=True,
+      user__is_staff=False,
+      user__is_superuser=False
     ).exclude(user_id=user.id).select_related('user').order_by('-created')[:20]
     for enrollment in recent_enrollments:
       learner = enrollment.user
@@ -123,7 +132,9 @@
 
     recent_certs = GeneratedCertificate.objects.filter(
       course_id__in=dedup_course_ids,
-      status=CertificateStatuses.downloadable
+      status=CertificateStatuses.downloadable,
+      user__is_staff=False,
+      user__is_superuser=False
     ).exclude(user_id=user.id).select_related('user').order_by('-modified_date')[:20]
     for cert in recent_certs:
       learner = cert.user
@@ -143,16 +154,46 @@
         'time_ago': 'Il y a {}'.format(timesince(cert_ts, now).split(',')[0]),
       })
 
+  internal_notifications = Notification.objects.filter(
+    user_id=user.id,
+    app_name='updates',
+    notification_type='course_updates',
+    content_context__mf_internal_message=True,
+  ).order_by('-created')[:20]
+  for notif in internal_notifications:
+    notif_context = notif.content_context or {}
+    notif_ts = notif.created or now
+    recent_activities.append({
+      'kind': 'message',
+      'notification_id': notif.id,
+      'user_name': notif_context.get('sender_name') or 'Equipe Mission',
+      'course_name': notif_context.get('subject') or 'Message interne',
+      'timestamp': notif_ts,
+      'time_ago': 'Il y a {}'.format(timesince(notif_ts, now).split(',')[0]),
+    })
+
   recent_activities.sort(key=lambda row: row['timestamp'], reverse=True)
   recent_activities = recent_activities[:6]
 
   apprenants_rows = []
   apprenants_link = '#apprenants-panel'
   calendrier_link = '#'
+  evaluations_link = '/admin/mission-dashboard/'
+  notes_link = '/admin/mission-dashboard/'
+  forums_link = '/courses'
+  bibliotheque_link = 'http://studio.local.openedx.io/home/'
+  statistiques_link = '/admin/mission-dashboard/'
+  rapports_link = '/admin/mission-dashboard/'
+  nouvelle_session_link = '/admin/mission-dashboard/'
+  export_resultats_link = '/admin/mission-dashboard/'
+  envoyer_message_link = '/messagerie/interne/?group=formateurs_all'
+  certificat_link = '#'
   if dedup_course_ids:
     recent_apprenants = CourseEnrollment.objects.filter(
       course_id__in=dedup_course_ids,
-      is_active=True
+      is_active=True,
+      user__is_staff=False,
+      user__is_superuser=False
     ).exclude(user_id=user.id).select_related('user').order_by('-created')[:12]
 
     for enrollment in recent_apprenants:
@@ -172,8 +213,19 @@
       })
 
   if formateur_courses:
+    instructor_link = '/courses/{}/instructor'.format(formateur_courses[0]['course_id'])
     apprenants_link = '/courses/{}/instructor#membership'.format(formateur_courses[0]['course_id'])
     calendrier_link = '/courses/{}/dates'.format(formateur_courses[0]['course_id'])
+    certificat_link = '{}#certificates'.format(instructor_link)
+    evaluations_link = instructor_link
+    notes_link = instructor_link
+    forums_link = '/courses/{}/discussion/forum'.format(formateur_courses[0]['course_id'])
+    bibliotheque_link = 'http://studio.local.openedx.io/home/'
+    statistiques_link = instructor_link
+    rapports_link = instructor_link
+    nouvelle_session_link = calendrier_link
+    export_resultats_link = instructor_link
+    envoyer_message_link = '/messagerie/interne/?group=formateurs_all'
 %>
 
 <div class="mf-formateur">
@@ -190,30 +242,31 @@
         <div class="lms-nav-group">
           <div class="lms-nav-label">Tableau de bord</div>
           <a class="lms-nav-item active" href="/dashboard"><span class="nav-icon">◉</span>Vue d'ensemble</a>
-          <a class="lms-nav-item" href="/admin/mission-dashboard/"><span class="nav-icon">◈</span>Dashboard central admin</a>
+          <a class="lms-nav-item" href="/admin/mission-dashboard/"><span class="nav-icon">◈</span>Dashboard admin</a>
           <a class="lms-nav-item" href="#mes-formations"><span class="nav-icon">◈</span>Mes formations<span class="nav-badge">${total_formations}</span></a>
           <a class="lms-nav-item" href="${calendrier_link}"><span class="nav-icon">◇</span>Calendrier</a>
         </div>
         <div class="lms-nav-group">
           <div class="lms-nav-label">Gestion</div>
           <a class="lms-nav-item" href="${apprenants_link}"><span class="nav-icon">◻</span>Apprenants</a>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◎</span>Evaluations</a>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◆</span>Notes & resultats</a>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◐</span>Forums</a>
+          <a class="lms-nav-item" href="${evaluations_link}"><span class="nav-icon">◎</span>Evaluations</a>
+          <a class="lms-nav-item" href="${notes_link}"><span class="nav-icon">◆</span>Notes & resultats</a>
+          <a class="lms-nav-item" href="${forums_link}"><span class="nav-icon">◐</span>Forums</a>
         </div>
         <div class="lms-nav-group">
           <div class="lms-nav-label">Contenu</div>
           <a class="lms-nav-item" href="http://studio.local.openedx.io/home/"><span class="nav-icon">◰</span>Studio (edition)</a>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◫</span>Bibliotheque</a>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◧</span>Certificats</a>
+          <a class="lms-nav-item" href="${bibliotheque_link}"><span class="nav-icon">◫</span>Bibliotheque</a>
+          <a class="lms-nav-item" href="${certificat_link}"><span class="nav-icon">◧</span>Certificats</a>
         </div>
         <div class="lms-nav-group">
           <div class="lms-nav-label">Analytics</div>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◔</span>Statistiques</a>
-          <a class="lms-nav-item" href="#"><span class="nav-icon">◕</span>Rapports</a>
+          <a class="lms-nav-item" href="${statistiques_link}"><span class="nav-icon">◔</span>Statistiques</a>
+          <a class="lms-nav-item" href="${rapports_link}"><span class="nav-icon">◕</span>Rapports</a>
         </div>
         <div class="lms-nav-group">
           <div class="lms-nav-label">Espace interne</div>
+          <a class="lms-nav-item" href="http://local.openedx.io/admin"><span class="nav-icon">◌</span>LMS</a>
           <a class="lms-nav-item" href="https://missionformations.com/formateur/login/index.html"><span class="nav-icon">◍</span>Espace formateur web</a>
         </div>
         <div class="lms-nav-group">
@@ -235,7 +288,7 @@
         <h2>Vue d'ensemble</h2>
         <div class="lms-topbar-right">
           <input class="lms-search" placeholder="Rechercher un apprenant, une formation...">
-          <button class="lms-notif" type="button" title="Notifications"><span class="dot"></span></button>
+          <a class="lms-notif" href="/notifications/interne/" title="Notifications"><span class="dot"></span></a>
         </div>
       </div>
 
@@ -248,10 +301,10 @@
         </div>
 
         <div class="quick-actions">
-          <a class="qa-btn" href="#"><div class="qa-icon">+</div><div class="qa-text"><h4>Nouvelle session</h4><p>Planifier une session de formation</p></div></a>
+          <a class="qa-btn" href="${nouvelle_session_link}"><div class="qa-icon">+</div><div class="qa-text"><h4>Nouvelle session</h4><p>Planifier une session de formation</p></div></a>
           <a class="qa-btn" href="http://studio.local.openedx.io/home/"><div class="qa-icon">✎</div><div class="qa-text"><h4>Editer un cours</h4><p>Ouvrir Studio pour modifier un contenu</p></div></a>
-          <a class="qa-btn" href="#"><div class="qa-icon">↓</div><div class="qa-text"><h4>Exporter les resultats</h4><p>Telecharger les notes au format CSV</p></div></a>
-          <a class="qa-btn" href="#"><div class="qa-icon">✉</div><div class="qa-text"><h4>Envoyer un message</h4><p>Contacter un groupe d'apprenants</p></div></a>
+          <a class="qa-btn" href="${export_resultats_link}"><div class="qa-icon">↓</div><div class="qa-text"><h4>Exporter les resultats</h4><p>Telecharger les notes au format CSV</p></div></a>
+          <a class="qa-btn" href="${envoyer_message_link}"><div class="qa-icon">✉</div><div class="qa-text"><h4>Envoyer un message</h4><p>Contacter apprenants, formateurs ou admins</p></div></a>
         </div>
 
         <div class="dash-grid">
@@ -289,6 +342,8 @@
                       <div>
                         % if activity['kind'] == 'certificate':
                           <div class="activity-text"><strong>${activity['user_name']}</strong> a obtenu un certificat sur "${activity['course_name']}"</div>
+                        % elif activity['kind'] == 'message':
+                          <div class="activity-text"><a href="/notifications/interne/?open=${activity.get('notification_id')}"><strong>Nouveau message</strong> de ${activity['user_name']} : "${activity['course_name']}"</a></div>
                         % else:
                           <div class="activity-text"><strong>${activity['user_name']}</strong> s'est inscrit(e) a "${activity['course_name']}"</div>
                         % endif

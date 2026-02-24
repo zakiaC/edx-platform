@@ -1,18 +1,24 @@
 from collections import defaultdict
 import csv
+import json
 from urllib.parse import quote
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models import Count
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.utils import timezone
 from django.utils.timesince import timesince
+from django.views.decorators.http import require_http_methods
 
 from common.djangoapps.edxmako.shortcuts import render_to_response
 from common.djangoapps.student.models import CourseAccessRole, CourseEnrollment
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+from openedx.core.djangoapps.notifications.models import Notification
+from .models import InternalMessageAudit
+from .tasks import send_internal_message_task
 
 ROLE_NAMES = ("instructor", "staff", "limited_staff")
 FRENCH_MONTHS = ("Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec")
@@ -58,8 +64,28 @@ def _activity_time_ago(value):
     return timesince(value, timezone.now()).split(",")[0]
 
 
+def _person_name(user):
+    first = (getattr(user, "first_name", "") or "").strip()
+    last = (getattr(user, "last_name", "") or "").strip()
+    full = f"{first} {last}".strip()
+    if full:
+        return full
+
+    email = (getattr(user, "email", "") or "").strip()
+    username = (getattr(user, "username", "") or "").strip()
+    seed = email.split("@", 1)[0] if email else username
+    seed = seed.replace(".", " ").replace("_", " ").replace("-", " ").strip()
+    if seed:
+        return " ".join(part.capitalize() for part in seed.split())
+    return username or "Formateur"
+
+
 def _admin_allowed(user):
     return bool(user and user.is_authenticated and user.is_superuser)
+
+
+def _staff_allowed(user):
+    return bool(user and user.is_authenticated and user.is_staff)
 
 
 def _resolve_mapping_courses(mapping_value, overviews):
@@ -92,6 +118,266 @@ def _resolve_mapping_courses(mapping_value, overviews):
     return selected
 
 
+def _managed_course_ids_for_user(user):
+    managed_ids = set(
+        str(course_id)
+        for course_id in CourseAccessRole.objects.filter(
+            user=user,
+            role__in=ROLE_NAMES,
+        ).exclude(course_id=None).values_list("course_id", flat=True)
+    )
+
+    mapping = getattr(settings, "MISSION_FORMATIONS_FORMATEURS_FORMATIONS", {}) or {}
+    lookup_keys = {_normalize(getattr(user, "email", "")), _normalize(getattr(user, "username", ""))}
+    mapping_value = None
+    for key, value in mapping.items():
+        if _normalize(str(key)) in lookup_keys:
+            mapping_value = value
+            break
+
+    if mapping_value is not None:
+        overviews = list(CourseOverview.objects.order_by("-start")[:1200])
+        if isinstance(mapping_value, str) and mapping_value.strip().upper() == "ALL" and getattr(user, "is_superuser", False):
+            managed_ids.update(str(overview.id) for overview in overviews)
+        else:
+            managed_ids.update(_resolve_mapping_courses(mapping_value, overviews))
+
+    return managed_ids
+
+
+def _collect_formateur_users():
+    User = get_user_model()
+    users_by_id = {}
+
+    for access_role in CourseAccessRole.objects.filter(role__in=ROLE_NAMES).exclude(course_id=None).select_related("user"):
+        role_user = access_role.user
+        if not role_user or role_user.is_superuser or not role_user.is_active:
+            continue
+        if not (role_user.email or "").strip():
+            continue
+        users_by_id[role_user.id] = role_user
+
+    mapping = getattr(settings, "MISSION_FORMATIONS_FORMATEURS_FORMATIONS", {}) or {}
+    for key in mapping.keys():
+        lookup = _normalize(str(key))
+        if not lookup:
+            continue
+        mapped_user = User.objects.filter(email__iexact=lookup).first() or User.objects.filter(username=lookup).first()
+        if not mapped_user or mapped_user.is_superuser or not mapped_user.is_active:
+            continue
+        if not (mapped_user.email or "").strip():
+            continue
+        users_by_id[mapped_user.id] = mapped_user
+
+    return list(users_by_id.values())
+
+
+def _build_group_payload(key, label, description, users):
+    emails = sorted(
+        {
+            (email or "").strip().lower()
+            for email in (user.email for user in users)
+            if (email or "").strip()
+        }
+    )
+    return {
+        "key": key,
+        "label": label,
+        "description": description,
+        "count": len(emails),
+        "emails": emails,
+    }
+
+
+def _messaging_groups_for_user(user):
+    User = get_user_model()
+    groups = []
+
+    admin_users = list(
+        User.objects.filter(is_active=True, is_superuser=True).exclude(email__exact="")
+    )
+
+    if user.is_superuser:
+        learner_ids = CourseEnrollment.objects.filter(
+            is_active=True,
+            user__is_staff=False,
+            user__is_superuser=False,
+        ).values_list("user_id", flat=True).distinct()
+        learner_users = list(
+            User.objects.filter(id__in=learner_ids, is_active=True).exclude(email__exact="")
+        )
+        formateur_users = _collect_formateur_users()
+
+        groups.append(
+            _build_group_payload(
+                "learners_all",
+                "Groupe apprenants (tous les cours)",
+                "Tous les apprenants actifs inscrits sur la plateforme.",
+                learner_users,
+            )
+        )
+        groups.append(
+            _build_group_payload(
+                "formateurs_all",
+                "Groupe formateurs",
+                "Tous les formateurs détectés sur les cours et le mapping Mission.",
+                formateur_users,
+            )
+        )
+        groups.append(
+            _build_group_payload(
+                "admins_global",
+                "Groupe admins",
+                "Tous les comptes superadmin de la plateforme.",
+                admin_users,
+            )
+        )
+        return groups
+
+    managed_course_ids = _managed_course_ids_for_user(user)
+    if managed_course_ids:
+        learner_ids = CourseEnrollment.objects.filter(
+            is_active=True,
+            course_id__in=managed_course_ids,
+            user__is_staff=False,
+            user__is_superuser=False,
+        ).values_list("user_id", flat=True).distinct()
+        learner_users = list(
+            User.objects.filter(id__in=learner_ids, is_active=True).exclude(email__exact="")
+        )
+    else:
+        learner_users = []
+
+    groups.append(
+        _build_group_payload(
+            "learners_managed",
+            "Groupe apprenants (mes formations)",
+            "Apprenants inscrits sur vos formations.",
+            learner_users,
+        )
+    )
+    groups.append(
+        _build_group_payload(
+            "admins_global",
+            "Groupe admins",
+            "Admins Mission Formations.",
+            admin_users,
+        )
+    )
+    return groups
+
+
+def _recent_message_audits(user):
+    queryset = InternalMessageAudit.objects.select_related("sender")
+    if not user.is_superuser:
+        queryset = queryset.filter(sender=user)
+    audits = []
+    for item in queryset[:12]:
+        status_label = "En file d'envoi"
+        if item.status == InternalMessageAudit.STATUS_SENT:
+            status_label = "Envoye"
+        elif item.status == InternalMessageAudit.STATUS_FAILED:
+            status_label = "Echec"
+        audits.append(
+            {
+                "created_text": (item.created or timezone.now()).strftime("%d/%m/%Y %H:%M"),
+                "group": item.recipient_group,
+                "subject": item.subject,
+                "count": item.recipient_count,
+                "sent_count": item.sent_count,
+                "status": item.status,
+                "status_label": status_label,
+                "error_message": item.error_message or "",
+            }
+        )
+    return audits
+
+
+def _internal_notifications_for_user(user):
+    notifications = Notification.objects.filter(
+        user_id=user.id,
+    ).order_by("-created")[:50]
+    rows = []
+    for notif in notifications:
+        ctx = notif.content_context or {}
+        is_internal = bool(ctx.get("mf_internal_message"))
+        sender_name = (
+            ctx.get("sender_name")
+            or ctx.get("from")
+            or ctx.get("author_name")
+            or "Equipe Mission"
+        )
+        subject = (
+            ctx.get("subject")
+            or ctx.get("title")
+            or ctx.get("headline")
+            or ""
+        )
+        message = (
+            ctx.get("course_update_content")
+            or ctx.get("message")
+            or ctx.get("body")
+            or ctx.get("text")
+            or ""
+        )
+        if not subject:
+            if is_internal:
+                subject = "Message interne"
+            else:
+                subject = "Notification Open edX"
+        if not message:
+            message = subject
+        source_label = "Mission interne" if is_internal else "Open edX"
+        base_url = notif.content_url or "/notifications/interne/"
+        open_url = f"/notifications/interne/?open={notif.id}"
+        rows.append(
+            {
+                "id": notif.id,
+                "sender_name": sender_name,
+                "subject": subject,
+                "message": message,
+                "title": "Nouveau message de {}".format(sender_name) if is_internal else subject,
+                "description": message,
+                "time": _activity_time_ago(notif.created),
+                "created_text": (notif.created or timezone.now()).strftime("%d/%m/%Y %H:%M"),
+                "unread": not bool(notif.last_read),
+                "content_url": base_url,
+                "open_url": open_url,
+                "source": source_label,
+                "is_internal": is_internal,
+            }
+        )
+    return rows
+
+
+def _to_positive_int(value):
+    try:
+        parsed = int(value)
+    except Exception:  # pylint: disable=broad-except
+        return None
+    return parsed if parsed > 0 else None
+
+
+def _match_formateur_row(identifier, rows):
+    normalized = _normalize(identifier)
+    if not normalized:
+        return None
+
+    for row in rows:
+        email_value = _normalize(row.get("email"))
+        username_value = _normalize(row.get("username"))
+        if normalized in (email_value, username_value):
+            return row
+
+    for row in rows:
+        person_name = _normalize(row.get("person_name"))
+        display_name = _normalize(row.get("name"))
+        if normalized and (normalized in person_name or normalized in display_name):
+            return row
+
+    return None
+
+
 def _collect(formateur_filter=None):
     now = timezone.now()
     overviews = list(CourseOverview.objects.order_by("-start")[:1200])
@@ -100,7 +386,7 @@ def _collect(formateur_filter=None):
     grouped = defaultdict(lambda: {"user": None, "course_ids": set()})
 
     for access_role in CourseAccessRole.objects.filter(role__in=ROLE_NAMES).exclude(course_id=None).select_related("user"):
-        if not access_role.user:
+        if not access_role.user or access_role.user.is_superuser:
             continue
         group = grouped[access_role.user.id]
         group["user"] = access_role.user
@@ -114,7 +400,7 @@ def _collect(formateur_filter=None):
             continue
 
         user = User.objects.filter(email__iexact=lookup).first() or User.objects.filter(username=lookup).first()
-        if not user:
+        if not user or user.is_superuser:
             continue
 
         if isinstance(value, str) and value.strip().upper() == "ALL":
@@ -129,6 +415,12 @@ def _collect(formateur_filter=None):
         group["user"] = user
         group["course_ids"].update(resolved_ids)
 
+    # Include all active staff users, even if no course/session is assigned yet.
+    for staff_user in User.objects.filter(is_staff=True, is_superuser=False, is_active=True):
+        group = grouped[staff_user.id]
+        if not group["user"]:
+            group["user"] = staff_user
+
     all_course_ids = set()
     for item in grouped.values():
         all_course_ids.update(item["course_ids"])
@@ -138,12 +430,16 @@ def _collect(formateur_filter=None):
         for item in CourseEnrollment.objects.filter(
             is_active=True,
             course_id__in=all_course_ids,
+            user__is_staff=False,
+            user__is_superuser=False,
         ).values("course_id").annotate(total=Count("id"))
     }
 
     total_learners = CourseEnrollment.objects.filter(
         is_active=True,
         course_id__in=all_course_ids,
+        user__is_staff=False,
+        user__is_superuser=False,
     ).values("user_id").distinct().count()
 
     rows = []
@@ -173,42 +469,49 @@ def _collect(formateur_filter=None):
                 }
             )
 
-        if not sessions:
-            continue
-
         profile = getattr(user, "profile", None)
         name = (
             getattr(profile, "name", "")
             or user.get_full_name().strip()
             or user.username
         )
+        person_name = _person_name(user)
 
-        avg_rating = 4.2
-        if learners_total >= 40:
-            avg_rating = 4.7
-        elif learners_total >= 25:
-            avg_rating = 4.5
+        avg_rating = 0.0
+        if sessions:
+            avg_rating = 4.2
+            if learners_total >= 40:
+                avg_rating = 4.7
+            elif learners_total >= 25:
+                avg_rating = 4.5
 
         row = (
             {
                 "username": user.username,
                 "name": name,
+                "person_name": person_name,
                 "email": user.email or "",
+                "is_staff": bool(getattr(user, "is_staff", False)),
                 "sessions": sessions,
                 "sessions_count": len(sessions),
                 "learners_total": learners_total,
                 "avatar": _initials(name or user.username),
-                "specialty": _course_specialty(sessions[0]["display_name"]) if sessions else "Formation professionnelle",
+                "specialty": _course_specialty(sessions[0]["display_name"]) if sessions else "Aucune session assignee",
                 "frais_pending_eur": 0,
                 "rating": avg_rating,
-                "status": "active",
+                "status": "active" if sessions else "pending",
             }
         )
         if formateur_filter:
             username_l = _normalize(row["username"])
             email_l = _normalize(row["email"])
             name_l = _normalize(row["name"])
-            if formateur_filter not in (username_l, email_l) and formateur_filter not in name_l:
+            person_name_l = _normalize(row.get("person_name"))
+            if (
+                formateur_filter not in (username_l, email_l)
+                and formateur_filter not in name_l
+                and formateur_filter not in person_name_l
+            ):
                 continue
         rows.append(row)
 
@@ -218,6 +521,8 @@ def _collect(formateur_filter=None):
     recent_enrollments = CourseEnrollment.objects.filter(
         is_active=True,
         course_id__in=all_course_ids,
+        user__is_staff=False,
+        user__is_superuser=False,
     ).select_related("user").order_by("-created")[:6]
     for enrollment in recent_enrollments:
         learner = enrollment.user
@@ -322,6 +627,114 @@ def _collect(formateur_filter=None):
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
+def internal_messaging(request):
+    if not _staff_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    groups = _messaging_groups_for_user(request.user)
+    groups_by_key = {group["key"]: group for group in groups}
+
+    preferred_group = _normalize(request.GET.get("group"))
+    selected_group = preferred_group if preferred_group in groups_by_key else (groups[0]["key"] if groups else "")
+    subject_value = ""
+    message_value = ""
+    success_message = ""
+    error_message = ""
+
+    if request.method == "POST":
+        selected_group = _normalize(request.POST.get("recipient_group"))
+        subject_value = (request.POST.get("subject") or "").strip()
+        message_value = (request.POST.get("message") or "").strip()
+
+        if not groups:
+            error_message = "Aucun groupe de destinataires disponible pour votre compte."
+        elif selected_group not in groups_by_key:
+            error_message = "Le groupe sélectionné est invalide."
+        elif not subject_value:
+            error_message = "Renseigne l'objet de l'email."
+        elif not message_value:
+            error_message = "Renseigne le contenu du message."
+        else:
+            recipients = groups_by_key[selected_group]["emails"]
+            if not recipients:
+                error_message = "Ce groupe ne contient aucun destinataire avec email valide."
+            elif len(recipients) > 5000:
+                error_message = "Le groupe dépasse la limite d'envoi (5000). Réduis le ciblage."
+            else:
+                try:
+                    audit = InternalMessageAudit.objects.create(
+                        sender=request.user,
+                        recipient_group=selected_group,
+                        recipient_count=len(recipients),
+                        recipients_json=json.dumps(recipients, ensure_ascii=True),
+                        subject=subject_value[:180],
+                        body=message_value,
+                        status=InternalMessageAudit.STATUS_QUEUED,
+                    )
+
+                    def _enqueue_after_commit(audit_id):
+                        task = send_internal_message_task.delay(audit_id)
+                        task_id = getattr(task, "id", "")
+                        if task_id:
+                            InternalMessageAudit.objects.filter(id=audit_id).update(task_id=task_id)
+
+                    transaction.on_commit(lambda: _enqueue_after_commit(audit.id))
+                    success_message = (
+                        f"Message mis en file d'envoi pour {len(recipients)} destinataire(s). "
+                        f"ID audit: {audit.id}."
+                    )
+                    subject_value = ""
+                    message_value = ""
+                except Exception as exc:  # pylint: disable=broad-except
+                    error_message = f"Envoi impossible via la file interne: {exc}"
+
+    audits = _recent_message_audits(request.user)
+    context = {
+        "groups": groups,
+        "selected_group": selected_group,
+        "subject_value": subject_value,
+        "message_value": message_value,
+        "success_message": success_message,
+        "error_message": error_message,
+        "audits": audits,
+        "dashboard_url": "/admin/mission-dashboard/" if request.user.is_superuser else "/dashboard",
+    }
+    return render_to_response("mission_internal_messaging.html", context)
+
+
+@login_required
+@require_http_methods(["GET"])
+def internal_notifications(request):
+    if not _staff_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    open_id = _to_positive_int(request.GET.get("open"))
+    if open_id:
+        unread = Notification.objects.filter(
+            id=open_id,
+            user_id=request.user.id,
+            last_read__isnull=True,
+        ).first()
+        if unread:
+            unread.last_read = timezone.now()
+            unread.last_seen = unread.last_read
+            unread.save(update_fields=["last_read", "last_seen"])
+
+    notifications = _internal_notifications_for_user(request.user)
+    selected = notifications[0] if notifications else None
+    if open_id:
+        selected = next((item for item in notifications if item["id"] == open_id), selected)
+
+    context = {
+        "notifications": notifications,
+        "selected_notification": selected,
+        "dashboard_url": "/admin/mission-dashboard/" if request.user.is_superuser else "/dashboard",
+    }
+    return render_to_response("mission_internal_notifications.html", context)
+
+
+@login_required
 def dashboard(request):
     if not _admin_allowed(request.user):
         return HttpResponseForbidden("403 Forbidden")
@@ -338,7 +751,55 @@ def dashboard(request):
         or request.user.username
     )
     context["admin_initials"] = _initials(context["admin_name"])
+    context["internal_notifications"] = _internal_notifications_for_user(request.user)
     return render_to_response("admin_central_dashboard.html", context)
+
+
+@login_required
+def formateur_detail(request):
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    identifier = (request.GET.get("id") or "").strip()
+    if not identifier:
+        raise Http404("Formateur introuvable")
+
+    data = _collect()
+    row = _match_formateur_row(identifier, data.get("formateurs", []))
+    if not row:
+        raise Http404("Formateur introuvable")
+
+    User = get_user_model()
+    row_email = (row.get("email") or "").strip()
+    row_username = (row.get("username") or "").strip()
+    formateur_user = (
+        User.objects.filter(email__iexact=row_email).first()
+        or User.objects.filter(username=row_username).first()
+    )
+
+    if formateur_user:
+        date_joined_text = (formateur_user.date_joined or timezone.now()).strftime("%d/%m/%Y %H:%M")
+        if formateur_user.last_login:
+            last_login_text = formateur_user.last_login.strftime("%d/%m/%Y %H:%M")
+        else:
+            last_login_text = "Jamais connecte"
+    else:
+        date_joined_text = "--"
+        last_login_text = "--"
+
+    profile = getattr(request.user, "profile", None)
+    context = {
+        "dashboard_url": "/admin/mission-dashboard/",
+        "formateur": row,
+        "date_joined_text": date_joined_text,
+        "last_login_text": last_login_text,
+        "admin_name": (
+            getattr(profile, "name", "")
+            or request.user.get_full_name().strip()
+            or request.user.username
+        ),
+    }
+    return render_to_response("admin_formateur_detail.html", context)
 
 
 @login_required

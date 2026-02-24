@@ -52,7 +52,11 @@ svg.ic-xl{width:22px;height:22px}
     linear-gradient(180deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,0) 48%),
     linear-gradient(180deg,#0f7dca 0%,#0a57b2 48%,#0a2f8f 100%);
   border-color:rgba(29,140,255,.75);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 24px rgba(2,19,58,.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -12px 18px rgba(255,255,255,.12),
+    0 10px 24px rgba(2,19,58,.35);
+  text-shadow:0 0 8px rgba(255,255,255,.45);
 }
 .sb-lk:hover,
 .sb-lk:hover > span,
@@ -505,21 +509,30 @@ body.view-dashboard-formateur .mf-formateur .lms-nav-item:hover {
     linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 45%),
     linear-gradient(135deg, #0f7dca 0%, #0a57b2 45%, #0a2f8f 100%);
   border-color: rgba(29, 140, 255, 0.75);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 24px rgba(2, 19, 58, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -12px 18px rgba(255, 255, 255, 0.12),
+    0 10px 24px rgba(2, 19, 58, 0.35);
   color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
 }
 body.view-dashboard-formateur .mf-formateur .lms-nav-item.active:hover {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 45%),
     linear-gradient(135deg, #0f7dca 0%, #0a57b2 45%, #0a2f8f 100%);
   border-color: rgba(29, 140, 255, 0.75);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 24px rgba(2, 19, 58, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -12px 18px rgba(255, 255, 255, 0.12),
+    0 10px 24px rgba(2, 19, 58, 0.35);
   color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
 }
 body.view-dashboard-formateur .mf-formateur .lms-nav-item.active {
   background: rgba(9, 101, 208, 0.2);
   color: var(--accent);
   font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 body.view-dashboard-formateur .mf-formateur .lms-nav-item .nav-icon {
   width: 18px;

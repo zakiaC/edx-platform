@@ -1,0 +1,438 @@
+<%page expression_filter="h"/>
+<%inherit file="main.html" />
+
+<%block name="pagetitle">Messagerie interne — Mission Formations</%block>
+<%block name="bodyclass">view-mission-messaging is-authenticated</%block>
+
+<%block name="head_extra">
+  <style>
+    :root {
+      --mf-blue: #0965d0;
+      --mf-blue-2: #0a2f8f;
+      --mf-green: #01e8ae;
+      --mf-dark: #0a1628;
+      --mf-text: #223;
+      --mf-border: #dfe6ef;
+      --mf-bg: #f6f8fb;
+      --mf-white: #fff;
+      --mf-danger: #c0392b;
+      --mf-danger-bg: #fdecea;
+      --mf-ok: #0f8f5f;
+      --mf-ok-bg: #e8f8f1;
+    }
+
+    .mf-msg-page {
+      min-height: calc(100vh - 140px);
+      background: var(--mf-bg);
+      padding: 28px 16px 56px;
+    }
+
+    .mf-msg-wrap {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .mf-msg-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .mf-msg-top h1 {
+      margin: 0;
+      color: var(--mf-dark);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .mf-msg-top p {
+      margin: 6px 0 0;
+      color: #66758a;
+      font-size: 14px;
+    }
+
+    .mf-msg-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--mf-blue), var(--mf-green));
+      border: 1px solid rgba(9, 101, 208, 0.35);
+      box-shadow: 0 10px 24px rgba(2, 19, 58, 0.18);
+    }
+
+    .mf-msg-notice {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .mf-msg-notice.ok {
+      color: var(--mf-ok);
+      background: var(--mf-ok-bg);
+      border: 1px solid rgba(15, 143, 95, 0.2);
+    }
+
+    .mf-msg-notice.err {
+      color: var(--mf-danger);
+      background: var(--mf-danger-bg);
+      border: 1px solid rgba(192, 57, 43, 0.2);
+    }
+
+    .mf-msg-card {
+      background: var(--mf-white);
+      border: 1px solid var(--mf-border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .mf-msg-field {
+      margin-bottom: 14px;
+    }
+
+    .mf-msg-label {
+      display: block;
+      margin: 0 0 6px;
+      color: var(--mf-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mf-msg-input,
+    .mf-msg-select,
+    .mf-msg-textarea {
+      width: 100%;
+      border: 1px solid var(--mf-border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--mf-text);
+      background: #fff;
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    .mf-msg-textarea {
+      min-height: 180px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .mf-msg-help {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #6f7b8c;
+    }
+
+    .mf-msg-groups {
+      margin: 10px 0 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mf-msg-group {
+      border: 1px solid var(--mf-border);
+      background: #fcfdff;
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .mf-msg-group.on {
+      border-color: rgba(9, 101, 208, 0.45);
+      box-shadow: 0 0 0 2px rgba(9, 101, 208, 0.1);
+      background: #f4f9ff;
+    }
+
+    .mf-msg-group-h {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .mf-msg-group-t {
+      font-size: 13px;
+      color: var(--mf-dark);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .mf-msg-group-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--mf-blue-2);
+      background: #e8f0fb;
+    }
+
+    .mf-msg-group-p {
+      margin: 0;
+      color: #647388;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .mf-msg-actions {
+      margin-top: 4px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mf-msg-audits {
+      margin-top: 16px;
+      background: #fff;
+      border: 1px solid var(--mf-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .mf-msg-audits table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .mf-msg-audits th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: #66758a;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--mf-border);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      background: #f9fbff;
+    }
+
+    .mf-msg-audits td {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #23324a;
+      border-bottom: 1px solid #eff3f8;
+      vertical-align: top;
+    }
+
+    .mf-msg-audits tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .mf-msg-st {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mf-msg-st.queued {
+      color: #805600;
+      background: #fff3cd;
+    }
+
+    .mf-msg-st.sent {
+      color: #0f8f5f;
+      background: #e8f8f1;
+    }
+
+    .mf-msg-st.failed {
+      color: #c0392b;
+      background: #fdecea;
+    }
+
+    .mf-msg-submit {
+      border: 0;
+      border-radius: 10px;
+      min-height: 42px;
+      padding: 0 18px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--mf-blue), var(--mf-green));
+    }
+
+    .mf-msg-cancel {
+      color: #5f6e82;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 2px;
+    }
+
+    @media (max-width: 860px) {
+      .mf-msg-groups {
+        grid-template-columns: 1fr;
+      }
+      .mf-msg-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</%block>
+
+<div class="mf-msg-page">
+  <div class="mf-msg-wrap">
+    <div class="mf-msg-top">
+      <div>
+        <h1>Ecrire un message</h1>
+        <p>Messagerie email interne Mission Formations.</p>
+      </div>
+      <a class="mf-msg-back" href="${dashboard_url}">Mon dashboard</a>
+    </div>
+
+    % if success_message:
+      <div class="mf-msg-notice ok">${success_message}</div>
+    % endif
+    % if error_message:
+      <div class="mf-msg-notice err">${error_message}</div>
+    % endif
+
+    <div class="mf-msg-card">
+      <form method="post" action="/messagerie/interne/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="${ csrf_token }">
+
+        <div class="mf-msg-field">
+          <label class="mf-msg-label" for="recipient_group">Destinataires</label>
+          <select class="mf-msg-select" id="recipient_group" name="recipient_group">
+            % for group in groups:
+              <option value="${group['key']}" ${'selected' if group['key'] == selected_group else ''}>
+                ${group['label']} (${group['count']})
+              </option>
+            % endfor
+          </select>
+          <div class="mf-msg-help">Choisissez le groupe à contacter.</div>
+        </div>
+
+        <div class="mf-msg-groups" id="mf-msg-groups">
+          % for group in groups:
+            <div class="mf-msg-group ${'on' if group['key'] == selected_group else ''}" data-group-key="${group['key']}">
+              <div class="mf-msg-group-h">
+                <p class="mf-msg-group-t">${group['label']}</p>
+                <span class="mf-msg-group-count">${group['count']}</span>
+              </div>
+              <p class="mf-msg-group-p">${group['description']}</p>
+            </div>
+          % endfor
+        </div>
+
+        <div class="mf-msg-field">
+          <label class="mf-msg-label" for="subject">Objet</label>
+          <input
+            class="mf-msg-input"
+            id="subject"
+            name="subject"
+            type="text"
+            maxlength="180"
+            value="${subject_value}"
+            placeholder="Ex: Informations session de lundi"
+          >
+        </div>
+
+        <div class="mf-msg-field">
+          <label class="mf-msg-label" for="message">Message</label>
+          <textarea
+            class="mf-msg-textarea"
+            id="message"
+            name="message"
+            placeholder="Rédigez votre message..."
+          >${message_value}</textarea>
+          <div class="mf-msg-help">L'email part via le service interne Open edX, en copie cachée pour les destinataires.</div>
+        </div>
+
+        <div class="mf-msg-actions">
+          <button class="mf-msg-submit" type="submit">Envoyer le message</button>
+          <a class="mf-msg-cancel" href="${dashboard_url}">Annuler</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="mf-msg-audits">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Groupe</th>
+            <th>Objet</th>
+            <th>Volume</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          % if audits:
+            % for audit in audits:
+              <tr>
+                <td>${audit['created_text']}</td>
+                <td>${audit['group']}</td>
+                <td>
+                  <div>${audit['subject']}</div>
+                  % if audit['error_message']:
+                    <div style="margin-top:4px;color:#c0392b;font-size:12px;">${audit['error_message']}</div>
+                  % endif
+                </td>
+                <td>${audit['sent_count']}/${audit['count']}</td>
+                <td><span class="mf-msg-st ${audit['status']}">${audit['status_label']}</span></td>
+              </tr>
+            % endfor
+          % else:
+            <tr><td colspan="5" style="color:#6f7b8c;">Aucun envoi récent.</td></tr>
+          % endif
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var select = document.getElementById("recipient_group");
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".mf-msg-group"));
+    if (!select || cards.length === 0) {
+      return;
+    }
+
+    function setActive(key) {
+      cards.forEach(function (card) {
+        card.classList.toggle("on", card.getAttribute("data-group-key") === key);
+      });
+    }
+
+    cards.forEach(function (card) {
+      card.addEventListener("click", function () {
+        var key = card.getAttribute("data-group-key");
+        select.value = key;
+        setActive(key);
+      });
+    });
+
+    select.addEventListener("change", function () {
+      setActive(select.value);
+    });
+  })();
+</script>

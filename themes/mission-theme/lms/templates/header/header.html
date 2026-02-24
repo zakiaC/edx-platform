@@ -1,0 +1,80 @@
+## mako
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+
+<header class="global-header" style="
+  position:sticky;top:0;z-index:1000;
+  background:#0a1628;
+  height:60px;display:flex;align-items:center;
+  padding:0 32px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  box-shadow:0 4px 24px rgba(0,0,0,.2);
+">
+  <div style="display:flex;align-items:center;gap:14px;flex:1">
+    <a href="https://missionformations.com" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;text-decoration:none">
+      <div style="
+        width:36px;height:36px;
+        background:linear-gradient(135deg,#0965D0,#01E8AE);
+        border-radius:10px;
+        display:flex;align-items:center;justify-content:center;
+        font-family:'Ubuntu',sans-serif;font-size:18px;font-weight:900;color:#fff;
+      ">M</div>
+      <div style="font-family:'Ubuntu',sans-serif;font-size:15px;font-weight:700;color:#fff;">
+        Académie Mission<span style="color:rgba(255,255,255,.25);font-weight:400;font-size:12px;margin-left:6px;">Formations</span>
+      </div>
+    </a>
+  </div>
+
+  <nav style="display:flex;align-items:center;gap:4px;">
+    <a href="/courses" style="
+      font-size:12px;font-weight:600;
+      color:rgba(255,255,255,.4);
+      padding:8px 16px;border-radius:8px;
+      transition:all .15s;text-decoration:none;
+      font-family:'Ubuntu',sans-serif;
+    ">Catalogue</a>
+  </nav>
+
+  <div style="display:flex;align-items:center;gap:16px;margin-left:24px;">
+    % if user.is_authenticated:
+      <a href="${'/admin/mission-dashboard/' if user.is_superuser else '/dashboard'}" style="
+        font-size:12px;font-weight:700;
+        color:#fff;
+        padding:8px 16px;border-radius:10px;
+        background:linear-gradient(135deg,#0965D0,#01E8AE);
+        text-decoration:none;transition:all .2s;
+        font-family:'Ubuntu',sans-serif;
+        box-shadow:0 4px 16px rgba(9,101,208,.2);
+      ">Mon dashboard</a>
+      <span style="
+        font-size:12px;font-weight:600;
+        color:rgba(255,255,255,.75);
+        font-family:'Ubuntu',sans-serif;
+      ">${user.username}</span>
+      <a href="/logout" style="
+        font-size:12px;font-weight:600;
+        color:rgba(255,255,255,.6);
+        padding:8px 16px;border-radius:8px;
+        text-decoration:none;transition:all .15s;
+        font-family:'Ubuntu',sans-serif;
+      ">Déconnexion</a>
+    % else:
+      <a href="/login" style="
+        font-size:12px;font-weight:600;
+        color:rgba(255,255,255,.5);
+        padding:8px 16px;border-radius:8px;
+        text-decoration:none;transition:all .15s;
+        font-family:'Ubuntu',sans-serif;
+      ">Se connecter</a>
+      <a href="/register" style="
+        font-size:12px;font-weight:700;
+        color:#fff;
+        padding:8px 20px;border-radius:10px;
+        background:linear-gradient(135deg,#0965D0,#01E8AE);
+        text-decoration:none;transition:all .2s;
+        font-family:'Ubuntu',sans-serif;
+        box-shadow:0 4px 16px rgba(9,101,208,.2);
+      ">S'inscrire</a>
+    % endif
+  </div>
+</header>

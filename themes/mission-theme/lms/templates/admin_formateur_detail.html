@@ -1,0 +1,133 @@
+<%page expression_filter="h"/>
+<%inherit file="main.html" />
+<%block name="pagetitle">Fiche formateur - ${formateur.get('person_name') or formateur.get('name') or 'Formateur'}</%block>
+<%block name="bodyclass">view-dashboard-formateur is-authenticated</%block>
+
+<%block name="head_extra">
+<style>
+  :root {
+    --mf-bg: #f4f7fb;
+    --mf-card: #ffffff;
+    --mf-text: #11243e;
+    --mf-muted: #667a93;
+    --mf-line: #dce6f3;
+    --mf-blue: #0f6ad8;
+    --mf-blue-2: #0a45aa;
+  }
+  .mf-wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 40px; }
+  .mf-back {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    color: var(--mf-blue-2); font-weight: 700; margin-bottom: 18px;
+  }
+  .mf-hero {
+    display: grid; grid-template-columns: 96px 1fr; gap: 18px;
+    background: var(--mf-card); border: 1px solid var(--mf-line); border-radius: 16px;
+    padding: 22px; box-shadow: 0 12px 35px rgba(12, 44, 88, .08);
+  }
+  .mf-avatar {
+    width: 96px; height: 96px; border-radius: 18px;
+    background: linear-gradient(135deg, #1a89ff, #18d2a3);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 30px; font-weight: 800;
+  }
+  .mf-title { margin: 0 0 6px; font-size: 32px; color: var(--mf-text); }
+  .mf-sub { margin: 0; color: var(--mf-muted); font-size: 15px; }
+  .mf-grid {
+    margin-top: 18px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
+  }
+  .mf-kpi {
+    background: var(--mf-card); border: 1px solid var(--mf-line); border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .mf-kpi-l { font-size: 12px; color: var(--mf-muted); margin-bottom: 6px; }
+  .mf-kpi-v { font-size: 20px; font-weight: 800; color: var(--mf-text); }
+  .mf-section {
+    margin-top: 18px; background: var(--mf-card); border: 1px solid var(--mf-line);
+    border-radius: 16px; padding: 16px;
+  }
+  .mf-h2 { margin: 0 0 12px; font-size: 22px; color: var(--mf-text); }
+  .mf-table { width: 100%; border-collapse: collapse; }
+  .mf-table th, .mf-table td {
+    text-align: left; padding: 11px 10px; border-bottom: 1px solid var(--mf-line); font-size: 14px;
+  }
+  .mf-table th { color: var(--mf-muted); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  .mf-table td { color: var(--mf-text); }
+  .mf-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 6px 10px; border-radius: 8px; border: 1px solid #9cc2f4;
+    color: var(--mf-blue-2); font-weight: 700; text-decoration: none;
+  }
+  .mf-status {
+    display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px;
+    background: #e6f4ea; color: #1d7a41; font-size: 12px; font-weight: 700;
+  }
+  @media (max-width: 980px) {
+    .mf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mf-hero { grid-template-columns: 72px 1fr; }
+    .mf-avatar { width: 72px; height: 72px; font-size: 24px; }
+    .mf-title { font-size: 26px; }
+  }
+</style>
+</%block>
+
+<%
+  display_name = formateur.get('person_name') or formateur.get('name') or formateur.get('username') or 'Formateur'
+  status_text = 'Actif' if formateur.get('status') == 'active' else 'En attente'
+  sessions = formateur.get('sessions') or []
+%>
+
+<div class="mf-wrap">
+  <a class="mf-back" href="${dashboard_url}">&#8592; Retour dashboard admin</a>
+
+  <section class="mf-hero">
+    <div class="mf-avatar">${formateur.get('avatar') or 'MF'}</div>
+    <div>
+      <h1 class="mf-title">${display_name}</h1>
+      <p class="mf-sub">${formateur.get('email') or '-'} · ${formateur.get('username') or '-'}</p>
+      <p class="mf-sub">Specialite: ${formateur.get('specialty') or 'Formation professionnelle'}</p>
+    </div>
+  </section>
+
+  <section class="mf-grid">
+    <div class="mf-kpi"><div class="mf-kpi-l">Statut</div><div class="mf-kpi-v"><span class="mf-status">${status_text}</span></div></div>
+    <div class="mf-kpi"><div class="mf-kpi-l">Sessions actives</div><div class="mf-kpi-v">${formateur.get('sessions_count', 0)}</div></div>
+    <div class="mf-kpi"><div class="mf-kpi-l">Apprenants</div><div class="mf-kpi-v">${formateur.get('learners_total', 0)}</div></div>
+    <div class="mf-kpi"><div class="mf-kpi-l">Note moyenne</div><div class="mf-kpi-v">${'%.1f' % (formateur.get('rating', 0) or 0)}</div></div>
+    <div class="mf-kpi"><div class="mf-kpi-l">Compte cree</div><div class="mf-kpi-v" style="font-size:15px">${date_joined_text}</div></div>
+    <div class="mf-kpi"><div class="mf-kpi-l">Derniere connexion</div><div class="mf-kpi-v" style="font-size:15px">${last_login_text}</div></div>
+  </section>
+
+  <section class="mf-section">
+    <h2 class="mf-h2">Formations du formateur (${len(sessions)})</h2>
+    % if sessions:
+      <table class="mf-table">
+        <thead>
+          <tr>
+            <th>Formation</th>
+            <th>Course ID</th>
+            <th>Apprenants</th>
+            <th>Studio</th>
+          </tr>
+        </thead>
+        <tbody>
+          % for session in sessions:
+            <tr>
+              <td>${session.get('display_name') or '-'}</td>
+              <td>${session.get('course_id') or '-'}</td>
+              <td>${session.get('learners', 0)}</td>
+              <td>
+                % if session.get('studio_url'):
+                  <a class="mf-link" href="${session.get('studio_url')}" target="_blank" rel="noopener noreferrer">Ouvrir</a>
+                % else:
+                  -
+                % endif
+              </td>
+            </tr>
+          % endfor
+        </tbody>
+      </table>
+    % else:
+      <p class="mf-sub">Aucune formation assignee a ce formateur pour le moment.</p>
+    % endif
+  </section>
+</div>

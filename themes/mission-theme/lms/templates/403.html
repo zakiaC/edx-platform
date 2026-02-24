@@ -1,0 +1,261 @@
+## mako
+<%page expression_filter="h"/>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Accès refusé — Académie Mission</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700;900&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;
+      --vert:#01E8AE;--vert2:#00c494;
+      --dark:#0a1628;--dark2:#0f1f3a;
+      --noir:#3B3B3B;--gris:#6b6b6b;--gris2:#999;--gris4:#e8e8e8;
+      --fond:#f5f7fa;--blanc:#fff;
+      --rouge:#e74c3c;--orange:#e67e22;
+      --heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;
+    }
+    body{
+      margin:0;min-height:100vh;
+      display:flex;flex-direction:column;
+      background:var(--fond);
+      font-family:var(--body);
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Header */
+    .header{
+      background:var(--dark);height:60px;
+      display:flex;align-items:center;padding:0 32px;gap:14px;
+      border-bottom:1px solid rgba(255,255,255,.04);
+      box-shadow:0 4px 24px rgba(0,0,0,.2);
+    }
+    .header-logo{
+      width:36px;height:36px;
+      background:linear-gradient(135deg,var(--bleu),var(--vert));
+      border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--heading);font-size:18px;font-weight:900;color:#fff;
+      text-decoration:none;
+    }
+    .header-brand{
+      font-family:var(--heading);font-size:15px;font-weight:700;color:#fff;
+      text-decoration:none;
+    }
+    .header-brand span{
+      color:rgba(255,255,255,.25);font-weight:400;font-size:12px;margin-left:6px;
+    }
+
+    /* Main content */
+    .main{
+      flex:1;display:flex;align-items:center;justify-content:center;
+      padding:40px 24px;
+    }
+    .card{
+      background:var(--blanc);
+      border:1px solid var(--gris4);
+      border-radius:20px;
+      padding:52px 48px;
+      max-width:520px;width:100%;
+      text-align:center;
+      box-shadow:0 8px 40px rgba(9,101,208,.06);
+      animation:fadeUp .4s ease;
+    }
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(16px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    /* Shield icon */
+    .shield{
+      width:80px;height:80px;border-radius:20px;
+      background:linear-gradient(135deg,var(--rouge),#c0392b);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;
+      box-shadow:0 8px 28px rgba(231,76,60,.2);
+      position:relative;
+    }
+    .shield::after{
+      content:'';position:absolute;inset:-4px;
+      border-radius:24px;
+      border:2px solid rgba(231,76,60,.1);
+    }
+    .shield svg{width:36px;height:36px;stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+    /* Badge 403 */
+    .code{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(231,76,60,.06);
+      border:1px solid rgba(231,76,60,.1);
+      border-radius:8px;
+      padding:4px 14px;
+      font-family:var(--heading);font-size:12px;font-weight:700;
+      color:var(--rouge);
+      margin-bottom:18px;
+    }
+    .code .dot{width:6px;height:6px;border-radius:50%;background:var(--rouge)}
+
+    h1{
+      font-family:var(--heading);font-size:26px;font-weight:900;
+      color:var(--dark);margin-bottom:10px;
+    }
+    .desc{
+      font-size:14px;color:var(--gris);line-height:1.8;
+      margin-bottom:28px;max-width:380px;margin-left:auto;margin-right:auto;
+    }
+
+    /* Reasons card */
+    .reasons{
+      background:var(--fond);border:1px solid var(--gris4);
+      border-radius:12px;padding:18px 20px;
+      text-align:left;margin-bottom:28px;
+    }
+    .reasons-title{
+      font-family:var(--heading);font-size:11px;font-weight:700;
+      color:var(--dark);text-transform:uppercase;letter-spacing:1px;
+      margin-bottom:10px;
+    }
+    .reason{
+      display:flex;align-items:flex-start;gap:10px;
+      font-size:12px;color:var(--gris);line-height:1.7;
+      padding:6px 0;
+    }
+    .reason-icon{
+      width:22px;height:22px;border-radius:6px;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;font-size:11px;margin-top:1px;
+    }
+    .reason-icon.lock{background:rgba(231,76,60,.08);color:var(--rouge)}
+    .reason-icon.user{background:rgba(9,101,208,.08);color:var(--bleu)}
+    .reason-icon.clock{background:rgba(230,126,34,.08);color:var(--orange)}
+
+    /* Buttons */
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:12px 28px;border-radius:12px;
+      font-family:var(--heading);font-size:13px;font-weight:700;
+      text-decoration:none;cursor:pointer;border:none;
+      transition:all .2s;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--bleu),var(--vert));
+      color:#fff;
+      box-shadow:0 4px 16px rgba(9,101,208,.2);
+    }
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      box-shadow:0 6px 24px rgba(9,101,208,.3);
+    }
+    .btn-secondary{
+      background:var(--blanc);color:var(--bleu);
+      border:1px solid var(--gris4);
+    }
+    .btn-secondary:hover{
+      background:var(--bleu-pale);
+      border-color:rgba(9,101,208,.15);
+    }
+    .btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+    /* Support link */
+    .support{
+      margin-top:24px;
+      font-size:12px;color:var(--gris2);
+    }
+    .support a{
+      color:var(--bleu);text-decoration:none;font-weight:600;
+      transition:color .15s;
+    }
+    .support a:hover{color:var(--bleu2)}
+
+    /* Footer */
+    .footer{
+      background:var(--dark);padding:20px 32px;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .footer-logo{
+      width:20px;height:20px;border-radius:5px;
+      background:linear-gradient(135deg,var(--bleu),var(--vert));
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--heading);font-size:10px;font-weight:900;color:#fff;
+    }
+    .footer span{font-size:10px;color:rgba(255,255,255,.15)}
+
+    @media(max-width:600px){
+      .card{padding:36px 24px}
+      h1{font-size:22px}
+      .actions{flex-direction:column}
+      .btn{justify-content:center}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="/" class="header-logo">M</a>
+    <a href="/" class="header-brand">Académie Mission<span>Formations</span></a>
+  </header>
+
+  <main class="main">
+    <div class="card">
+
+      <div class="shield">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+        </svg>
+      </div>
+
+      <div class="code"><div class="dot"></div>Erreur 403</div>
+
+      <h1>Accès refusé</h1>
+      <p class="desc">
+        Vous n'avez pas les droits nécessaires pour accéder à cette page ou à cette ressource.
+      </p>
+
+      <div class="reasons">
+        <div class="reasons-title">Causes possibles</div>
+        <div class="reason">
+          <div class="reason-icon lock">🔒</div>
+          <div>Vous n'êtes <strong>pas inscrit</strong> à cette formation ou votre accès a expiré.</div>
+        </div>
+        <div class="reason">
+          <div class="reason-icon user">👤</div>
+          <div>Votre session a expiré — essayez de <strong>vous reconnecter</strong>.</div>
+        </div>
+        <div class="reason">
+          <div class="reason-icon clock">⏱</div>
+          <div>Le contenu n'est <strong>pas encore disponible</strong> ou la période d'accès est terminée.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="/dashboard" class="btn btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Tableau de bord
+        </a>
+        <a href="/login" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Se reconnecter
+        </a>
+      </div>
+
+      <div class="support">
+        Un problème ? <a href="mailto:support@missionformations.com">support@missionformations.com</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-logo">M</div>
+    <span>&copy; 2026 Mission Formations</span>
+  </footer>
+
+</body>
+</html>

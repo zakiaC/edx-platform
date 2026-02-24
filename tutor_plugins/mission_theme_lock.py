@@ -20,6 +20,9 @@ PATCH_CONTENT = """
 FEATURES['ENABLE_AUTHN_MICROFRONTEND'] = False
 ENABLE_LEARNER_HOME_MFE = False
 LEARNER_HOME_MFE_REDIRECT_PERCENTAGE = 0
+DEFAULT_SITE_THEME = "mission-theme"
+if "/openedx/themes/mission-theme/lms/static" not in STATICFILES_DIRS:
+    STATICFILES_DIRS.append("/openedx/themes/mission-theme/lms/static")
 """.strip()
 
 for patch_target in (
@@ -33,13 +36,13 @@ for patch_target in (
     )
 
 # ---------------------------------------------------------------------------
-# 2. Caddy redirects: force all auth routes to /login
+# 2. Caddy redirects: force only authn MFE routes to /login
 # ---------------------------------------------------------------------------
 CADDY_LMS_PATCH = """
 # mission_theme_lock: keep legacy themed auth entrypoints
 @mf_authn_native_routes {
     method GET HEAD
-    path /authn /authn/* /register /register/ /password_reset /password_reset/
+    path /authn /authn/*
 }
 redir @mf_authn_native_routes /login 302
 header X-Mission-Theme-Lock "enabled"
@@ -84,4 +87,38 @@ hooks.Filters.CLI_DO_INIT_TASKS.add_item(
 """.strip(),
     ),
     priority=priorities.DEFAULT,
+)
+
+# ---------------------------------------------------------------------------
+# 6. Theme assets publish: ensure custom auth CSS/JS are served after launch.
+#    In this environment, post-process hashing can fail on upstream CSS paths,
+#    so we publish with --no-post-process for runtime stability.
+# ---------------------------------------------------------------------------
+hooks.Filters.CLI_DO_INIT_TASKS.add_item(
+    (
+        "lms",
+        "./manage.py lms collectstatic --noinput --no-post-process",
+    ),
+    priority=priorities.LOW,
+)
+
+# ---------------------------------------------------------------------------
+# 7. Hard sync Mission theme assets to staticfiles.
+#    This avoids silent regressions where theme static files are present
+#    under /openedx/themes but not exposed by /static/* after launch.
+# ---------------------------------------------------------------------------
+hooks.Filters.CLI_DO_INIT_TASKS.add_item(
+    (
+        "lms",
+        """
+mkdir -p /openedx/staticfiles/css /openedx/staticfiles/js
+for file in /openedx/themes/mission-theme/lms/static/css/mf-*.css; do
+  [ -f "$file" ] && cp -f "$file" /openedx/staticfiles/css/
+done
+for file in /openedx/themes/mission-theme/lms/static/js/mf-*.js; do
+  [ -f "$file" ] && cp -f "$file" /openedx/staticfiles/js/
+done
+""".strip(),
+    ),
+    priority=priorities.LOW + 1,
 )

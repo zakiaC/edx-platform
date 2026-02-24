@@ -1,0 +1,279 @@
+## mako
+<%page expression_filter="h"/>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Maintenance — Académie Mission</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700;900&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;
+      --vert:#01E8AE;--vert2:#00c494;
+      --dark:#0a1628;--dark2:#0f1f3a;
+      --noir:#3B3B3B;--gris:#6b6b6b;--gris2:#999;--gris4:#e8e8e8;
+      --fond:#f5f7fa;--blanc:#fff;
+      --orange:#e67e22;--jaune:#f1c40f;
+      --heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;
+    }
+    body{
+      margin:0;min-height:100vh;
+      display:flex;flex-direction:column;
+      background:var(--dark);
+      font-family:var(--body);
+      -webkit-font-smoothing:antialiased;
+      overflow:hidden;
+    }
+
+    /* Background animated orbs */
+    .bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .bg .orb{position:absolute;border-radius:50%}
+    .bg .orb1{top:-15%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(9,101,208,.1),transparent 65%);animation:float 14s ease-in-out infinite}
+    .bg .orb2{bottom:-20%;left:-8%;width:500px;height:500px;background:radial-gradient(circle,rgba(1,232,174,.06),transparent 65%);animation:float 18s ease-in-out infinite reverse}
+    .bg .orb3{top:40%;left:50%;width:300px;height:300px;background:radial-gradient(circle,rgba(9,101,208,.04),transparent 65%);animation:float 10s ease-in-out infinite 2s}
+    @keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(25px,-20px) scale(1.06)}}
+    .bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.01) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px);background-size:60px 60px}
+
+    /* Content */
+    .main{
+      flex:1;display:flex;align-items:center;justify-content:center;
+      padding:40px 24px;position:relative;z-index:1;
+    }
+    .card{
+      text-align:center;max-width:520px;width:100%;
+      animation:fadeUp .5s ease;
+    }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Logo */
+    .logo{
+      width:56px;height:56px;border-radius:14px;
+      background:linear-gradient(135deg,var(--bleu),var(--vert));
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--heading);font-size:28px;font-weight:900;color:#fff;
+      margin:0 auto 28px;
+      box-shadow:0 8px 32px rgba(9,101,208,.25);
+    }
+
+    /* Gear icon */
+    .gear-wrap{
+      width:88px;height:88px;
+      margin:0 auto 28px;
+      position:relative;
+    }
+    .gear{
+      width:88px;height:88px;
+      animation:spin 8s linear infinite;
+    }
+    .gear svg{width:88px;height:88px;stroke:rgba(255,255,255,.12);stroke-width:1.2;fill:none}
+    .gear-dot{
+      position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      width:36px;height:36px;border-radius:50%;
+      background:linear-gradient(135deg,var(--orange),var(--jaune));
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;
+      box-shadow:0 4px 20px rgba(230,126,34,.3);
+    }
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+    /* Badge */
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(230,126,34,.1);
+      border:1px solid rgba(230,126,34,.15);
+      border-radius:8px;
+      padding:5px 14px;
+      font-family:var(--heading);font-size:11px;font-weight:700;
+      color:var(--orange);
+      margin-bottom:18px;
+    }
+    .badge .pulse{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--orange);
+      animation:pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+    h1{
+      font-family:var(--heading);font-size:28px;font-weight:900;
+      color:#fff;margin-bottom:10px;
+    }
+    .desc{
+      font-size:14px;color:rgba(255,255,255,.45);line-height:1.8;
+      margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;
+    }
+
+    /* Progress bar */
+    .progress-wrap{
+      max-width:300px;margin:0 auto 32px;
+    }
+    .progress-label{
+      display:flex;justify-content:space-between;
+      font-family:var(--heading);font-size:10px;font-weight:700;
+      color:rgba(255,255,255,.25);margin-bottom:8px;
+      text-transform:uppercase;letter-spacing:1.5px;
+    }
+    .progress-bar{
+      height:6px;border-radius:3px;
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    .progress-fill{
+      height:100%;border-radius:3px;
+      background:linear-gradient(90deg,var(--bleu),var(--vert));
+      width:65%;
+      animation:loading 3s ease-in-out infinite;
+    }
+    @keyframes loading{0%{width:20%}50%{width:80%}100%{width:20%}}
+
+    /* Info cards */
+    .info-row{
+      display:flex;gap:12px;justify-content:center;
+      margin-bottom:32px;flex-wrap:wrap;
+    }
+    .info-card{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:12px;
+      padding:16px 20px;
+      text-align:center;min-width:140px;
+    }
+    .info-card-icon{font-size:20px;margin-bottom:6px}
+    .info-card-label{
+      font-family:var(--heading);font-size:9px;font-weight:700;
+      text-transform:uppercase;letter-spacing:1.2px;
+      color:rgba(255,255,255,.25);margin-bottom:4px;
+    }
+    .info-card-value{
+      font-family:var(--heading);font-size:14px;font-weight:900;
+      color:#fff;
+    }
+
+    /* Button */
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:12px 28px;border-radius:12px;
+      font-family:var(--heading);font-size:13px;font-weight:700;
+      text-decoration:none;border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.04);
+      color:rgba(255,255,255,.6);
+      transition:all .2s;cursor:pointer;
+    }
+    .btn:hover{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.15);
+      color:#fff;
+    }
+    .btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+    /* Support */
+    .support{
+      margin-top:24px;font-size:12px;color:rgba(255,255,255,.2);
+    }
+    .support a{color:var(--vert);text-decoration:none;font-weight:600;transition:opacity .15s}
+    .support a:hover{opacity:.7}
+
+    /* Footer */
+    .footer{
+      padding:20px 32px;text-align:center;position:relative;z-index:1;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .footer-logo{
+      width:20px;height:20px;border-radius:5px;
+      background:linear-gradient(135deg,var(--bleu),var(--vert));
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--heading);font-size:10px;font-weight:900;color:#fff;
+    }
+    .footer span{font-size:10px;color:rgba(255,255,255,.1)}
+
+    @media(max-width:600px){
+      h1{font-size:22px}
+      .info-row{flex-direction:column;align-items:center}
+      .gear-wrap{width:70px;height:70px}
+      .gear,.gear svg{width:70px;height:70px}
+      .gear-dot{width:28px;height:28px;font-size:14px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg">
+    <div class="grid"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <main class="main">
+    <div class="card">
+
+      <div class="logo">M</div>
+
+      <div class="gear-wrap">
+        <div class="gear">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </div>
+        <div class="gear-dot">🔧</div>
+      </div>
+
+      <div class="badge"><div class="pulse"></div>Maintenance en cours</div>
+
+      <h1>On revient très vite</h1>
+      <p class="desc">
+        Notre équipe technique effectue une mise à jour pour améliorer votre expérience de formation. Ça ne devrait pas être long.
+      </p>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Progression</span>
+          <span>Bientôt terminé</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-card">
+          <div class="info-card-icon">🕐</div>
+          <div class="info-card-label">Durée estimée</div>
+          <div class="info-card-value">~30 min</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">📧</div>
+          <div class="info-card-label">Notifications</div>
+          <div class="info-card-value">Par email</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">💾</div>
+          <div class="info-card-label">Vos données</div>
+          <div class="info-card-value">Sauvegardées</div>
+        </div>
+      </div>
+
+      <a href="/" class="btn" onclick="location.reload();return false;">
+        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Réessayer
+      </a>
+
+      <div class="support">
+        Un souci ? <a href="mailto:support@missionformations.com">support@missionformations.com</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-logo">M</div>
+    <span>&copy; 2026 Mission Formations</span>
+  </footer>
+
+</body>
+</html>

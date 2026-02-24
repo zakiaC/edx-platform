@@ -38,25 +38,79 @@ svg.ic-xl{width:22px;height:22px}
 .sb-logo-t span{display:block;font-size:8px;font-weight:500;color:rgba(255,255,255,.3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
 .sb-badge{margin:0 12px 10px;padding:7px 10px;border-radius:7px;background:linear-gradient(135deg,rgba(231,76,60,.1),rgba(230,126,34,.08));border:1px solid rgba(231,76,60,.12);display:flex;align-items:center;gap:7px}
 .sb-badge svg{width:13px;height:13px;stroke:var(--rouge);fill:none;stroke-width:2;flex-shrink:0}
-.sb-badge span{font-family:var(--heading);font-size:8.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--rouge)}
+.sb-badge span{
+  font-family:var(--body);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.6px;
+  line-height:1;
+  text-transform:uppercase;
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+  text-shadow:none;
+  -webkit-text-stroke:0;
+  filter:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:geometricPrecision;
+}
 .sb-nav{flex:1;padding:8px 8px}
 .sb-sec{margin-bottom:14px}
 .sb-sec-t{font-family:var(--heading);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.15);padding:0 10px;margin-bottom:4px}
-.sb-lk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.38);cursor:pointer;border:1px solid transparent;transition:all .15s}
-.sb-lk:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
-.sb-lk.active{color:#fff;background:linear-gradient(135deg,rgba(9,101,208,.18),rgba(1,232,174,.08));border-color:rgba(9,101,208,.12)}
+.sb-lk{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.38);cursor:pointer;border:1px solid transparent;transition:all .2s}
+.sb-lk:hover,
+.sb-lk.active{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,0) 48%),
+    linear-gradient(180deg,#0f7dca 0%,#0a57b2 48%,#0a2f8f 100%);
+  border-color:rgba(29,140,255,.75);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 24px rgba(2,19,58,.35);
+  color:#fff;
+}
+.sb-lk:hover > span,
+.sb-lk.active > span{color:#fff}
 .sb-lk .sb-ic{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);flex-shrink:0;transition:all .15s}
-.sb-lk.active .sb-ic{background:linear-gradient(135deg,var(--bleu),var(--vert))}
+.sb-lk:hover .sb-ic,
+.sb-lk.active .sb-ic{background:rgba(255,255,255,.18)}
+.sb-lk:hover .sb-ic svg,
 .sb-lk.active .sb-ic svg{stroke:#fff}
+.sb-lk:hover .sb-bdg,
+.sb-lk.active .sb-bdg{background:#fff;color:var(--bleu2)}
 .sb-lk .sb-ic svg{width:14px;height:14px}
 .sb-bdg{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:700;background:var(--rouge);color:#fff;padding:1px 6px;border-radius:8px}
 .sb-bdg.g{background:var(--vert2)}.sb-bdg.o{background:var(--orange)}.sb-bdg.b{background:var(--bleu)}
+.sb-dd{margin-bottom:6px}
+.sb-dd summary{list-style:none}
+.sb-dd summary::-webkit-details-marker{display:none}
+.sb-dd-toggle .sb-dd-arrow{margin-left:6px;transition:transform .18s}
+.sb-dd[open] .sb-dd-toggle .sb-dd-arrow{transform:rotate(180deg)}
+.sb-dd-menu{padding:6px 0 2px 36px;display:flex;flex-direction:column;gap:4px}
+.sb-dd-item{display:block;padding:5px 8px;border-radius:6px;font-size:11px;color:rgba(255,255,255,.58);border:1px solid transparent;transition:all .15s;text-decoration:none}
+.sb-dd-item:hover,.sb-dd-item.active{
+  color:#fff !important;
+  text-decoration:none;
+  border-color:rgba(29,140,255,.75);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,0) 48%),
+    linear-gradient(180deg,#0f7dca 0%,#0a57b2 48%,#0a2f8f 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -10px 16px rgba(255,255,255,.12),
+    0 8px 16px rgba(2,19,58,.28);
+  text-shadow:0 0 8px rgba(255,255,255,.45);
+}
 .sb-user{padding:12px 14px;border-top:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:9px}
 .sb-av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--rouge),var(--orange));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
 .sb-uname{font-family:var(--heading);font-size:11px;font-weight:700;color:#fff}
 .sb-urole{font-size:9px;color:rgba(255,255,255,.25)}
-.sb-out{width:24px;height:24px;border-radius:5px;border:none;background:rgba(255,255,255,.04);color:rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.sb-out:hover{background:rgba(231,76,60,.15);color:var(--rouge)}
+.sb-out{width:24px;height:24px;border-radius:5px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.sb-out:hover{
+  background:linear-gradient(135deg,var(--vert),var(--vert2));
+  border-color:rgba(1,232,174,.75);
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 8px 18px rgba(1,232,174,.35);
+  transform:translateY(-1px);
+}
 .sb-out svg{width:12px;height:12px}
 
 /* ======= MAIN ======= */
@@ -65,11 +119,51 @@ svg.ic-xl{width:22px;height:22px}
 .breadcrumb{display:flex;align-items:center;gap:5px;font-family:var(--heading);font-size:11.5px;color:var(--gris2)}
 .breadcrumb .sep{color:var(--gris3);font-size:10px}
 .breadcrumb strong{color:var(--dark);font-weight:700}
-.topbar-r{display:flex;align-items:center;gap:8px}
-.top-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--gris4);background:var(--blanc);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--gris);position:relative}
-.top-btn:hover{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-pale)}
-.top-btn svg{width:15px;height:15px}
+.topbar-r{display:flex;align-items:center;gap:10px}
+.top-btn{
+  width:40px;
+  height:40px;
+  border-radius:11px;
+  border:1px solid rgba(9,101,208,.35);
+  background:linear-gradient(180deg,#1e4f8f 0%, #12396f 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .15s;
+  color:#fff;
+  position:relative;
+  box-shadow:0 6px 14px rgba(11,47,95,.25);
+}
+.top-btn:hover{
+  border-color:rgba(1,232,174,.75);
+  color:#fff;
+  background:linear-gradient(135deg,var(--bleu),var(--vert2));
+  box-shadow:0 8px 18px rgba(1,232,174,.25);
+  transform:translateY(-1px);
+}
+.top-btn .top-ic{
+  width:22px;
+  height:22px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  shape-rendering:geometricPrecision;
+  vector-effect:non-scaling-stroke;
+}
+.top-btn[data-action="export"] .top-ic{
+  width:23px;
+  height:23px;
+}
 .notif-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--rouge);border:2px solid var(--blanc)}
+.mf-hit{
+  background:rgba(9,101,208,.12);
+  outline:2px solid rgba(9,101,208,.35);
+  border-radius:6px;
+}
 .mf-admin-cnt{padding:22px 28px 50px}
 
 /* ======= PAGE SECTIONS (show/hide) ======= */
@@ -294,6 +388,29 @@ svg.ic-xl{width:22px;height:22px}
 </style>
 </%block>
 
+<%
+  mission_internal_notifications = internal_notifications if 'internal_notifications' in locals() else []
+  mission_internal_total = len(mission_internal_notifications)
+  mission_internal_unread = len([row for row in mission_internal_notifications if row.get('unread')])
+  mission_notification_url = '/notifications/interne/'
+  mission_total_formateurs = int(total_formateurs or 0)
+  mission_total_learners = int(total_learners or 0)
+  mission_total_sessions = int(total_sessions or 0)
+  mission_planning_count = len(upcoming_sessions) if 'upcoming_sessions' in locals() else 0
+  mission_pending_expenses_count = int(pending_expenses_count or 0)
+  mission_pending_expenses_total_eur = float(pending_expenses_total_eur or 0)
+  mission_admin_display_name = (admin_name or 'Super Admin').strip() if 'admin_name' in locals() else 'Super Admin'
+  mission_admin_initials_value = (admin_initials or 'SA').strip() if 'admin_initials' in locals() else 'SA'
+  mission_admin_first_name = mission_admin_display_name.split()[0] if mission_admin_display_name else 'Admin'
+  mission_academy_counts = academy_counts if 'academy_counts' in locals() else {}
+  mission_vtc_count = int(mission_academy_counts.get('vtc', 0) or 0)
+  mission_it_count = int(mission_academy_counts.get('it', 0) or 0)
+  mission_marketing_count = int(mission_academy_counts.get('marketing', 0) or 0)
+  mission_academy_total = mission_vtc_count + mission_it_count + mission_marketing_count
+  mission_recent_students = recent_students if 'recent_students' in locals() else []
+  mission_recent_activity = recent_activity if 'recent_activity' in locals() else []
+%>
+
 <div id="mf-super-admin-root">
 <!-- ===================== SIDEBAR ===================== -->
 <nav class="sidebar">
@@ -316,20 +433,31 @@ svg.ic-xl{width:22px;height:22px}
 
     <div class="sb-sec">
       <div class="sb-sec-t">Gestion</div>
-      <div class="sb-lk" data-page="formateurs">
-        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Formateurs<span class="sb-bdg g">8</span>
-      </div>
+      <details class="sb-dd" ${'open' if current_formateur else ''}>
+        <summary class="sb-lk sb-dd-toggle">
+          <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Formateurs<span class="sb-bdg g">${mission_total_formateurs}</span><svg class="ic sb-dd-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="sb-dd-menu">
+          % for row in formateurs:
+            <% row_label = row.get('person_name') or row.get('name') or row.get('email') or row.get('username') or 'Formateur' %>
+            <% row_key = row.get('email') or row.get('username') or '' %>
+            % if row.get('is_staff') and row_key:
+              <a class="sb-dd-item ${'active' if current_formateur and (current_formateur == (row.get('email') or '').lower() or current_formateur == (row.get('username') or '').lower()) else ''}" href="/admin/mission-dashboard/formateur/?id=${row_key}">${row_label}</a>
+            % endif
+          % endfor
+        </div>
+      </details>
       <div class="sb-lk" data-page="apprenants">
-        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Apprenants<span class="sb-bdg g">156</span>
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Apprenants<span class="sb-bdg g">${mission_total_learners}</span>
       </div>
       <div class="sb-lk" data-page="formations">
-        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>Formations<span class="sb-bdg b">12</span>
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>Formations<span class="sb-bdg b">${mission_total_sessions}</span>
       </div>
       <div class="sb-lk" data-page="academies">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>Académies
       </div>
       <div class="sb-lk" data-page="planning">
-        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Planning<span class="sb-bdg o">5</span>
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Planning<span class="sb-bdg o">${mission_planning_count}</span>
       </div>
     </div>
 
@@ -339,7 +467,7 @@ svg.ic-xl{width:22px;height:22px}
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Revenus
       </div>
       <div class="sb-lk" data-page="frais">
-        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>Frais formateurs<span class="sb-bdg">3</span>
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>Frais formateurs<span class="sb-bdg">${mission_pending_expenses_count}</span>
       </div>
       <div class="sb-lk" data-page="factures">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Factures
@@ -348,9 +476,15 @@ svg.ic-xl{width:22px;height:22px}
 
     <div class="sb-sec">
       <div class="sb-sec-t">Système</div>
-      <div class="sb-lk" data-page="notifications">
-        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>Notifications<span class="sb-bdg">7</span>
-      </div>
+      <a class="sb-lk" href="/dashboard">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/></svg></span>Dashboard admin
+      </a>
+      <a class="sb-lk" href="http://local.openedx.io/admin">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="13" y2="18"/></svg></span>LMS
+      </a>
+      <a class="sb-lk" href="${mission_notification_url}">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>Notifications<span class="sb-bdg">${mission_internal_total}</span>
+      </a>
       <div class="sb-lk" data-page="parametres">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Paramètres
       </div>
@@ -358,8 +492,8 @@ svg.ic-xl{width:22px;height:22px}
   </div>
 
   <div class="sb-user">
-    <div class="sb-av">AD</div>
-    <div style="flex:1;min-width:0"><div class="sb-uname">Abdel Diouf</div><div class="sb-urole">Super Administrateur</div></div>
+    <div class="sb-av">${mission_admin_initials_value}</div>
+    <div style="flex:1;min-width:0"><div class="sb-uname">${mission_admin_display_name}</div><div class="sb-urole">Super Administrateur</div></div>
     <a class="sb-out" href="/logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></a>
   </div>
 </nav>
@@ -369,9 +503,28 @@ svg.ic-xl{width:22px;height:22px}
   <header class="topbar">
     <div class="breadcrumb"><span>Administration</span><span class="sep">›</span><strong id="page-title">Vue d'ensemble</strong></div>
     <div class="topbar-r">
-      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></button>
-      <button class="top-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      <button class="top-btn" type="button" data-action="search" aria-label="Recherche" title="Recherche">
+        <svg class="top-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="20" y1="20" x2="16.4" y2="16.4"></line>
+        </svg>
+      </button>
+      <a class="top-btn" href="${mission_notification_url}" aria-label="Notifications" title="Notifications">
+        <svg class="top-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9z"></path>
+          <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
+        </svg>
+        % if mission_internal_unread > 0:
+        <span class="notif-dot"></span>
+        % endif
+      </a>
+      <button class="top-btn" type="button" data-action="export" aria-label="Exporter" title="Exporter CSV">
+        <svg class="top-ic" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+          <polyline points="7 10 12 15 17 10"></polyline>
+        </svg>
+      </button>
     </div>
   </header>
 
@@ -383,24 +536,24 @@ svg.ic-xl{width:22px;height:22px}
     <div class="hero-grid"></div>
     <div class="hero-top">
       <div>
-        <h1>Bienvenue <em>Abdel</em> !</h1>
-        <p>3 notes de frais en attente, 2 nouvelles inscriptions et 5 sessions cette semaine.</p>
+        <h1>Bienvenue <em>${mission_admin_first_name}</em> !</h1>
+        <p>${mission_pending_expenses_count} notes de frais en attente, ${len(mission_recent_students)} nouvelles inscriptions et ${mission_planning_count} sessions cette semaine.</p>
         <div class="hero-btns">
-          <button class="h-btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un formateur</button>
+          <a class="h-btn primary" href="/admin/auth/user/add/" title="Ouverture de la creation utilisateur native Open edX"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un formateur</a>
           <button class="h-btn ghost"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Rapport mensuel</button>
         </div>
       </div>
     </div>
     <div class="hero-stats">
-      <div class="hs"><div class="hs-ic bl"><svg viewBox="0 0 24 24" style="stroke:var(--bleu)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="hs-v">156</div><div class="hs-l">Apprenants</div></div><span class="hs-trend up">+12</span></div>
-      <div class="hs"><div class="hs-ic gr"><svg viewBox="0 0 24 24" style="stroke:var(--vert)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="hs-v">8</div><div class="hs-l">Formateurs</div></div><span class="hs-trend up">+1</span></div>
+      <div class="hs"><div class="hs-ic bl"><svg viewBox="0 0 24 24" style="stroke:var(--bleu)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="hs-v">${mission_total_learners}</div><div class="hs-l">Apprenants</div></div><span class="hs-trend up">${len(mission_recent_students)} récents</span></div>
+      <div class="hs"><div class="hs-ic gr"><svg viewBox="0 0 24 24" style="stroke:var(--vert)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><div class="hs-v">${mission_total_formateurs}</div><div class="hs-l">Formateurs</div></div><span class="hs-trend up">${mission_total_sessions} formations</span></div>
       <div class="hs"><div class="hs-ic or"><svg viewBox="0 0 24 24" style="stroke:var(--orange)"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="hs-v">47 280 €</div><div class="hs-l">CA ce mois</div></div><span class="hs-trend up">+18%</span></div>
-      <div class="hs"><div class="hs-ic rd"><svg viewBox="0 0 24 24" style="stroke:var(--rouge)"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div><div class="hs-v">3</div><div class="hs-l">Frais en attente</div></div><span class="hs-trend dn">1 240€</span></div>
-      <div class="hs"><div class="hs-ic vi"><svg viewBox="0 0 24 24" style="stroke:var(--violet)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="hs-v">5</div><div class="hs-l">Sessions/sem</div></div><div class="live-dot" style="margin-left:auto"></div></div>
+      <div class="hs"><div class="hs-ic rd"><svg viewBox="0 0 24 24" style="stroke:var(--rouge)"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div><div class="hs-v">${mission_pending_expenses_count}</div><div class="hs-l">Frais en attente</div></div><span class="hs-trend dn">${"{:,.0f}".format(mission_pending_expenses_total_eur).replace(",", " ")}€</span></div>
+      <div class="hs"><div class="hs-ic vi"><svg viewBox="0 0 24 24" style="stroke:var(--violet)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="hs-v">${mission_planning_count}</div><div class="hs-l">Sessions/sem</div></div><div class="live-dot" style="margin-left:auto"></div></div>
     </div>
   </div>
 
-  <div class="alert warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span><strong>3 notes de frais</strong> en attente depuis +48h — <a href="#" class="js-nav-link" data-target-page="frais" style="color:var(--orange);font-weight:700">Traiter maintenant →</a></span></div>
+  <div class="alert warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span><strong>${mission_pending_expenses_count} notes de frais</strong> en attente (total ${"{:,.0f}".format(mission_pending_expenses_total_eur).replace(",", " ")}€) — <a href="#" class="js-nav-link" data-target-page="frais" style="color:var(--orange);font-weight:700">Traiter maintenant →</a></span></div>
 
   <div class="g4">
     <div class="card">
@@ -428,12 +581,12 @@ svg.ic-xl{width:22px;height:22px}
             <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bleu)" stroke-width="10" stroke-dasharray="50.3 251.3" stroke-dashoffset="-163.4" stroke-linecap="round"/>
             <circle cx="50" cy="50" r="40" fill="none" stroke="var(--violet)" stroke-width="10" stroke-dasharray="37.7 251.3" stroke-dashoffset="-213.7" stroke-linecap="round"/>
           </svg>
-          <div class="donut-center"><div class="donut-val">156</div><div class="donut-lab">Total</div></div>
+          <div class="donut-center"><div class="donut-val">${mission_academy_total}</div><div class="donut-lab">Total</div></div>
         </div>
         <div class="donut-legend">
-          <div class="leg-item"><div class="leg-dot" style="background:var(--vert)"></div>Académie VTC<div class="leg-val">101</div></div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--bleu)"></div>Académie IT<div class="leg-val">32</div></div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--violet)"></div>Marketing<div class="leg-val">23</div></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--vert)"></div>Académie VTC<div class="leg-val">${mission_vtc_count}</div></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--bleu)"></div>Académie IT<div class="leg-val">${mission_it_count}</div></div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--violet)"></div>Marketing<div class="leg-val">${mission_marketing_count}</div></div>
         </div>
       </div>
     </div>
@@ -442,19 +595,30 @@ svg.ic-xl{width:22px;height:22px}
   <div class="g3">
     <div class="card">
       <div class="card-h"><div class="card-t">Dernières inscriptions</div><a href="#" class="card-a js-nav-link" data-target-page="apprenants">Voir tous →</a></div>
-      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--bleu),var(--vert))"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Léa Rousseau</div><div class="item-meta">Marketing digital · Il y a 2h</div></div><div class="item-val blue">2%</div></div>
-      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--vert2),#27ae60)"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Omar Cissé</div><div class="item-meta">IT DevOps · Il y a 1 jour</div></div><div class="item-val blue">5%</div></div>
-      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--orange),#d35400)"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Sophie Bertrand</div><div class="item-meta">VTC Classique · Il y a 6 jours</div></div><div class="item-val blue">12%</div></div>
-      <div class="item"><div class="item-ic" style="background:linear-gradient(135deg,var(--violet),#6c3483)"><svg viewBox="0 0 24 24" style="stroke:#fff"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="item-info"><div class="item-name">Thomas Martin</div><div class="item-meta">Création entreprise · Il y a 18 jours</div></div><div class="item-val blue">45%</div></div>
+      % if mission_recent_students:
+        % for student in mission_recent_students:
+          <div class="item">
+            <div class="item-ic" style="background:linear-gradient(135deg,var(--bleu),var(--vert));color:#fff;font-family:var(--heading);font-size:10px;font-weight:700">${student.get('initials', 'AP')}</div>
+            <div class="item-info">
+              <div class="item-name">${student.get('name', 'Apprenant')}</div>
+              <div class="item-meta">${student.get('course_name', 'Formation')} · ${student.get('created_text', '--')}</div>
+            </div>
+            <div class="item-val blue">${student.get('progress_text', '--')}</div>
+          </div>
+        % endfor
+      % else:
+        <div class="item"><div class="item-info"><div class="item-meta">Aucune inscription récente.</div></div></div>
+      % endif
     </div>
     <div class="card">
       <div class="card-h"><div class="card-t">Activité récente</div></div>
-      <div class="act"><div class="act-dot gr"></div><div class="act-text"><strong>Léa Rousseau</strong> inscrite en Marketing digital</div><div class="act-time">2m</div></div>
-      <div class="act"><div class="act-dot or"></div><div class="act-text"><strong>Mme Traoré</strong> a soumis une note de frais (340€)</div><div class="act-time">45m</div></div>
-      <div class="act"><div class="act-dot bl"></div><div class="act-text"><strong>Karim Diallo</strong> — Module 6 terminé</div><div class="act-time">1h</div></div>
-      <div class="act"><div class="act-dot vi"></div><div class="act-text"><strong>M. Benhamed</strong> nouveau quiz ajouté</div><div class="act-time">2h</div></div>
-      <div class="act"><div class="act-dot rd"></div><div class="act-text"><strong>Amina M.</strong> certificat VTC obtenu</div><div class="act-time">3h</div></div>
-      <div class="act"><div class="act-dot gr"></div><div class="act-text"><strong>Omar Cissé</strong> inscrit en IT DevOps</div><div class="act-time">5h</div></div>
+      % if mission_recent_activity:
+        % for act in mission_recent_activity:
+          <div class="act"><div class="act-dot ${act.get('dot', 'gr')}"></div><div class="act-text">${act.get('text', '')}</div><div class="act-time">${act.get('time', '--')}</div></div>
+        % endfor
+      % else:
+        <div class="act"><div class="act-dot gr"></div><div class="act-text">Aucune activité récente.</div><div class="act-time">--</div></div>
+      % endif
     </div>
   </div>
 </div>
@@ -494,7 +658,7 @@ svg.ic-xl{width:22px;height:22px}
     <div class="card">
       <div class="card-h"><div class="card-t">Top formateurs</div></div>
       <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,#0f3460,#16213e);width:28px;height:28px;font-size:9px">MN</div><div class="item-info"><div class="item-name">M. Nabil</div><div class="item-meta">4.8/5 · 31 apprenants</div></div><div class="item-val green">98%</div></div>
-      <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e);width:28px;height:28px;font-size:9px">ML</div><div class="item-info"><div class="item-name">Mme Leclerc</div><div class="item-meta">4.6/5 · 42 apprenants</div></div><div class="item-val green">92%</div></div>
+      <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e);width:28px;height:28px;font-size:9px">ND</div><div class="item-info"><div class="item-name">Mme Nadia</div><div class="item-meta">4.6/5 · 42 apprenants</div></div><div class="item-val green">92%</div></div>
       <div class="item"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert));width:28px;height:28px;font-size:9px">MB</div><div class="item-info"><div class="item-name">M. Benhamed</div><div class="item-meta">4.4/5 · 38 apprenants</div></div><div class="item-val blue">88%</div></div>
     </div>
     <div class="card">
@@ -523,20 +687,57 @@ svg.ic-xl{width:22px;height:22px}
 <!-- ===================== PAGE: FORMATEURS ===================== -->
 <div class="mf-admin-page" id="page-formateurs">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div class="filters"><button class="flt on">Tous (8)</button><button class="flt">Actifs (6)</button><button class="flt">En attente (1)</button><button class="flt">Inactifs (1)</button></div>
-    <div style="display:flex;gap:8px"><button class="btn outline"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter</button><button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter</button></div>
+    <div class="filters">
+      <button class="flt on">Tous (${total_formateurs})</button>
+      <button class="flt">Actifs (${total_formateurs})</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <a class="btn outline" href="${export_url}"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter</a>
+    </div>
   </div>
   <div class="card">
     <table class="tbl">
       <thead><tr><th>Formateur</th><th>Spécialité</th><th>Formations</th><th>Apprenants</th><th>Satisfaction</th><th>Heures ce mois</th><th>Frais</th><th>Statut</th><th></th></tr></thead>
       <tbody>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">ML</div><div><div class="tbl-name">Mme Leclerc</div><div class="tbl-sub">leclerc@mission.fr</div></div></div></td><td>Réglementation VTC</td><td style="font-family:var(--mono);font-weight:700">3</td><td style="font-family:var(--mono);font-weight:700">42</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:92%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.6</span></div></td><td style="font-family:var(--mono);font-weight:700">28h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--orange)">380€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">MB</div><div><div class="tbl-name">M. Benhamed</div><div class="tbl-sub">benhamed@mission.fr</div></div></div></td><td>Gestion de flotte</td><td style="font-family:var(--mono);font-weight:700">2</td><td style="font-family:var(--mono);font-weight:700">38</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:88%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.4</span></div></td><td style="font-family:var(--mono);font-weight:700">32h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--orange)">520€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#0f3460,#16213e)">MN</div><div><div class="tbl-name">M. Nabil</div><div class="tbl-sub">nabil@mission.fr</div></div></div></td><td>Création entreprise</td><td style="font-family:var(--mono);font-weight:700">2</td><td style="font-family:var(--mono);font-weight:700">31</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:96%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.8</span></div></td><td style="font-family:var(--mono);font-weight:700">24h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--violet),#6c3483)">ST</div><div><div class="tbl-name">Mme Traoré</div><div class="tbl-sub">traore@mission.fr</div></div></div></td><td>Marketing digital</td><td style="font-family:var(--mono);font-weight:700">1</td><td style="font-family:var(--mono);font-weight:700">24</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:84%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.2</span></div></td><td style="font-family:var(--mono);font-weight:700">18h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--orange)">340€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--orange),#d35400)">PD</div><div><div class="tbl-name">M. Dupont</div><div class="tbl-sub">dupont@mission.fr</div></div></div></td><td>Comptabilité</td><td style="font-family:var(--mono);font-weight:700">2</td><td style="font-family:var(--mono);font-weight:700">21</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:78%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--bleu)">3.9</span></div></td><td style="font-family:var(--mono);font-weight:700">12h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status pending">En attente</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--rouge),#c0392b)">FK</div><div><div class="tbl-name">M. Konaté</div><div class="tbl-sub">konate@mission.fr</div></div></div></td><td>Sécurité routière</td><td style="font-family:var(--mono);font-weight:700">1</td><td style="font-family:var(--mono);font-weight:700">15</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:90%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">4.5</span></div></td><td style="font-family:var(--mono);font-weight:700">20h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
-        <tr style="opacity:.5"><td><div class="tbl-user"><div class="tbl-av" style="background:var(--gris3)">AR</div><div><div class="tbl-name">M. Roche</div><div class="tbl-sub">roche@mission.fr</div></div></div></td><td>Anglais VTC</td><td style="font-family:var(--mono);font-weight:700">1</td><td style="font-family:var(--mono);font-weight:700">8</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:50px"><div class="pf" style="width:72%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--gris2)">3.6</span></div></td><td style="font-family:var(--mono);font-weight:700">0h</td><td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">0€</span></td><td><span class="status inactive">Inactif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>
+        % if formateurs:
+          % for row in formateurs:
+            <% first_session = (row.get('sessions') or [None])[0] %>
+            <% first_course_id = first_session.get('course_id') if first_session else None %>
+            <% instructor_link = '/courses/{}/instructor'.format(first_course_id) if first_course_id else '/dashboard' %>
+            <% status = row.get('status') or 'active' %>
+            <% status_label = 'Actif' if status == 'active' else ('En attente' if status == 'pending' else 'Inactif') %>
+            <tr>
+              <td>
+                <div class="tbl-user">
+                  <div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">${row.get('avatar', 'MF')}</div>
+                  <div><div class="tbl-name">${row.get('name', 'Formateur')}</div><div class="tbl-sub">${row.get('email', '')}</div></div>
+                </div>
+              </td>
+              <td>${row.get('specialty', '-')}</td>
+              <td style="font-family:var(--mono);font-weight:700">${row.get('sessions_count', 0)}</td>
+              <td style="font-family:var(--mono);font-weight:700">${row.get('learners_total', 0)}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <div class="pb" style="width:50px"><div class="pf" style="width:${min(100, int((row.get('rating', 0) / 5.0) * 100))}%"></div></div>
+                  <span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--vert2)">${"{:.1f}".format(row.get('rating', 0))}</span>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-weight:700">--</td>
+              <td><span style="font-family:var(--mono);font-weight:700;color:var(--gris2)">--</span></td>
+              <td><span class="status ${status}">${status_label}</span></td>
+              <td>
+                <div class="tbl-actions">
+                  <a class="tbl-btn" href="${instructor_link}" title="Voir"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a>
+                  <a class="tbl-btn" href="/messagerie/interne/?group=formateurs_all" title="Contacter"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+                </div>
+              </td>
+            </tr>
+          % endfor
+        % else:
+          <tr>
+            <td colspan="9">Aucun formateur détecté dans les cours. Assigne les formateurs dans Studio (Course Team).</td>
+          </tr>
+        % endif
       </tbody>
     </table>
   </div>
@@ -545,7 +746,7 @@ svg.ic-xl{width:22px;height:22px}
 <!-- ===================== PAGE: APPRENANTS ===================== -->
 <div class="mf-admin-page" id="page-apprenants">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div class="filters"><button class="flt on">Tous (156)</button><button class="flt">VTC (101)</button><button class="flt">IT (32)</button><button class="flt">Marketing (23)</button></div>
+    <div class="filters"><button class="flt on">Tous (${mission_total_learners})</button><button class="flt">VTC (${mission_vtc_count})</button><button class="flt">IT (${mission_it_count})</button><button class="flt">Marketing (${mission_marketing_count})</button></div>
     <div style="display:flex;gap:8px"><button class="btn outline"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter CSV</button><button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Inscrire</button></div>
   </div>
   <div class="card">
@@ -571,8 +772,8 @@ svg.ic-xl{width:22px;height:22px}
     <button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer une formation</button>
   </div>
   <div class="g6">
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Formation VTC Classique</div><div class="fc-meta">Mme Leclerc · 42h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">38</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">82%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.6</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--dark),var(--bleu))"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">VTC Continue 2025</div><div class="fc-meta">Mme Leclerc · 14h · 6 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">91%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.7</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Formation VTC Classique</div><div class="fc-meta">Mme Nadia · 42h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">38</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">82%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.6</div><div class="fc-stat-l">Note</div></div></div></div></div>
+    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--dark),var(--bleu))"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">VTC Continue 2025</div><div class="fc-meta">Mme Nadia · 14h · 6 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">91%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.7</div><div class="fc-stat-l">Note</div></div></div></div></div>
     <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#0f3460,#16213e)"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Création entreprise VTC</div><div class="fc-meta">M. Nabil · 8h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">31</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">45%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.8</div><div class="fc-stat-l">Note</div></div></div></div></div>
     <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--violet),#6c3483)"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Marketing digital VTC</div><div class="fc-meta">Mme Traoré · 6h · 5 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">32%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.2</div><div class="fc-stat-l">Note</div></div></div></div></div>
     <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--bleu2),var(--dark))"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">IT DevOps Fondamentaux</div><div class="fc-meta">Externe · 20h · 12 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">18</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">34%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.1</div><div class="fc-stat-l">Note</div></div></div></div></div>
@@ -685,7 +886,7 @@ svg.ic-xl{width:22px;height:22px}
     <table class="tbl">
       <thead><tr><th>Formateur</th><th>Type</th><th>Description</th><th>Date</th><th>Montant</th><th>Justificatif</th><th>Statut</th><th></th></tr></thead>
       <tbody>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">ML</div><div><div class="tbl-name">Mme Leclerc</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--bleu);background:var(--bleu-pale);padding:2px 6px;border-radius:4px">Transport</span></td><td style="font-size:11px">Déplacement Paris — Lyon (TGV A/R)</td><td style="font-family:var(--mono);font-size:10px">18/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">380,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
+        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">ND</div><div><div class="tbl-name">Mme Nadia</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--bleu);background:var(--bleu-pale);padding:2px 6px;border-radius:4px">Transport</span></td><td style="font-size:11px">Déplacement Paris — Lyon (TGV A/R)</td><td style="font-family:var(--mono);font-size:10px">18/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">380,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
         <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">MB</div><div><div class="tbl-name">M. Benhamed</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--orange);background:#fef3e2;padding:2px 6px;border-radius:4px">Repas</span></td><td style="font-size:11px">Repas session formation (18 pers.)</td><td style="font-family:var(--mono);font-size:10px">17/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">520,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
         <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--violet),#6c3483)">ST</div><div><div class="tbl-name">Mme Traoré</div></div></div></td><td><span style="font-size:10px;font-weight:700;color:var(--violet);background:var(--violet-pale);padding:2px 6px;border-radius:4px">Matériel</span></td><td style="font-size:11px">Matériel pédagogique (manuels, supports)</td><td style="font-family:var(--mono);font-size:10px">15/02/26</td><td style="font-family:var(--mono);font-weight:700;color:var(--dark)">340,00 €</td><td><button class="btn outline" style="padding:3px 8px;font-size:9px"><svg viewBox="0 0 24 24" style="width:11px;height:11px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Voir PDF</button></td><td><span class="status pending">À valider</span></td><td><div class="tbl-actions"><button class="tbl-btn" style="border-color:var(--vert2);color:var(--vert2);background:var(--vert-pale)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button><button class="tbl-btn danger"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></td></tr>
       </tbody>
@@ -716,15 +917,18 @@ svg.ic-xl{width:22px;height:22px}
 
 <!-- ===================== PAGE: NOTIFICATIONS ===================== -->
 <div class="mf-admin-page" id="page-notifications">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="filters"><button class="flt on">Toutes (7)</button><button class="flt">Non lues (4)</button><button class="flt">Urgentes</button></div><button class="btn outline">Tout marquer lu</button></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="filters"><button class="flt on">Toutes (${mission_internal_total})</button><button class="flt">Non lues (${mission_internal_unread})</button><button class="flt">Urgentes</button></div><button class="btn outline">Tout marquer lu</button></div>
 
-  <div class="notif unread"><div class="notif-ic" style="background:#fde8e8;color:var(--rouge)"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="notif-body"><div class="notif-title">Note de frais en attente depuis 48h</div><div class="notif-desc">Mme Leclerc — Déplacement Paris-Lyon (380€). Action requise.</div></div><div class="notif-time">2h</div></div>
-  <div class="notif unread"><div class="notif-ic" style="background:var(--vert-pale);color:var(--vert2)"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div><div class="notif-body"><div class="notif-title">Nouvelle inscription</div><div class="notif-desc">Léa Rousseau s'est inscrite à "Marketing digital VTC".</div></div><div class="notif-time">2h</div></div>
-  <div class="notif unread"><div class="notif-ic" style="background:var(--vert-pale);color:var(--vert2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div><div class="notif-body"><div class="notif-title">Certificat délivré</div><div class="notif-desc">Amina Moussaoui a obtenu le certificat "VTC Continue 2025".</div></div><div class="notif-time">3h</div></div>
-  <div class="notif unread"><div class="notif-ic" style="background:#fef3e2;color:var(--orange)"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="notif-body"><div class="notif-title">Note de frais soumise</div><div class="notif-desc">Mme Traoré — Matériel pédagogique (340€).</div></div><div class="notif-time">5h</div></div>
-  <div class="notif"><div class="notif-ic" style="background:var(--bleu-pale);color:var(--bleu)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="notif-body"><div class="notif-title">Contenu mis à jour</div><div class="notif-desc">Mme Leclerc a mis à jour le module "Réglementation 2026".</div></div><div class="notif-time">1j</div></div>
-  <div class="notif"><div class="notif-ic" style="background:var(--violet-pale);color:var(--violet)"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="notif-body"><div class="notif-title">Évaluation formateur</div><div class="notif-desc">M. Nabil a reçu 3 nouvelles évaluations (moy. 4.9/5).</div></div><div class="notif-time">2j</div></div>
-  <div class="notif"><div class="notif-ic" style="background:#fde8e8;color:var(--rouge)"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><div class="notif-title">Facture en retard</div><div class="notif-desc">FAC-2026-0082 — Marc Petit — 790€ · Échue depuis 32 jours.</div></div><div class="notif-time">3j</div></div>
+  % for notif in mission_internal_notifications:
+    <a class="notif ${'unread' if notif.get('unread') else ''}" href="${notif.get('open_url') or notif.get('content_url') or '/notifications/interne/'}" style="text-decoration:none;">
+      <div class="notif-ic" style="background:var(--bleu-pale);color:var(--bleu)"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <div class="notif-body"><div class="notif-title">${notif.get('title') or 'Message interne'}</div><div class="notif-desc">${notif.get('description') or ''}</div></div>
+      <div class="notif-time">${notif.get('time') or '--'}</div>
+    </a>
+  % endfor
+  % if not mission_internal_notifications:
+  <div class="notif"><div class="notif-ic" style="background:var(--bleu-pale);color:var(--bleu)"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="notif-body"><div class="notif-title">Aucune notification</div><div class="notif-desc">Aucun message interne pour le moment.</div></div><div class="notif-time">--</div></div>
+  % endif
 </div>
 
 <!-- ===================== PAGE: PARAMETRES ===================== -->

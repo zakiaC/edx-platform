@@ -1,0 +1,168 @@
+## mako
+<%page expression_filter="h"/>
+<%!
+from django.utils.translation import gettext as _
+from django.conf import settings
+%>
+
+<style>
+  .mf-studio-footer-shell.wrapper-footer.wrapper {
+    margin: 0;
+    width: 100%;
+    background: #0a1628;
+    border-top: 1px solid rgba(255,255,255,.06);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  .mf-studio-footer {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: clamp(14px, 2.2vw, 24px) clamp(14px, 2.6vw, 28px) clamp(12px, 1.8vw, 18px);
+    color: rgba(255,255,255,.72);
+    font-family: 'Raleway', Helvetica, Arial, sans-serif;
+  }
+  .mf-studio-footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .mf-studio-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .mf-studio-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg,#0965D0,#01E8AE);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+  }
+  .mf-studio-brand-text {
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .mf-studio-brand-text span {
+    color: rgba(255,255,255,.3);
+    font-weight: 400;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+  .mf-studio-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  .mf-studio-nav a,
+  .mf-studio-legal a,
+  .mf-studio-copy a {
+    color: rgba(255,255,255,.62);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: color .15s ease;
+  }
+  .mf-studio-nav a:hover,
+  .mf-studio-legal a:hover,
+  .mf-studio-copy a:hover {
+    color: #01E8AE;
+  }
+  .mf-studio-divider {
+    height: 1px;
+    background: rgba(255,255,255,.1);
+    margin: 10px 0;
+  }
+  .mf-studio-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .mf-studio-copy {
+    margin: 0;
+    color: rgba(255,255,255,.45);
+    font-size: 11px;
+    line-height: 1.7;
+    max-width: 720px;
+  }
+  @media (max-width: 980px) {
+    .mf-studio-footer-top,
+    .mf-studio-bottom {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .mf-studio-nav {
+      gap: 10px 14px;
+    }
+    .mf-studio-copy {
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 760px) {
+    .mf-studio-footer {
+      padding: 16px 14px 12px;
+    }
+    .mf-studio-brand {
+      width: 100%;
+    }
+    .mf-studio-nav {
+      width: 100%;
+    }
+  }
+  @media (max-width: 520px) {
+    .mf-studio-brand-text {
+      font-size: 13px;
+    }
+    .mf-studio-brand-text span {
+      display: block;
+      margin-left: 0;
+      margin-top: 2px;
+    }
+  }
+</style>
+
+<div class="wrapper-footer wrapper mf-studio-footer-shell">
+  <footer class="primary mf-studio-footer" role="contentinfo">
+    <div class="mf-studio-footer-top">
+      <a href="https://missionformations.com" class="mf-studio-brand" rel="external" target="_blank">
+        <span class="mf-studio-logo">M</span>
+        <span class="mf-studio-brand-text">Académie Mission<span>Formations</span></span>
+      </a>
+
+      <nav class="nav-peripheral" aria-label="${_('Policies')}">
+        <ul class="mf-studio-nav">
+          <li class="nav-item"><a href="mailto:contact@missionformations.com">Contact</a></li>
+          % if is_marketing_link_set('TOS'):
+            <li class="nav-item nav-peripheral-tos"><a href="${marketing_link('TOS')}">${_('Terms of Service')}</a></li>
+          % endif
+          <li class="nav-item nav-peripheral-pp"><a href="https://missionformations.com/politique-de-confidentialite/" target="_blank" rel="noopener noreferrer">${_('Privacy Policy')}</a></li>
+          <li class="nav-item"><a id="lms-link" href="${settings.LMS_ROOT_URL}">${_('LMS')}</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="mf-studio-divider"></div>
+
+    <div class="mf-studio-bottom" aria-label="${_('Legal')}">
+      <p class="mf-studio-copy">
+        © Academie Mission Formation. Tous droits exclusivement réservés à l'entreprise We Will.
+      </p>
+    </div>
+  </footer>
+</div>
