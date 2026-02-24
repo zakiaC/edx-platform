@@ -407,6 +407,17 @@ svg.ic-xl{width:22px;height:22px}
   mission_it_count = int(mission_academy_counts.get('it', 0) or 0)
   mission_marketing_count = int(mission_academy_counts.get('marketing', 0) or 0)
   mission_academy_total = mission_vtc_count + mission_it_count + mission_marketing_count
+  mission_first_course_id = ''
+  for row in formateurs:
+    for session in row.get('sessions', []):
+      mission_first_course_id = (session.get('course_id') or '').strip()
+      if mission_first_course_id:
+        break
+    if mission_first_course_id:
+      break
+  mission_dates_url = '/courses/{}/dates'.format(mission_first_course_id) if mission_first_course_id else '/courses'
+  mission_learners_admin_url = '/admin/auth/user/?is_staff__exact=0&is_superuser__exact=0'
+  mission_studio_home_url = 'http://studio.local.openedx.io/home/'
   mission_recent_students = recent_students if 'recent_students' in locals() else []
   mission_recent_activity = recent_activity if 'recent_activity' in locals() else []
 %>
@@ -447,18 +458,18 @@ svg.ic-xl{width:22px;height:22px}
           % endfor
         </div>
       </details>
-      <div class="sb-lk" data-page="apprenants">
+      <a class="sb-lk" href="${mission_learners_admin_url}">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Apprenants<span class="sb-bdg g">${mission_total_learners}</span>
-      </div>
-      <div class="sb-lk" data-page="formations">
+      </a>
+      <a class="sb-lk" href="${mission_studio_home_url}">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>Formations<span class="sb-bdg b">${mission_total_sessions}</span>
-      </div>
+      </a>
       <div class="sb-lk" data-page="academies">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>Académies
       </div>
-      <div class="sb-lk" data-page="planning">
+      <a class="sb-lk" href="${mission_dates_url}">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Planning<span class="sb-bdg o">${mission_planning_count}</span>
-      </div>
+      </a>
     </div>
 
     <div class="sb-sec">
@@ -479,15 +490,15 @@ svg.ic-xl{width:22px;height:22px}
       <a class="sb-lk" href="/dashboard">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="4" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/></svg></span>Dashboard admin
       </a>
-      <a class="sb-lk" href="http://local.openedx.io/admin">
+      <a class="sb-lk" href="/admin/">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="13" y2="18"/></svg></span>LMS
       </a>
       <a class="sb-lk" href="${mission_notification_url}">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>Notifications<span class="sb-bdg">${mission_internal_total}</span>
       </a>
-      <div class="sb-lk" data-page="parametres">
+      <a class="sb-lk" href="/admin/">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Paramètres
-      </div>
+      </a>
     </div>
   </div>
 
@@ -540,7 +551,7 @@ svg.ic-xl{width:22px;height:22px}
         <p>${mission_pending_expenses_count} notes de frais en attente, ${len(mission_recent_students)} nouvelles inscriptions et ${mission_planning_count} sessions cette semaine.</p>
         <div class="hero-btns">
           <a class="h-btn primary" href="/admin/auth/user/add/" title="Ouverture de la creation utilisateur native Open edX"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un formateur</a>
-          <button class="h-btn ghost"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Rapport mensuel</button>
+          <a class="h-btn ghost" href="${export_url}"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Rapport mensuel</a>
         </div>
       </div>
     </div>
@@ -594,7 +605,7 @@ svg.ic-xl{width:22px;height:22px}
 
   <div class="g3">
     <div class="card">
-      <div class="card-h"><div class="card-t">Dernières inscriptions</div><a href="#" class="card-a js-nav-link" data-target-page="apprenants">Voir tous →</a></div>
+      <div class="card-h"><div class="card-t">Dernières inscriptions</div><a href="${mission_learners_admin_url}" class="card-a">Voir tous →</a></div>
       % if mission_recent_students:
         % for student in mission_recent_students:
           <div class="item">

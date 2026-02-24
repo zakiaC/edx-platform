@@ -176,18 +176,18 @@
   recent_activities = recent_activities[:6]
 
   apprenants_rows = []
-  apprenants_link = '#apprenants-panel'
-  calendrier_link = '#'
+  apprenants_link = '/admin/auth/user/?is_staff__exact=0&is_superuser__exact=0'
+  calendrier_link = '/courses'
   evaluations_link = '/admin/mission-dashboard/'
   notes_link = '/admin/mission-dashboard/'
   forums_link = '/courses'
   bibliotheque_link = 'http://studio.local.openedx.io/home/'
   statistiques_link = '/admin/mission-dashboard/'
   rapports_link = '/admin/mission-dashboard/'
-  nouvelle_session_link = '/admin/mission-dashboard/'
-  export_resultats_link = '/admin/mission-dashboard/'
+  nouvelle_session_link = '/courses'
+  export_resultats_link = '/api/admin/formateurs-sessions/export.csv'
   envoyer_message_link = '/messagerie/interne/?group=formateurs_all'
-  certificat_link = '#'
+  certificat_link = '/admin/mission-dashboard/'
   if dedup_course_ids:
     recent_apprenants = CourseEnrollment.objects.filter(
       course_id__in=dedup_course_ids,
@@ -214,17 +214,17 @@
 
   if formateur_courses:
     instructor_link = '/courses/{}/instructor'.format(formateur_courses[0]['course_id'])
-    apprenants_link = '/courses/{}/instructor#membership'.format(formateur_courses[0]['course_id'])
+    apprenants_link = '/admin/auth/user/?is_staff__exact=0&is_superuser__exact=0'
     calendrier_link = '/courses/{}/dates'.format(formateur_courses[0]['course_id'])
     certificat_link = '{}#certificates'.format(instructor_link)
     evaluations_link = instructor_link
     notes_link = instructor_link
-    forums_link = '/courses/{}/discussion/forum'.format(formateur_courses[0]['course_id'])
+    forums_link = '/courses/{}/discussion/forum/'.format(formateur_courses[0]['course_id'])
     bibliotheque_link = 'http://studio.local.openedx.io/home/'
     statistiques_link = instructor_link
     rapports_link = instructor_link
     nouvelle_session_link = calendrier_link
-    export_resultats_link = instructor_link
+    export_resultats_link = '/api/admin/formateurs-sessions/export.csv'
     envoyer_message_link = '/messagerie/interne/?group=formateurs_all'
 %>
 
@@ -243,7 +243,7 @@
           <div class="lms-nav-label">Tableau de bord</div>
           <a class="lms-nav-item active" href="/dashboard"><span class="nav-icon">◉</span>Vue d'ensemble</a>
           <a class="lms-nav-item" href="/admin/mission-dashboard/"><span class="nav-icon">◈</span>Dashboard admin</a>
-          <a class="lms-nav-item" href="#mes-formations"><span class="nav-icon">◈</span>Mes formations<span class="nav-badge">${total_formations}</span></a>
+          <a class="lms-nav-item" href="/dashboard#mes-formations"><span class="nav-icon">◈</span>Mes formations<span class="nav-badge">${total_formations}</span></a>
           <a class="lms-nav-item" href="${calendrier_link}"><span class="nav-icon">◇</span>Calendrier</a>
         </div>
         <div class="lms-nav-group">
@@ -266,7 +266,7 @@
         </div>
         <div class="lms-nav-group">
           <div class="lms-nav-label">Espace interne</div>
-          <a class="lms-nav-item" href="http://local.openedx.io/admin"><span class="nav-icon">◌</span>LMS</a>
+          <a class="lms-nav-item" href="/admin/"><span class="nav-icon">◌</span>LMS</a>
           <a class="lms-nav-item" href="https://missionformations.com/formateur/login/index.html"><span class="nav-icon">◍</span>Espace formateur web</a>
         </div>
         <div class="lms-nav-group">

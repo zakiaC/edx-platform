@@ -227,18 +227,18 @@
   recent_activities = recent_activities[:6]
 
   apprenants_rows = []
-  apprenants_link = '#apprenants-panel'
-  calendrier_link = '#'
-  evaluations_link = '/dashboard'
-  notes_link = '/dashboard'
+  apprenants_link = '/courses'
+  calendrier_link = '/courses'
+  evaluations_link = '/courses'
+  notes_link = '/courses'
   forums_link = '/courses'
   bibliotheque_link = 'http://studio.local.openedx.io/home/'
-  statistiques_link = '/dashboard'
-  rapports_link = '/dashboard'
-  nouvelle_session_link = '/dashboard'
-  export_resultats_link = '/dashboard'
+  statistiques_link = '/courses'
+  rapports_link = '/courses'
+  nouvelle_session_link = '/courses'
+  export_resultats_link = '/courses'
   envoyer_message_link = '/messagerie/interne/?group=learners_managed'
-  certificat_link = '#'
+  certificat_link = '/dashboard'
   if dedup_course_ids:
     recent_apprenants = CourseEnrollment.objects.filter(
       course_id__in=dedup_course_ids,
@@ -270,7 +270,7 @@
     certificat_link = '{}#certificates'.format(instructor_link)
     evaluations_link = instructor_link
     notes_link = instructor_link
-    forums_link = '/courses/{}/discussion/forum'.format(formateur_courses[0]['course_id'])
+    forums_link = '/courses/{}/discussion/forum/'.format(formateur_courses[0]['course_id'])
     bibliotheque_link = 'http://studio.local.openedx.io/home/'
     statistiques_link = instructor_link
     rapports_link = instructor_link
@@ -293,7 +293,7 @@
         <div class="lms-nav-group">
           <div class="lms-nav-label">Tableau de bord</div>
           <a class="lms-nav-item active" href="/dashboard"><span class="nav-icon">◉</span>Vue d'ensemble</a>
-          <a class="lms-nav-item" href="#mes-formations"><span class="nav-icon">◈</span>Mes formations<span class="nav-badge">${total_formations}</span></a>
+          <a class="lms-nav-item" href="/dashboard#mes-formations"><span class="nav-icon">◈</span>Mes formations<span class="nav-badge">${total_formations}</span></a>
           <a class="lms-nav-item" href="${calendrier_link}"><span class="nav-icon">◇</span>Calendrier</a>
         </div>
         <div class="lms-nav-group">
