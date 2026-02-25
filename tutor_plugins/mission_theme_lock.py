@@ -12,11 +12,11 @@ THEME_NAME = "mission-theme"
 
 PATCH_CONTENT = """
 # mission_theme_lock: enforce Mission themed auth stack
-DEFAULT_SITE_THEME = "{{ DEFAULT_SITE_THEME }}"
-FEATURES['ENABLE_AUTHN_MICROFRONTEND'] = {{ ENABLE_AUTHN_MICROFRONTEND }}
+DEFAULT_SITE_THEME = "mission-theme"
+FEATURES['ENABLE_AUTHN_MICROFRONTEND'] = False
 FEATURES['ENABLE_THIRD_PARTY_AUTH'] = False
 FEATURES['ENABLE_COMBINED_LOGIN_REGISTRATION'] = True
-ENABLE_LEARNER_HOME_MFE = {{ ENABLE_LEARNER_HOME_MFE }}
+ENABLE_LEARNER_HOME_MFE = False
 LEARNER_HOME_MFE_REDIRECT_PERCENTAGE = 0
 
 if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
@@ -27,7 +27,7 @@ if "/openedx/themes/mission-theme/lms/static" not in STATICFILES_DIRS:
 
 CMS_PATCH_CONTENT = """
 # mission_theme_lock: keep CMS aligned on Mission default theme
-DEFAULT_SITE_THEME = "{{ DEFAULT_SITE_THEME }}"
+DEFAULT_SITE_THEME = "mission-theme"
 if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
     COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")
 """.strip()
