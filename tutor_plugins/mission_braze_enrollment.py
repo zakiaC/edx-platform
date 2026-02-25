@@ -1,9 +1,8 @@
 """Tutor plugin: native enrollment confirmation email via Braze.
 
-Goals:
-- Keep native Open edX enrollment-email flow (no custom override).
-- Wire Braze credentials/canvas id from Tutor config.
-- Enable enrollment confirmation flag globally.
+Role ownership (single responsibility):
+- Braze credentials wiring in LMS.
+- Native enrollment confirmation flag enablement.
 """
 
 from tutor import hooks
@@ -18,7 +17,6 @@ hooks.Filters.CONFIG_DEFAULTS.add_items([
 ])
 
 
-# Inject Braze settings into LMS settings.
 BRAZE_SETTINGS_PATCH = """
 # mission_braze_enrollment: native Open edX enrollment confirmation email via Braze
 EDX_BRAZE_API_KEY = "{{ MISSION_BRAZE_API_KEY }}"
@@ -26,12 +24,10 @@ EDX_BRAZE_API_SERVER = "{{ MISSION_BRAZE_API_SERVER }}"
 BRAZE_COURSE_ENROLLMENT_CANVAS_ID = "{{ MISSION_BRAZE_COURSE_ENROLLMENT_CANVAS_ID }}"
 """.strip()
 
-for target in (
-    "openedx-lms-common-settings",
-    "openedx-lms-production-settings",
-    "openedx-lms-development-settings",
-):
-    hooks.Filters.ENV_PATCHES.add_item((target, BRAZE_SETTINGS_PATCH), priority=priorities.LOW)
+hooks.Filters.ENV_PATCHES.add_item(
+    ("openedx-lms-common-settings", BRAZE_SETTINGS_PATCH),
+    priority=priorities.LOW,
+)
 
 
 # Ensure native enrollment confirmation email flag is enabled.
