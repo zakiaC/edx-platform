@@ -3,7 +3,6 @@
 <%!
   from django.utils.translation import gettext as _
   from lms.djangoapps.branding.api import get_footer
-  from openedx.core.djangoapps.lang_pref.api import footer_language_selector_is_enabled
 %>
 <% footer = get_footer(is_secure=is_secure) %>
 <% icp_license_info = getattr(settings, 'ICP_LICENSE_INFO', {}) %>
@@ -97,9 +96,6 @@
   .mf-footer-copy a:hover {
     color: #01E8AE;
   }
-  .mf-footer-lang {
-    margin: 10px 0 12px;
-  }
   .mf-footer-divider {
     height: 1px;
     background: rgba(255,255,255,.1);
@@ -181,12 +177,6 @@
         </ul>
       </nav>
     </div>
-
-    % if context.get('include_language_selector', footer_language_selector_is_enabled()):
-      <div class="mf-footer-lang">
-        <%include file="${static.get_template_path('widgets/footer-language-selector.html')}"/>
-      </div>
-    % endif
 
     <div class="mf-footer-divider"></div>
 

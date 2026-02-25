@@ -91,7 +91,11 @@ fieldset.module h2,
 #content .module table{width:100%;border-collapse:collapse}
 #content .module tr{border-bottom:1px solid var(--dk-bg);transition:background .08s}
 #content .module tr:last-child{border-bottom:none}
-#content .module tr:hover{background:rgba(9,101,208,.015)}
+#content .module tr:hover{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,0) 55%),
+    linear-gradient(135deg,#0f7dca 0%,#0a57b2 45%,#0a2f8f 100%);
+}
 #content .module td,
 #content .module th,
 #changelist table td,
@@ -100,6 +104,36 @@ fieldset.module h2,
 #content .module td a,
 #changelist table td a,
 #changelist .results a{font-weight:600;color:var(--pri)}
+
+#content .module th a{color:var(--pri-dk);font-weight:700}
+#content .module tr:hover th a,
+#content .module tr:hover td a{
+  color:#fff !important;
+  text-decoration:none;
+  text-shadow:0 0 8px rgba(255,255,255,.4);
+}
+
+#content .module td .addlink,
+#content .module td .changelink{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:86px;
+  padding:4px 10px;
+  border-radius:6px;
+  border:1px solid rgba(9,101,208,.35);
+  background:rgba(9,101,208,.08);
+  color:var(--pri-dk) !important;
+  font-size:11px;
+  font-weight:700;
+  background-image:none !important;
+}
+#content .module td .addlink:hover,
+#content .module td .changelink:hover{
+  background:linear-gradient(135deg,#0f7dca 0%,#0a57b2 45%,#0a2f8f 100%);
+  border-color:rgba(29,140,255,.8);
+  color:#fff !important;
+}
 
 /* RECENT ACTIONS */
 #recent-actions-module h2{background:var(--pri-dk)!important}
