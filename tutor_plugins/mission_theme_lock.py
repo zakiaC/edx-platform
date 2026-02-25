@@ -32,14 +32,25 @@ if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
     COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")
 """.strip()
 
-hooks.Filters.ENV_PATCHES.add_item(
-    ("openedx-lms-common-settings", PATCH_CONTENT),
-    priority=priorities.DEFAULT,
-)
-hooks.Filters.ENV_PATCHES.add_item(
-    ("openedx-cms-common-settings", CMS_PATCH_CONTENT),
-    priority=priorities.DEFAULT,
-)
+for patch_target in (
+    "openedx-lms-common-settings",
+    "openedx-lms-production-settings",
+    "openedx-lms-development-settings",
+):
+    hooks.Filters.ENV_PATCHES.add_item(
+        (patch_target, PATCH_CONTENT),
+        priority=priorities.DEFAULT,
+    )
+
+for patch_target in (
+    "openedx-cms-common-settings",
+    "openedx-cms-production-settings",
+    "openedx-cms-development-settings",
+):
+    hooks.Filters.ENV_PATCHES.add_item(
+        (patch_target, CMS_PATCH_CONTENT),
+        priority=priorities.DEFAULT,
+    )
 
 CADDY_LMS_PATCH = """
 # mission_theme_lock: keep legacy themed auth entrypoints
