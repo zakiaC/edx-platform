@@ -1,6 +1,5 @@
 ## mako
 <%! from django.utils.translation import gettext as _ %>
-<%! from django.conf import settings %>
 
 <%inherit file="main.html" />
 
@@ -17,243 +16,144 @@
 
 <%block name="content">
 <div class="mf-home">
-  <nav class="mf-nav" aria-label="Navigation homepage Mission">
-    <div class="mf-nav__brand">
-      <div class="mf-nav__logo">M</div>
-      Mission Formations
-    </div>
-    <div class="mf-nav__links">
-      <a href="#mf-catalog" class="mf-nav__link">Catalogue</a>
-      <a href="/login" class="mf-nav__link mf-nav__link--cta">Se connecter</a>
-    </div>
-  </nav>
 
-  <!-- ═══════ HERO ═══════ -->
-  <section class="mf-hero">
-    <div class="mf-hero__bg"></div>
-    <div class="mf-hero__inner">
-      <div class="mf-hero__badge">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.657 2.686 3 6 3s6-1.343 6-3v-5"/></svg>
-        Académie de formation professionnelle
+<!-- NAV -->
+<nav class="mf-nav">
+  <div class="mf-nav__brand">
+    <div class="mf-nav__logo">M</div>
+    Mission Formations
+  </div>
+  <div class="mf-nav__links">
+    <a href="#mf-catalog" class="mf-nav__link">Catalogue</a>
+    <a href="/login" class="mf-nav__link mf-nav__link--cta">Se connecter</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="mf-hero">
+  <div class="mf-hero__bg"></div>
+  <div class="mf-hero__inner">
+    <div class="mf-hero__badge">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.657 2.686 3 6 3s6-1.343 6-3v-5"/></svg>
+      Académie de formation professionnelle
+    </div>
+    <h1 class="mf-hero__title">Développez vos <em>compétences</em> avec Mission Formations</h1>
+    <p class="mf-hero__sub">Des formations certifiantes conçues par des experts pour accélérer votre carrière. Apprenez à votre rythme, progressez avec confiance.</p>
+    <div class="mf-hero__actions">
+      <a href="/dashboard" class="mf-btn mf-btn--grad">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Accéder à mes formations
+      </a>
+      <a href="#mf-catalog" class="mf-btn mf-btn--outline">Explorer le catalogue</a>
+    </div>
+    <div class="mf-hero__stats">
+      <div class="mf-hero__stat"><span class="mf-hero__stat-num">100%</span><span class="mf-hero__stat-lbl">En ligne</span></div>
+      <div class="mf-hero__stat-div"></div>
+      <div class="mf-hero__stat"><span class="mf-hero__stat-num">24/7</span><span class="mf-hero__stat-lbl">Accessible</span></div>
+      <div class="mf-hero__stat-div"></div>
+      <div class="mf-hero__stat"><span class="mf-hero__stat-num">Certifié</span><span class="mf-hero__stat-lbl">Formations reconnues</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="mf-features">
+  <div class="mf-wrap">
+    <div class="mf-features__grid">
+      <div class="mf-feat">
+        <div class="mf-feat__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>Formations en ligne</h3>
+        <p>Accédez à vos cours depuis n'importe quel appareil, à tout moment.</p>
       </div>
-      <h1 class="mf-hero__title">
-        Développez vos <em>compétences</em> avec Mission Formations
-      </h1>
-      <p class="mf-hero__sub">
-        Des formations certifiantes conçues par des experts pour accélérer votre carrière.
-        Apprenez à votre rythme, progressez avec confiance.
-      </p>
-      <div class="mf-hero__actions">
-        <a href="/dashboard" class="mf-btn mf-btn--grad">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Accéder à mes formations
-        </a>
-        <a href="#mf-catalog" class="mf-btn mf-btn--outline">
-          Explorer le catalogue
-        </a>
+      <div class="mf-feat">
+        <div class="mf-feat__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Suivi personnalisé</h3>
+        <p>Progression détaillée et accompagnement par nos formateurs experts.</p>
       </div>
-      <div class="mf-hero__stats">
-        <div class="mf-hero__stat">
-          <span class="mf-hero__stat-num">100%</span>
-          <span class="mf-hero__stat-lbl">En ligne</span>
-        </div>
-        <div class="mf-hero__stat-div"></div>
-        <div class="mf-hero__stat">
-          <span class="mf-hero__stat-num">24/7</span>
-          <span class="mf-hero__stat-lbl">Accessible</span>
-        </div>
-        <div class="mf-hero__stat-div"></div>
-        <div class="mf-hero__stat">
-          <span class="mf-hero__stat-num">Certifié</span>
-          <span class="mf-hero__stat-lbl">Formations reconnues</span>
-        </div>
+      <div class="mf-feat">
+        <div class="mf-feat__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg></div>
+        <h3>Certifications</h3>
+        <p>Obtenez des attestations reconnues à la fin de chaque parcours.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ═══════ FEATURES ═══════ -->
-  <section class="mf-features">
-    <div class="mf-wrap">
-      <div class="mf-features__grid">
-        <div class="mf-feat">
-          <div class="mf-feat__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          </div>
-          <h3>Formations en ligne</h3>
-          <p>Accédez à vos cours depuis n'importe quel appareil, à tout moment.</p>
-        </div>
-        <div class="mf-feat">
-          <div class="mf-feat__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h3>Suivi personnalisé</h3>
-          <p>Progression détaillée et accompagnement par nos formateurs experts.</p>
-        </div>
-        <div class="mf-feat">
-          <div class="mf-feat__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
-          </div>
-          <h3>Certifications</h3>
-          <p>Obtenez des attestations reconnues à la fin de chaque parcours.</p>
-        </div>
-      </div>
+<!-- CATALOGUE -->
+<section class="mf-catalog" id="mf-catalog">
+  <div class="mf-wrap">
+    <div class="mf-catalog__head">
+      <div><span class="mf-tag">Catalogue</span><h2 class="mf-title">Nos formations disponibles</h2></div>
+      <form class="mf-search"><svg class="mf-search__ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="mf-search__in" type="text" placeholder="Rechercher une formation…" /></form>
     </div>
-  </section>
-
-  <!-- ═══════ CATALOGUE ═══════ -->
-  <section class="mf-catalog" id="mf-catalog">
-    <div class="mf-wrap">
-      <div class="mf-catalog__head">
-        <div>
-          <span class="mf-tag">Catalogue</span>
-          <h2 class="mf-title">Nos formations disponibles</h2>
+    <div class="mf-catalog__grid">
+      <!-- Card 1 -->
+      <a href="/login" class="mf-card">
+        <div class="mf-card__img"><div class="mf-card__ph"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div></div>
+        <div class="mf-card__body">
+          <span class="mf-card__org">formateurNabil · Serie1-VTC2</span>
+          <h3 class="mf-card__name">Test formation en ligne</h3>
+          <p class="mf-card__desc">Formation pratique pour développer vos compétences professionnelles.</p>
         </div>
-        <form class="mf-search" action="/search/" method="get">
-          <svg class="mf-search__ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input class="mf-search__in" type="text" name="q" placeholder="Rechercher une formation…" />
-        </form>
-      </div>
-
-      <div class="mf-catalog__grid">
-        % if courses:
-          % for course in courses:
-          <a href="${course.course_about_url if hasattr(course, 'course_about_url') else '/courses/' + str(course.id)}" class="mf-card">
-            <div class="mf-card__img">
-              % if hasattr(course, 'course_image_url') and course.course_image_url:
-              <img src="${course.course_image_url}" alt="${course.display_name_with_default if hasattr(course, 'display_name_with_default') else course.display_name}" loading="lazy" />
-              % else:
-              <div class="mf-card__ph">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-              </div>
-              % endif
-            </div>
-            <div class="mf-card__body">
-              % if hasattr(course, 'org') and course.org:
-              <span class="mf-card__org">${course.org}</span>
-              % endif
-              <h3 class="mf-card__name">
-                ${course.display_name_with_default if hasattr(course, 'display_name_with_default') else course.display_name}
-              </h3>
-              % if hasattr(course, 'short_description') and course.short_description:
-              <p class="mf-card__desc">${course.short_description}</p>
-              % endif
-            </div>
-            <div class="mf-card__foot">
-              <span class="mf-card__cta">
-                Voir la formation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </span>
-            </div>
-          </a>
-          % endfor
-        % else:
-          <a href="/login" class="mf-card">
-            <div class="mf-card__img">
-              <div class="mf-card__ph">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-              </div>
-            </div>
-            <div class="mf-card__body">
-              <span class="mf-card__org">Mission Formations</span>
-              <h3 class="mf-card__name">Préparation examen VTC</h3>
-              <p class="mf-card__desc">Parcours complet pour réussir l'examen et démarrer votre activité.</p>
-            </div>
-            <div class="mf-card__foot">
-              <span class="mf-card__cta">
-                Voir la formation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </span>
-            </div>
-          </a>
-          <a href="/login" class="mf-card">
-            <div class="mf-card__img">
-              <div class="mf-card__ph">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-              </div>
-            </div>
-            <div class="mf-card__body">
-              <span class="mf-card__org">Mission Formations</span>
-              <h3 class="mf-card__name">Comptabilité et fiscalité VTC</h3>
-              <p class="mf-card__desc">Structurez votre gestion financière pour piloter votre activité sereinement.</p>
-            </div>
-            <div class="mf-card__foot">
-              <span class="mf-card__cta">
-                Voir la formation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </span>
-            </div>
-          </a>
-          <a href="/login" class="mf-card">
-            <div class="mf-card__img">
-              <div class="mf-card__ph">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-              </div>
-            </div>
-            <div class="mf-card__body">
-              <span class="mf-card__org">Mission Formations</span>
-              <h3 class="mf-card__name">Développement commercial VTC</h3>
-              <p class="mf-card__desc">Augmentez votre chiffre d'affaires avec des techniques commerciales ciblées.</p>
-            </div>
-            <div class="mf-card__foot">
-              <span class="mf-card__cta">
-                Voir la formation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </span>
-            </div>
-          </a>
-        % endif
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════ CTA ═══════ -->
-  <section class="mf-cta">
-    <div class="mf-wrap">
-      <div class="mf-cta__box">
-        <div class="mf-cta__txt">
-          <h2>Prêt à commencer votre parcours ?</h2>
-          <p>Rejoignez l'Académie Mission Formations et développez les compétences qui feront la différence.</p>
+        <div class="mf-card__foot"><span class="mf-card__cta">Voir la formation <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+      </a>
+      <!-- Card 2 -->
+      <a href="/login" class="mf-card">
+        <div class="mf-card__img"><div class="mf-card__ph"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div></div>
+        <div class="mf-card__body">
+          <span class="mf-card__org">Nadia · N345</span>
+          <h3 class="mf-card__name">Deuxième test formation</h3>
+          <p class="mf-card__desc">Parcours complet avec suivi personnalisé et certification.</p>
         </div>
-        <a href="/login" class="mf-btn mf-btn--white">
-          Se connecter
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="mf-footer">
-    <div class="mf-wrap">
-      <div class="mf-footer__inner">
-        <div class="mf-footer__brand">
-          <div class="mf-footer__logo">M</div>
-          Mission Formations
+        <div class="mf-card__foot"><span class="mf-card__cta">Voir la formation <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+      </a>
+      <!-- Card 3 -->
+      <a href="/login" class="mf-card">
+        <div class="mf-card__img"><div class="mf-card__ph"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div></div>
+        <div class="mf-card__body">
+          <span class="mf-card__org">Mission Formations</span>
+          <h3 class="mf-card__name">Formation management & leadership</h3>
+          <p class="mf-card__desc">Développez vos capacités de gestion d'équipe et de leadership.</p>
         </div>
-        <span class="mf-footer__copy">
-          © 2026 Mission Formations · <a href="mailto:contact@missionformations.com">Contact</a> · <a href="https://missionformations.com/demarches-qualite/handicap/" target="_blank" rel="noopener noreferrer">Handicap</a>
-        </span>
-      </div>
+        <div class="mf-card__foot"><span class="mf-card__cta">Voir la formation <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+      </a>
     </div>
-  </footer>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="mf-cta">
+  <div class="mf-wrap">
+    <div class="mf-cta__box">
+      <div class="mf-cta__txt">
+        <h2>Prêt à commencer votre parcours ?</h2>
+        <p>Rejoignez l'Académie Mission Formations et développez les compétences qui feront la différence.</p>
+      </div>
+      <a href="/login" class="mf-btn mf-btn--white">Se connecter <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="mf-footer">
+  <div class="mf-wrap">
+    <div class="mf-footer__inner">
+      <div class="mf-footer__brand"><div class="mf-footer__logo">M</div>Mission Formations</div>
+      <span class="mf-footer__copy">© 2026 Mission Formations · <a href="/contact">Contact</a> · <a href="/handicap">Handicap</a></span>
+    </div>
+  </div>
+</footer>
 
 </div>
 </%block>
 
 <%block name="js_extra">
 <script>
-(function() {
-  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
-    a.addEventListener('click', function(e) {
-      var t = document.querySelector(this.getAttribute('href'));
-      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
   });
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(en) {
-      if (en.isIntersecting) { en.target.classList.add('mf-visible'); obs.unobserve(en.target); }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.mf-feat, .mf-card, .mf-cta__box').forEach(function(el) { obs.observe(el); });
-})();
+});
 </script>
 </%block>
