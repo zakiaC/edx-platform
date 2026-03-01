@@ -13,7 +13,7 @@
 <%block name="bodyclass">view-login</%block>
 
 <%block name="head_extra">
-    <link rel="stylesheet" href="${static.url('mission-theme/css/mf-login.css')}" />
+    <link rel="stylesheet" href="${static.url('css/mf-login.css')}" />
     <style>
       /* Critical overrides kept inline so login stays custom even before static re-build */
       body.view-login .global-header,
@@ -48,7 +48,7 @@
     % if configuration_helpers.get_value('DISPLAY_TOS_IN_MODAL_ON_REGISTRATION_PAGE', False):
     <script type="text/javascript" src="${static.url('js/student_account/tos_modal.js')}"></script>
     % endif
-    <script src="${static.url('mission-theme/js/mf-login.js')}"></script>
+    <script src="${static.url('js/mf-login.js')}"></script>
 </%block>
 
 <%block name="header_extras">
