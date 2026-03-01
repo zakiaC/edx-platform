@@ -1,0 +1,13 @@
+// themes/mission-theme/lms/static/sass/lms-main-v1.scss
+//
+// Entry-point Sass thème mission-theme — override lms-main-v1.scss core.
+// Le comprehensive theming d'Open edX utilise ce fichier à la place
+// du lms-main-v1.scss par défaut quand le thème est actif.
+
+// 1. Importer le pipeline LMS complet
+@import 'lms/static/sass/lms-main-v1';
+
+// 2. Ajouter les styles custom Mission (homepage, composants)
+@import 'partials/lms/theme/extras';
+@import 'partials/lms/theme/dashboard';
+@import 'partials/lms/theme/login';

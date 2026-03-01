@@ -37,7 +37,8 @@ class MissionHomepageDesignTests(unittest.TestCase):
     def test_homepage_styles_are_in_theme_extras_sass(self):
         """Les styles de homepage sont centralises dans le partial theme extras (pipeline)."""
         self.assertTrue(self.SASS_EXTRAS_PATH.exists(), "themes/mission-theme/lms/static/sass/partials/lms/theme/_extras.scss manquant")
-        self.assertIn("body.view-index", self.extras_sass)
+        self.assertNotIn("body.view-index", self.extras_sass)
+        self.assertIn(".mf-home", self.extras_sass)
         self.assertIn(".mf-nav", self.extras_sass)
         self.assertIn(".mf-hero", self.extras_sass)
         self.assertIn(".mf-catalog", self.extras_sass)

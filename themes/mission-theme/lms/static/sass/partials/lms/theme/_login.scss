@@ -1,0 +1,710 @@
+:root {
+  --bleu: #0965d0;
+  --bleu2: #074da0;
+  --bleu-pale: #e8f0fb;
+  --vert: #01e8ae;
+  --vert2: #00c494;
+  --vert-pale: #e6faf4;
+  --dark: #0a1628;
+  --noir: #3b3b3b;
+  --gris: #6b6b6b;
+  --gris2: #999;
+  --gris3: #ccc;
+  --gris4: #e8e8e8;
+  --fond: #f5f7fa;
+  --blanc: #fff;
+  --rouge: #e74c3c;
+}
+
+body.view-login .header-global,
+body.view-login .global-header,
+body.view-login header.global-header,
+body.view-login .wrapper-footer,
+body.view-login #footer-openedx,
+body.view-login footer#footer-openedx,
+body.view-login .nav-skip,
+body.view-login .preview-menu-wrapper {
+  display: none !important;
+}
+
+body.view-login .content-wrapper.main-container {
+  margin: 0;
+  max-width: none;
+  padding: 0 !important;
+}
+
+body.view-login {
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+  color: var(--noir);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-smooth: always;
+}
+
+body.view-login * {
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  text-rendering: inherit;
+}
+
+.mf-auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.mf-auth-layout * {
+  box-sizing: border-box;
+}
+
+.mf-brand-panel {
+  background: var(--dark);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+}
+
+.mf-brand-panel::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -30%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(9, 101, 208, 0.12) 0%, transparent 70%);
+  animation: float-orb 12s ease-in-out infinite;
+}
+
+.mf-brand-panel::after {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(1, 232, 174, 0.06) 0%, transparent 70%);
+  animation: float-orb 15s ease-in-out infinite reverse;
+}
+
+.mf-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.mf-geo {
+  position: absolute;
+  border: 1px solid rgba(9, 101, 208, 0.1);
+  border-radius: 8px;
+  animation: geo-float 8s ease-in-out infinite;
+}
+
+.mf-geo-1 {
+  width: 80px;
+  height: 80px;
+  top: 15%;
+  right: 20%;
+  animation-delay: 0s;
+  transform: rotate(15deg);
+}
+
+.mf-geo-2 {
+  width: 50px;
+  height: 50px;
+  bottom: 25%;
+  right: 35%;
+  animation-delay: 2s;
+  border-color: rgba(1, 232, 174, 0.08);
+  transform: rotate(-10deg);
+}
+
+.mf-geo-3 {
+  width: 120px;
+  height: 120px;
+  top: 60%;
+  left: 10%;
+  animation-delay: 4s;
+  border-radius: 50%;
+  border-color: rgba(9, 101, 208, 0.05);
+}
+
+.mf-brand-content {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+}
+
+.mf-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.mf-logo-m {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--bleu), var(--vert));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(9, 101, 208, 0.25);
+}
+
+.mf-logo-text {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.mf-logo-text span {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+#mf-brand-title {
+  margin: 0 0 16px;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+}
+
+#mf-brand-title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--bleu), var(--vert));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#mf-brand-subtitle {
+  margin: 0 0 32px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.8;
+}
+
+.mf-form-panel {
+  background: var(--blanc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.mf-form-shell {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-register {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  max-width: none;
+  width: 100%;
+}
+
+.login-register .form-wrapper {
+  width: 100%;
+}
+
+.login-register .toggle-form,
+.login-register .toggle,
+.login-register .section-title,
+.login-register .button-secondary-login,
+.login-register .login-providers,
+.login-register .wrapper-other-login,
+.login-register .supplemental-link,
+.login-register .login-help,
+.login-register #login-help,
+.login-register .reset-help,
+.login-register #reset-help {
+  display: none !important;
+}
+
+#login-and-registration-container > .toggle-form,
+#login-and-registration-container > .toggle {
+  display: none !important;
+}
+
+.form-head {
+  margin-bottom: 28px;
+}
+
+.form-head h1 {
+  margin: 0 0 6px;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.form-head p {
+  font-size: 14px;
+  color: var(--gris);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.field {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--gris4);
+  border-radius: 10px;
+  font-family: "Raleway", sans-serif;
+  font-size: 14px;
+  color: var(--noir);
+  background: var(--blanc);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--bleu);
+  box-shadow: 0 0 0 3px rgba(9, 101, 208, 0.08);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--gris3);
+}
+
+.field .hint {
+  font-size: 11px;
+  color: var(--gris2);
+  margin-top: 4px;
+}
+
+.field .tip.error {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--rouge);
+}
+
+.field .tip.error ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mf-toggle-pw {
+  position: absolute;
+  right: 14px;
+  top: 38px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--gris2);
+  font-family: "Raleway", sans-serif;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.mf-toggle-pw:hover {
+  color: var(--bleu);
+}
+
+.mf-inline-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox input {
+  display: none;
+}
+
+.checkbox .check {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--gris4);
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+
+.checkbox input:checked + .check {
+  background: linear-gradient(135deg, var(--bleu), var(--vert));
+  border-color: transparent;
+}
+
+.checkbox input:checked + .check::after {
+  content: "✓";
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.checkbox .text {
+  font-size: 12px;
+  color: var(--gris);
+  line-height: 1.6;
+}
+
+.forgot-link {
+  margin: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bleu);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  color: var(--bleu2);
+}
+
+.btn-submit,
+.login-register .action-primary {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--bleu), var(--vert));
+  color: #fff;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-submit::before,
+.login-register .action-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--bleu2), var(--vert2));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-submit span,
+.login-register .action-primary span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-submit:hover::before,
+.login-register .action-primary:hover::before {
+  opacity: 1;
+}
+
+.btn-submit:hover,
+.login-register .action-primary:hover {
+  box-shadow: 0 8px 28px rgba(9, 101, 208, 0.2);
+  transform: translateY(-1px);
+}
+
+.rgpd-notice {
+  background: var(--vert-pale);
+  border-left: 4px solid var(--vert);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 20px;
+  font-size: 11px;
+  color: var(--gris2);
+  line-height: 1.6;
+}
+
+.rgpd-notice strong {
+  color: var(--vert2);
+}
+
+.form-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--gris);
+}
+
+.form-bottom .form-toggle {
+  border: 0;
+  background: none;
+  color: var(--bleu);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#login-and-registration-container .mf-toggle-pw,
+#login-and-registration-container .forgot-link.form-toggle,
+#login-and-registration-container .form-bottom .form-toggle {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: none !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  outline: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+#login-and-registration-container .forgot-link.form-toggle {
+  color: var(--bleu) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+#login-and-registration-container .form-bottom .form-toggle {
+  color: var(--bleu) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+#login-and-registration-container .form-bottom .form-toggle:hover,
+#login-and-registration-container .forgot-link.form-toggle:hover {
+  text-decoration: underline !important;
+}
+
+.form-bottom .form-toggle:hover {
+  text-decoration: underline;
+}
+
+.form-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gris4);
+  text-align: center;
+  font-size: 11px;
+  color: var(--gris2);
+}
+
+.form-footer a {
+  color: var(--gris);
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  color: var(--bleu);
+}
+
+.login-register .js-form-feedback {
+  margin-bottom: 12px;
+}
+
+.js-form-errors .message-title {
+  margin: 0 0 4px;
+  color: var(--rouge);
+  font-size: 14px;
+}
+
+.js-form-errors .message-copy {
+  color: var(--rouge);
+  font-size: 12px;
+}
+
+#login-form.mf-reset-sent-active > .js-form-feedback {
+  margin-bottom: 0;
+}
+
+#login-form.mf-reset-sent-active > .form-head,
+#login-form.mf-reset-sent-active > form,
+#login-form.mf-reset-sent-active > .rgpd-notice,
+#login-form.mf-reset-sent-active > .form-footer,
+#login-form.mf-reset-sent-active > .form-bottom {
+  display: none !important;
+}
+
+.mf-reset-sent-card {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.mf-reset-sent-card .mf-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--bleu), var(--vert));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 32px;
+  color: #fff;
+  box-shadow: 0 12px 40px rgba(1, 232, 174, 0.2);
+}
+
+.mf-reset-sent-card h2 {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0 0 8px;
+}
+
+.mf-reset-sent-card p {
+  font-size: 14px;
+  color: var(--gris);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.mf-reset-sent-card .mf-email-pill {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--bleu);
+  background: var(--bleu-pale);
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  margin: 16px 0;
+}
+
+.mf-reset-sent-card .mf-reset-help {
+  font-size: 12px;
+  color: var(--gris2);
+  margin-bottom: 16px;
+}
+
+.mf-reset-sent-card .js-back-login {
+  margin-top: 16px;
+}
+
+.mf-reset-sent-card .form-bottom {
+  margin-top: 20px;
+}
+
+.mf-reset-sent-card .help-link {
+  color: var(--bleu);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-register .form-field.checkbox-honor_code,
+.login-register .form-field.checkbox-tos_required,
+.login-register .form-field.checkbox-optional_fields_toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.login-register .form-field.checkbox-honor_code .input-block.checkbox,
+.login-register .form-field.checkbox-tos_required .input-block.checkbox,
+.login-register .form-field.checkbox-optional_fields_toggle .input-block.checkbox {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+}
+
+.login-register .form-field.checkbox-honor_code label,
+.login-register .form-field.checkbox-tos_required label,
+.login-register .form-field.checkbox-optional_fields_toggle label {
+  margin: 0;
+  font-size: 12px;
+  color: var(--gris);
+}
+
+body.view-login.mode-password-reset #mf-brand-title {
+  content: "";
+}
+
+@keyframes float-orb {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+}
+
+@keyframes geo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@media (max-width: 900px) {
+  .mf-auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mf-brand-panel {
+    display: none;
+  }
+
+  .mf-form-panel {
+    padding: 24px;
+  }
+}

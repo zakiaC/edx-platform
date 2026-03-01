@@ -9,30 +9,28 @@
   width: auto !important;
 }
 
-body.view-index {
-  .mf-home {
-    font-family: 'Raleway', sans-serif;
-    color: #3B3B3B;
-    line-height: 1.8;
-    -webkit-font-smoothing: antialiased;
-    background: #FFF;
-  }
+.mf-home {
+  font-family: 'Raleway', sans-serif;
+  color: #3B3B3B;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  background: #FFF;
 
-  .mf-home *,
-  .mf-home *::before,
-  .mf-home *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
-  .mf-home h1,
-  .mf-home h2,
-  .mf-home h3 {
+  h1,
+  h2,
+  h3 {
     font-family: 'Ubuntu', sans-serif;
     font-weight: 700;
     line-height: 1.2;
   }
 
-  .mf-home a {
+  a {
     text-decoration: none;
     color: inherit;
   }
@@ -684,18 +682,6 @@ body.view-index {
     .mf-nav__links {
       gap: 4px;
     }
-  }
-
-  .content-wrapper,
-  #content {
-    max-width: none !important;
-    padding: 0 !important;
-  }
-
-  .courses-container,
-  .courses,
-  .discovery-button-wrapper {
-    display: none !important;
   }
 
   .global-header,
