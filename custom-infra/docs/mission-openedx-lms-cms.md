@@ -57,3 +57,17 @@ OVERRIDE_CONFIG=true custom-infra/scripts/configure-mission-tenant.sh
 3. Confirm route mapping in admin:
    - `EDUNEXT OPENEDX MULTITENANCY > Routes`
    - `EDUNEXT OPENEDX MULTITENANCY > Tenant configs`
+
+## 5. Theme deploy and smoke (staging)
+
+Use the standardized scripts for theme deployment and post-deploy checks:
+
+```bash
+cd /Users/zakiachabane/edx-platform
+custom-infra/scripts/deploy-theme.sh /Users/zakiachabane/edx-platform
+custom-infra/scripts/smoke-test.sh academie.staging.missionformations.com studio.staging.missionformations.com
+```
+
+RCA and troubleshooting details are documented in:
+
+- `custom-infra/docs/openedx-theme-css-rca-runbook.md`
