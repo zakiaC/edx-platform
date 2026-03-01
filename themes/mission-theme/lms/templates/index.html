@@ -6,11 +6,18 @@
 <%namespace name='static' file='static_content.html'/>
 
 <%block name="pagetitle">${_("Accueil")} | Mission Formations</%block>
+<%block name="bodyclass">view-homepage-mf</%block>
 
 <%block name="header_extras">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Homepage only: hide platform footer to avoid double footer with Mission footer */
+  body.view-homepage-mf .window-wrap > .mf-footer-shell {
+    display: none !important;
+  }
+</style>
 </%block>
 
 <%block name="content">

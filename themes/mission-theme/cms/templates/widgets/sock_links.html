@@ -1,0 +1,26 @@
+<%page expression_filter="h" />
+<%!
+from django.utils.translation import gettext as _
+%>
+<%namespace file="sock_links_extra.html" import="get_sock_links_extra" />
+
+<%def name="get_sock_links()">
+    <%
+        links = [
+            {
+                'href': 'https://docs.openedx.org',
+                'sr_mouseover_text': _('Access product documentation'),
+                'text': _('Documentation'),
+                'condition': True
+            }, {
+                'href': 'https://learning.edx.org/course/course-v1:edX+DemoX+Demo_Course/home',
+                'sr_mouseover_text': _('Open the demo course'),
+                'text': _('Course demo'),
+                'condition': True
+            }
+        ]
+        links_extra = get_sock_links_extra()
+        links += links_extra
+        return links
+    %>
+</%def>

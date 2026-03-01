@@ -217,7 +217,7 @@ ul.messagelist li.error{background:rgba(231,76,60,.12);color:#b83a2e}
         <a href="{% url 'admin:password_change' %}">{% trans 'Changer mot de passe' as tmsg %}{{ tmsg|force_escape }}</a> /
     {% endif %}
 
-    <a class="mf-lms-btn" href="/dashboard">↗ LMS</a>
+    <a class="mf-lms-btn" href="/dashboard">↗ Hub</a>
 
     <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
         {% csrf_token %}
@@ -238,5 +238,5 @@ ul.messagelist li.error{background:rgba(231,76,60,.12);color:#b83a2e}
 {% endblock %}
 
 {% block footer %}
-© {% now "Y" %} Mission Formations · Administration LMS
+© {% now "Y" %} Mission Formations · Administration Hub
 {% endblock %}
