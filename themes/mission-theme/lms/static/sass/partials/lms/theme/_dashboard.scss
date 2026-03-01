@@ -114,7 +114,7 @@ svg.ic-xl{width:22px;height:22px}
 /* Certificates preview modal */
 .mf-cert-modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:1200;padding:20px}
 .mf-cert-modal.open{display:flex}
-.mf-cert-modal-dialog{width:min(980px,96vw);height:min(86vh,860px);background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.mf-cert-modal-dialog{width:96vw;max-width:980px;height:86vh;max-height:860px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;flex-direction:column}
 .mf-cert-modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #e7e7e7}
 .mf-cert-modal-head strong{font-size:14px;color:#0a1628;font-weight:700}
 .mf-cert-modal-close{width:30px;height:30px;border-radius:6px;border:1px solid #d8d8d8;background:#fff;color:#3B3B3B;cursor:pointer;font-size:12px;font-weight:700}
