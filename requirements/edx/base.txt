@@ -700,7 +700,7 @@ lazy==1.6
     #   lti-consumer-xblock
     #   ora2
     #   xblock
-loremipsum==1.0.5
+lorem==0.1.1
     # via ora2
 lti-consumer-xblock==9.13.2
     # via -r requirements/edx/kernel.in
