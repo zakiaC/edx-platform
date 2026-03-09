@@ -280,7 +280,7 @@ for feature, value in _YAML_TOKENS.get('FEATURES', {}).items():
 ALLOWED_HOSTS = [
     "*",
     _YAML_TOKENS.get('LMS_BASE'),
-    FEATURES['PREVIEW_LMS_BASE'],
+    FEATURES.get('PREVIEW_LMS_BASE', ''),
 ]
 
 # Cache used for location mapping -- called many times with the same key/value
@@ -352,8 +352,8 @@ if FEATURES['ENABLE_CORS_HEADERS'] or FEATURES.get('ENABLE_CROSS_DOMAIN_CSRF_COO
     CROSS_DOMAIN_CSRF_COOKIE_DOMAIN = _YAML_TOKENS.get('CROSS_DOMAIN_CSRF_COOKIE_DOMAIN')
 
 # PREVIEW DOMAIN must be present in HOSTNAME_MODULESTORE_DEFAULT_MAPPINGS for the preview to show draft changes
-if 'PREVIEW_LMS_BASE' in FEATURES and FEATURES['PREVIEW_LMS_BASE'] != '':
-    PREVIEW_DOMAIN = FEATURES['PREVIEW_LMS_BASE'].split(':')[0]
+if 'PREVIEW_LMS_BASE' in FEATURES and FEATURES.get('PREVIEW_LMS_BASE', '') != '':
+    PREVIEW_DOMAIN = FEATURES.get('PREVIEW_LMS_BASE', '').split(':')[0]
     # update dictionary with preview domain regex
     HOSTNAME_MODULESTORE_DEFAULT_MAPPINGS.update({
         PREVIEW_DOMAIN: 'draft-preferred'
