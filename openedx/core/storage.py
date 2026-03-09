@@ -4,6 +4,7 @@ Django storage backends for Open edX.
 
 
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.contrib.staticfiles.storage import StaticFilesStorage
 from django.core.files.storage import get_storage_class, FileSystemStorage
 from django.utils.deconstruct import deconstructible
@@ -22,7 +23,7 @@ class PipelineForgivingMixin:
     def hashed_name(self, name, content=None, **kwargs):  # lint-amnesty, pylint: disable=missing-function-docstring
         try:
             out = super().hashed_name(name, content, **kwargs)  # lint-amnesty, pylint: disable=super-with-arguments
-        except ValueError:
+        except (ValueError, SuspiciousFileOperation):
             # This means that a file could not be found, and normally this would
             # cause a fatal error, which seems rather excessive given that
             # some packages have missing files in their css all the time.
