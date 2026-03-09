@@ -1,9 +1,13 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AdminUserCreationForm
+
+try:
+    from django.contrib.auth.forms import AdminUserCreationForm as _BaseForm
+except ImportError:
+    from django.contrib.auth.forms import UserCreationForm as _BaseForm
 
 
-class MissionAdminUserCreationForm(AdminUserCreationForm):
+class MissionAdminUserCreationForm(_BaseForm):
     """
     Enforce a non-empty email on Django admin user creation.
     This avoids DB IntegrityError with unique auth_user.email.
@@ -11,7 +15,7 @@ class MissionAdminUserCreationForm(AdminUserCreationForm):
 
     email = forms.EmailField(required=True, label="Adresse email")
 
-    class Meta(AdminUserCreationForm.Meta):
+    class Meta(_BaseForm.Meta):
         model = get_user_model()
         fields = ("username", "email")
 
