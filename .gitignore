@@ -110,6 +110,7 @@ common/static/common/js/vendor
 common/static/common/css/vendor
 common/static/bundles
 webpack-stats.json
+!staticfiles/webpack-stats.json
 
 ### Styling generated from templates
 lms/static/sass/*.css
