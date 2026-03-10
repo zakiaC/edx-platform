@@ -8,16 +8,16 @@ header.global-header a[href="/login"]{
   transition:color .22s ease !important;
 }
 header.global-header a[href="/login"]::after{
-  content:"";
-  position:absolute;
-  left:16px;
-  right:16px;
-  bottom:6px;
-  height:2px;
-  background:#00c9a0;
-  transform:scaleX(0);
-  transform-origin:left center;
-  transition:transform .22s ease;
+  content:"" !important;
+  position:absolute !important;
+  left:16px !important;
+  right:16px !important;
+  bottom:6px !important;
+  height:2px !important;
+  background:#00c9a0 !important;
+  transform:scaleX(0) !important;
+  transform-origin:left center !important;
+  transition:transform .22s ease !important;
 }
 header.global-header a[href="/login"]:hover,
 header.global-header a[href="/login"]:focus-visible{
@@ -25,7 +25,7 @@ header.global-header a[href="/login"]:focus-visible{
 }
 header.global-header a[href="/login"]:hover::after,
 header.global-header a[href="/login"]:focus-visible::after{
-  transform:scaleX(1);
+  transform:scaleX(1) !important;
 }
 
 header.global-header a[href="/register"]{
@@ -33,13 +33,13 @@ header.global-header a[href="/register"]{
   border:1px solid #00c9a0 !important;
   color:#00c9a0 !important;
   box-shadow:none !important;
-  transform:translateY(0);
+  transform:translateY(0) !important;
   transition:background-color .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease !important;
 }
 header.global-header a[href="/register"]:hover,
 header.global-header a[href="/register"]:focus-visible{
   background:#00c9a0 !important;
   color:#0d1b2e !important;
-  transform:translateY(-1px);
+  transform:translateY(-1px) !important;
   box-shadow:0 6px 14px rgba(0,201,160,.28) !important;
 }
