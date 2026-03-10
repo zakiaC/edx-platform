@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequential display_name="Accueil client">
+  <vertical url_name="s6_1_u1_parcours_accueil_client"/>
+  <vertical url_name="s6_1_u2_scenario_dialogue_client"/>
+</sequential>

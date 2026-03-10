@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequential display_name="Caractéristiques du véhicule">
+  <vertical url_name="s3_1_u1_regles_vehicule_vtc"/>
+  <vertical url_name="s3_1_u2_exemples_vehicules_conformes"/>
+</sequential>

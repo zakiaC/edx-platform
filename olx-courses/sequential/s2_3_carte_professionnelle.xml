@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequential display_name="Carte professionnelle">
+  <vertical url_name="s2_3_u1_conditions_obtention"/>
+  <vertical url_name="s2_3_u2_procedure_demande"/>
+  <vertical url_name="s2_3_u3_simulation_dossier_qcm"/>
+</sequential>

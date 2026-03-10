@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequential display_name="Fiscalité VTC">
+  <vertical url_name="s5_2_u1_tva_cotisations_charges"/>
+  <vertical url_name="s5_2_u2_optimisation_fiscale_legale"/>
+  <vertical url_name="s5_2_u3_quiz_fiscalite_vtc"/>
+</sequential>

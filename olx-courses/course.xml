@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<course org="MissionFormations"
+        course="MF-VTC-2025"
+        run="2025"
+        url_name="mf_vtc_2025"
+        display_name="Formation VTC - Chauffeur Privé Professionnel"
+        language="fr"
+        self_paced="true">
+  <chapter url_name="s1_introduction_metier"/>
+  <chapter url_name="s2_reglementation_vtc"/>
+  <chapter url_name="s3_vehicule_vtc"/>
+  <chapter url_name="s4_securite_routiere"/>
+  <chapter url_name="s5_gestion_activite"/>
+  <chapter url_name="s6_relation_client"/>
+  <chapter url_name="s7_langues_professionnelles"/>
+  <chapter url_name="s8_preparation_examen"/>
+</course>

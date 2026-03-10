@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html display_name="TVA, cotisations et charges fixes VTC">
+  <h2>TVA, cotisations sociales et charges d'exploitation d'un VTC</h2>
+
+  <h3>1) TVA applicable à l'activité de transport de voyageurs</h3>
+  <p>
+    En France, la prestation principale d'un chauffeur VTC correspond au transport de voyageurs et relève, en règle générale,
+    du taux de TVA de 10%. Le chauffeur facture donc une TVA collectée sur chaque course, puis la reverse à l'administration
+    fiscale après déclaration. Selon le régime choisi, la déclaration peut être mensuelle ou trimestrielle (CA3), ou annuelle
+    avec acomptes (régime simplifié). Le principe de base est le suivant : TVA à payer = TVA collectée sur les ventes - TVA
+    déductible sur les achats professionnels.
+  </p>
+  <p>
+    La TVA déductible est un levier important de pilotage : lorsqu'une dépense est strictement professionnelle, justifiée par
+    une facture conforme et engagée dans l'intérêt de l'activité, la TVA peut être récupérée selon les règles en vigueur.
+    Un suivi rigoureux des justificatifs évite les écarts de trésorerie et les redressements.
+  </p>
+
+  <h3>2) Cotisations sociales selon le statut juridique</h3>
+  <p>
+    Le niveau et le mode de calcul des cotisations sociales dépendent du statut retenu :
+  </p>
+  <ul>
+    <li><strong>Micro-entreprise :</strong> cotisations calculées de manière forfaitaire sur le chiffre d'affaires encaissé, avec obligations déclaratives simplifiées.</li>
+    <li><strong>EURL :</strong> le gérant majoritaire relève en principe du régime des travailleurs non salariés, avec cotisations assises sur la rémunération et, selon les cas, une partie du résultat.</li>
+    <li><strong>SASU :</strong> le président est assimilé salarié, avec charges sociales calculées sur la rémunération versée, sans cotisations minimales identiques au régime TNS.</li>
+  </ul>
+  <p>
+    Le choix du statut impacte directement la protection sociale, le coût global et la stratégie de rémunération.
+  </p>
+
+  <h3>3) Charges fixes à anticiper chaque mois</h3>
+  <p>Un exploitant VTC doit intégrer des charges récurrentes, parfois sous-estimées au démarrage :</p>
+  <ul>
+    <li>Carburant ou recharge énergétique</li>
+    <li>Assurance professionnelle (RC pro) et assurance du véhicule</li>
+    <li>Entretien courant et réparations</li>
+    <li>Pneumatiques</li>
+    <li>Contrôle technique et vérifications réglementaires</li>
+    <li>Commissions et frais de plateformes de mise en relation</li>
+    <li>Téléphonie, data mobile et outils numériques</li>
+    <li>Stationnement, péages, accès gares/aéroports selon zones</li>
+  </ul>
+
+  <h3>4) Charges déductibles selon le régime fiscal</h3>
+  <p>
+    En régime réel (entreprise individuelle au réel, EURL ou SASU), les dépenses professionnelles justifiées sont en principe
+    déductibles du résultat imposable : carburant, assurance, maintenance, loyers éventuels, abonnements, frais bancaires,
+    commissions plateformes, amortissement du véhicule (selon plafonds et règles applicables), etc. En micro-entreprise,
+    la logique est différente : un abattement forfaitaire s'applique et les charges réelles ne sont pas déduites une à une.
+  </p>
+
+  <h3>5) Conseil de provisionnement mensuel</h3>
+  <p>
+    Pour sécuriser la trésorerie, il est recommandé d'isoler chaque mois une provision dédiée aux obligations fiscales et
+    sociales. Une méthode simple consiste à ventiler le chiffre d'affaires sur trois enveloppes : exploitation immédiate,
+    cotisations sociales, fiscalité (dont TVA). Le chauffeur peut compléter par un budget prévisionnel glissant sur 12 mois
+    intégrant saisonnalité, entretien lourd et remplacement des pneus. Ce pilotage évite les tensions de trésorerie et permet
+    de financer l'activité de manière durable.
+  </p>
+</html>
