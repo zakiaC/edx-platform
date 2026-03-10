@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Mission Formations</title>
+  <style>
+  :root{--mf-primary:#0965D0;--mf-accent:#01E8AE;--mf-grad:linear-gradient(135deg,#0965D0 0%,#01E8AE 100%);--mf-dark:#3B3B3B;--mf-light:#F5F5F5;--mf-sidebar:#0a1628;--mf-white:#FFF;--mf-gray-200:#E5E7EB;--mf-gray-400:#9CA3AF;--mf-gray-600:#6B7280;--mf-ft:'Ubuntu',sans-serif;--mf-fb:'Raleway',sans-serif;--mf-radius:10px;--mf-radius-sm:6px;--mf-radius-lg:16px;--mf-shadow:0 2px 8px rgba(9,101,208,.06),0 1px 3px rgba(0,0,0,.04);--mf-shadow-lg:0 8px 30px rgba(9,101,208,.10),0 2px 8px rgba(0,0,0,.04);--mf-ease:cubic-bezier(.22,1,.36,1)}
+  body.view-mission-contact{font-family:var(--mf-fb);color:var(--mf-dark);line-height:1.8;-webkit-font-smoothing:antialiased;background:var(--mf-white);margin:0}
+  body.view-mission-contact h1,body.view-mission-contact h2,body.view-mission-contact h3{font-family:var(--mf-ft);font-weight:700;line-height:1.2}
+  body.view-mission-contact .mf-wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+
+  body.view-mission-contact .mf-hero-contact{position:relative;overflow:hidden;padding:64px 0 56px}
+  body.view-mission-contact .mf-hero-contact__bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a2540 0%,#0965D0 60%,#01E8AE 100%);z-index:0}
+  body.view-mission-contact .mf-hero-contact__bg::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(1,232,174,.12) 0%,transparent 70%);right:-100px;top:-80px;pointer-events:none}
+  body.view-mission-contact .mf-hero-contact__inner{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:0 28px}
+  body.view-mission-contact .mf-hero-contact__badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:6px 16px;font-family:var(--mf-ft);font-size:12px;font-weight:700;color:var(--mf-accent);margin-bottom:20px}
+  body.view-mission-contact .mf-hero-contact__title{font-size:clamp(1.8rem,4vw,2.8rem);color:white;letter-spacing:-.02em;margin-bottom:12px}
+  body.view-mission-contact .mf-hero-contact__title em{font-style:normal;color:var(--mf-accent)}
+  body.view-mission-contact .mf-hero-contact__sub{font-family:var(--mf-fb);font-size:1rem;color:rgba(255,255,255,.7);max-width:480px;line-height:1.8}
+
+  body.view-mission-contact .mf-contact-main{padding:56px 0 80px;background:var(--mf-light)}
+  body.view-mission-contact .mf-contact-grid{display:grid;grid-template-columns:1fr 1.7fr;gap:32px;align-items:start}
+
+  body.view-mission-contact .mf-info-list{display:flex;flex-direction:column;gap:16px}
+  body.view-mission-contact .mf-info-card{background:var(--mf-white);border-radius:var(--mf-radius);padding:24px;box-shadow:var(--mf-shadow);border:1px solid var(--mf-gray-200);transition:all .3s var(--mf-ease)}
+  body.view-mission-contact .mf-info-card:hover{transform:translateY(-3px);box-shadow:var(--mf-shadow-lg)}
+  body.view-mission-contact .mf-info-card__icon{width:42px;height:42px;border-radius:var(--mf-radius-sm);background:var(--mf-grad);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;margin-bottom:14px}
+  body.view-mission-contact .mf-info-card__label{font-family:var(--mf-ft);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mf-primary);margin-bottom:4px}
+  body.view-mission-contact .mf-info-card__value{font-family:var(--mf-ft);font-size:1rem;font-weight:700;color:var(--mf-dark)}
+  body.view-mission-contact .mf-info-card__value a{color:var(--mf-dark);transition:color .2s}
+  body.view-mission-contact .mf-info-card__value a:hover{color:var(--mf-primary)}
+  body.view-mission-contact .mf-info-card__sub{font-size:.82rem;color:var(--mf-gray-600);margin-top:3px}
+
+  body.view-mission-contact .mf-qualiopi{background:var(--mf-white);border-radius:var(--mf-radius);padding:20px 24px;box-shadow:var(--mf-shadow);border-left:4px solid;border-image:var(--mf-grad) 1;display:flex;align-items:center;gap:14px}
+  body.view-mission-contact .mf-qualiopi__icon{font-size:28px;flex-shrink:0}
+  body.view-mission-contact .mf-qualiopi__text strong{display:block;font-family:var(--mf-ft);font-size:.9rem;color:var(--mf-dark);margin-bottom:2px}
+  body.view-mission-contact .mf-qualiopi__text span{font-size:.82rem;color:var(--mf-gray-600)}
+
+  body.view-mission-contact .mf-form-wrap{background:var(--mf-white);border-radius:var(--mf-radius-lg);padding:40px;box-shadow:var(--mf-shadow-lg)}
+  body.view-mission-contact .mf-form-wrap__title{font-size:1.35rem;color:var(--mf-dark);margin-bottom:6px}
+  body.view-mission-contact .mf-form-wrap__sub{font-size:.9rem;color:var(--mf-gray-600);margin-bottom:32px}
+
+  body.view-mission-contact .mf-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:0}
+  body.view-mission-contact .mf-form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+  body.view-mission-contact .mf-form-group label{font-family:var(--mf-ft);font-size:.78rem;font-weight:700;color:var(--mf-dark);letter-spacing:.02em}
+  body.view-mission-contact .mf-form-group input,
+  body.view-mission-contact .mf-form-group select,
+  body.view-mission-contact .mf-form-group textarea{font-family:var(--mf-fb);font-size:.9rem;padding:11px 14px;border:1.5px solid var(--mf-gray-200);border-radius:var(--mf-radius-sm);background:var(--mf-white);color:var(--mf-dark);outline:none;transition:all .2s ease;width:100%}
+  body.view-mission-contact .mf-form-group input::placeholder,
+  body.view-mission-contact .mf-form-group textarea::placeholder{color:var(--mf-gray-400)}
+  body.view-mission-contact .mf-form-group input:focus,
+  body.view-mission-contact .mf-form-group select:focus,
+  body.view-mission-contact .mf-form-group textarea:focus{border-color:var(--mf-primary);box-shadow:0 0 0 3px rgba(9,101,208,.1)}
+  body.view-mission-contact .mf-form-group textarea{resize:vertical;min-height:120px}
+
+  body.view-mission-contact .mf-form-submit{width:100%;background:var(--mf-grad);color:white;font-family:var(--mf-ft);font-weight:700;font-size:15px;padding:14px 24px;border-radius:var(--mf-radius-sm);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .25s var(--mf-ease);box-shadow:0 4px 16px rgba(9,101,208,.25);margin-top:8px}
+  body.view-mission-contact .mf-form-submit:hover{box-shadow:0 6px 24px rgba(9,101,208,.35);transform:translateY(-1px)}
+  body.view-mission-contact .mf-form-submit svg{transition:transform .25s var(--mf-ease)}
+  body.view-mission-contact .mf-form-submit:hover svg{transform:translateX(3px)}
+
+  body.view-mission-contact .mf-mailto-fallback{margin-top:14px;font-size:.88rem;color:var(--mf-gray-600);text-align:center}
+  body.view-mission-contact .mf-mailto-fallback a{color:var(--mf-primary);font-weight:700}
+
+  @keyframes mfUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  body.view-mission-contact .mf-hero-contact__badge{animation:mfUp .6s var(--mf-ease) .05s both}
+  body.view-mission-contact .mf-hero-contact__title{animation:mfUp .6s var(--mf-ease) .1s both}
+  body.view-mission-contact .mf-hero-contact__sub{animation:mfUp .6s var(--mf-ease) .15s both}
+  body.view-mission-contact .mf-contact-grid{animation:mfUp .6s var(--mf-ease) .2s both}
+
+  @media(max-width:768px){
+    body.view-mission-contact .mf-contact-grid{grid-template-columns:1fr}
+    body.view-mission-contact .mf-form-row{grid-template-columns:1fr}
+  }
+  </style>
+</head>
+<body class="view-mission-contact">
+<main id="main">
+  <section class="mf-hero-contact">
+    <div class="mf-hero-contact__bg"></div>
+    <div class="mf-hero-contact__inner">
+      <div class="mf-hero-contact__badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Nous contacter
+      </div>
+      <h1 class="mf-hero-contact__title">Une question ?<br>On est <em>disponibles</em>.</h1>
+      <p class="mf-hero-contact__sub">Notre équipe répond dans les 24h ouvrées. Formations, accès, devis entreprise — on vous accompagne.</p>
+    </div>
+  </section>
+
+  <section class="mf-contact-main">
+    <div class="mf-wrap">
+      <div class="mf-contact-grid">
+        <div class="mf-info-list">
+          <div class="mf-info-card">
+            <div class="mf-info-card__icon">📞</div>
+            <div class="mf-info-card__label">Téléphone</div>
+            <div class="mf-info-card__value"><a href="tel:0625950254">06 25 95 02 54</a></div>
+            <div class="mf-info-card__sub">Lun–Ven, 9h–18h</div>
+          </div>
+
+          <div class="mf-info-card">
+            <div class="mf-info-card__icon">✉️</div>
+            <div class="mf-info-card__label">Email</div>
+            <div class="mf-info-card__value"><a href="mailto:contact@missionformations.com">contact@missionformations.com</a></div>
+            <div class="mf-info-card__sub">Réponse sous 24h ouvrées</div>
+          </div>
+
+          <div class="mf-info-card">
+            <div class="mf-info-card__icon">♿</div>
+            <div class="mf-info-card__label">Référent handicap</div>
+            <div class="mf-info-card__value"><a href="tel:0625950254">06 25 95 02 54</a></div>
+            <div class="mf-info-card__sub">Accessibilité & aménagements</div>
+          </div>
+
+          <div class="mf-qualiopi">
+            <div class="mf-qualiopi__icon">🎓</div>
+            <div class="mf-qualiopi__text">
+              <strong>Certification Qualiopi en cours</strong>
+              <span>N° déclaration d'activité en cours d'obtention</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mf-form-wrap">
+          <div id="mf-form-content">
+            <h2 class="mf-form-wrap__title">Envoyez-nous un message</h2>
+            <p class="mf-form-wrap__sub">Remplissez le formulaire, nous vous répondons rapidement.</p>
+
+            <form method="post" action="/contact">
+              <div class="mf-form-row">
+                <div class="mf-form-group">
+                  <label for="id-prenom">Prénom *</label>
+                  <input id="id-prenom" name="prenom" type="text" placeholder="Votre prénom" required>
+                </div>
+                <div class="mf-form-group">
+                  <label for="id-nom">Nom *</label>
+                  <input id="id-nom" name="nom" type="text" placeholder="Votre nom" required>
+                </div>
+              </div>
+
+              <div class="mf-form-row">
+                <div class="mf-form-group">
+                  <label for="id-email">Email *</label>
+                  <input id="id-email" name="email" type="email" placeholder="votre@email.com" required>
+                </div>
+                <div class="mf-form-group">
+                  <label for="id-telephone">Téléphone</label>
+                  <input id="id-telephone" name="telephone" type="tel" placeholder="06 XX XX XX XX">
+                </div>
+              </div>
+
+              <div class="mf-form-group">
+                <label for="id-profil">Vous êtes *</label>
+                <select id="id-profil" name="profil" required>
+                  <option value="">Sélectionnez votre profil</option>
+                  <option value="Particulier">Particulier</option>
+                  <option value="Entreprise / DRH">Entreprise / DRH</option>
+                  <option value="Formateur">Formateur</option>
+                  <option value="OPCO / Financeur">OPCO / Financeur</option>
+                </select>
+              </div>
+
+              <div class="mf-form-group">
+                <label for="id-sujet">Sujet *</label>
+                <select id="id-sujet" name="sujet" required>
+                  <option value="">Sélectionnez un sujet</option>
+                  <option value="Renseignement sur une formation">Renseignement sur une formation</option>
+                  <option value="Devis entreprise">Devis entreprise</option>
+                  <option value="Financement CPF / OPCO">Financement CPF / OPCO</option>
+                  <option value="Accès à la plateforme">Accès à la plateforme</option>
+                  <option value="Problème technique">Problème technique</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+
+              <div class="mf-form-group">
+                <label for="id-message">Message *</label>
+                <textarea id="id-message" name="message" placeholder="Décrivez votre demande…" required></textarea>
+              </div>
+
+              <button type="submit" class="mf-form-submit">
+                Envoyer le message
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </form>
+
+            <p class="mf-mailto-fallback">Si le formulaire ne fonctionne pas, écrivez-nous à <a href="mailto:contact@missionformations.com">contact@missionformations.com</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
