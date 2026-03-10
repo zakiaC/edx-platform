@@ -6,9 +6,11 @@ from urllib.parse import quote
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.db import transaction
 from django.db.models import Count
 from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.timesince import timesince
 from django.views.decorators.http import require_http_methods
@@ -841,3 +843,52 @@ def formateurs_sessions_export_csv(request):
             )
 
     return response
+
+
+@require_http_methods(["GET", "POST"])
+def contact_view(request):
+    field_names = ("prenom", "nom", "email", "telephone", "profil", "sujet", "message")
+    form_data = {name: (request.POST.get(name, "") or "").strip() for name in field_names}
+    success = request.GET.get("success") == "1"
+    error_message = ""
+
+    if request.method == "POST":
+        missing_required = [name for name in ("prenom", "nom", "email", "sujet", "message") if not form_data[name]]
+        if missing_required:
+            error_message = "Merci de renseigner tous les champs obligatoires."
+        else:
+            subject = f"[Contact Mission Formations] {form_data['sujet']}"
+            body = "\n".join(
+                [
+                    "Nouveau message depuis la page contact.",
+                    "",
+                    f"Prenom: {form_data['prenom']}",
+                    f"Nom: {form_data['nom']}",
+                    f"Email: {form_data['email']}",
+                    f"Telephone: {form_data['telephone']}",
+                    f"Profil: {form_data['profil']}",
+                    f"Sujet: {form_data['sujet']}",
+                    "",
+                    "Message:",
+                    form_data["message"],
+                ]
+            )
+            sender = (getattr(settings, "DEFAULT_FROM_EMAIL", "") or "").strip() or form_data["email"]
+            send_mail(
+                subject=subject,
+                message=body,
+                from_email=sender,
+                recipient_list=["contact@missionformations.com"],
+                fail_silently=False,
+            )
+            return redirect("/contact?success=1")
+
+    return render(
+        request,
+        "mission_central_admin/contact.html",
+        {
+            "success": success,
+            "error_message": error_message,
+            "form_data": form_data,
+        },
+    )

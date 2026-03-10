@@ -3,6 +3,7 @@ from django.urls import path
 from . import error_views, views
 
 urlpatterns = [
+    path("contact/", views.contact_view, name="contact"),
     path("mission-errors/403", error_views.render_403, name="mission-render-403"),
     path("mission-errors/404", error_views.render_404, name="mission-render-404"),
     path("mission-errors/500", error_views.render_500, name="mission-render-500"),
