@@ -1,0 +1,102 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    name: Compile & Deploy Assets
+    runs-on: ubuntu-latest
+
+    steps:
+      # ─── 1. Checkout ───────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ─── 2. SSH Deploy ─────────────────────────────────────────────
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.STAGING_SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+
+      - name: Pull latest code on staging
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@${{ secrets.STAGING_HOST }} \
+            "cd /root/edx-platform && git pull origin staging"
+
+      - name: Fix theme permissions
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@${{ secrets.STAGING_HOST }} \
+            "chown -R 1000:1000 /root/edx-platform/themes/mission-theme && \
+             chmod -R 775 /root/edx-platform/themes/mission-theme"
+
+      - name: Compile Sass
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@${{ secrets.STAGING_HOST }} \
+            "docker exec tutor_local-lms-1 \
+             bash -c 'npm run compile-sass -- --skip-default 2>&1 | tail -10'"
+
+      - name: Verify CSS contains mf- classes
+        run: |
+          COUNT=$(ssh -i ~/.ssh/id_ed25519 root@${{ secrets.STAGING_HOST }} \
+            "grep -c 'mf-' /root/edx-platform/themes/mission-theme/lms/static/css/lms-main-v1.css || echo 0")
+          echo "mf- occurrences: $COUNT"
+          if [ "$COUNT" = "0" ]; then
+            echo "ERREUR: CSS non compilé. Arrêt du déploiement."
+            exit 1
+          fi
+
+      - name: Run collectstatic (--clear pour manifest propre)
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@${{ secrets.STAGING_HOST }} \
+            "docker exec tutor_local-lms-1 \
+             ./manage.py lms collectstatic --noinput --clear 2>&1 | tail -5"
+
+      - name: Commit compiled CSS back to repo
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@${{ secrets.STAGING_HOST }} << 'EOF'
+            cd /root/edx-platform
+            git config user.email "deploy@missionformations.com"
+            git config user.name "Deploy Bot"
+            git add themes/mission-theme/lms/static/css/
+            git diff --cached --stat
+            git commit -m "build: compiled CSS mission-theme [auto deploy $(date +%Y-%m-%d)]" || echo "Rien à commiter"
+            git push origin staging || echo "Push non nécessaire"
+          EOF
+
+      # ─── 3. Smoke test ─────────────────────────────────────────────
+      - name: Smoke test — vérifier HTTP 200
+        run: |
+          sleep 5
+          STATUS=$(curl -sk -o /dev/null -w "%{http_code}" \
+            https://academie.staging.missionformations.com)
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "ERREUR: staging retourne $STATUS"
+            exit 1
+          fi
+
+      - name: Smoke test — vérifier classes mf- dans le HTML
+        run: |
+          COUNT=$(curl -sk https://academie.staging.missionformations.com | grep -c "mf-" || echo 0)
+          echo "mf- dans le HTML: $COUNT"
+          if [ "$COUNT" = "0" ]; then
+            echo "ATTENTION: aucune classe mf- dans le HTML rendu"
+            exit 1
+          fi
+
+      # ─── 4. Notification ───────────────────────────────────────────
+      - name: Notify success
+        if: success()
+        run: |
+          echo "✅ Déploiement staging réussi — $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "🌐 https://academie.staging.missionformations.com"
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          echo "❌ Déploiement staging ÉCHOUÉ — vérifier les logs ci-dessus"
