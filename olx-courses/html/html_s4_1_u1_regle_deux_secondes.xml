@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html display_name="Règle des 2 secondes et distances de sécurité">
+  <h2>Règle des 2 secondes : base de la sécurité en conduite VTC</h2>
+  <p>
+    La règle des 2 secondes consiste à maintenir un intervalle temporel minimal avec le véhicule qui précède.
+    Elle s'applique à toutes les vitesses et permet de conserver un temps de réaction suffisant en cas de freinage
+    soudain, obstacle ou changement de trajectoire. Pour un chauffeur VTC, cette règle protège à la fois les passagers,
+    la responsabilité professionnelle et la continuité d'activité.
+  </p>
+
+  <h3>1) Méthode de calcul simple</h3>
+  <p>
+    Choisir un repère fixe (panneau, marquage, arbre) que le véhicule de devant franchit. Compter ensuite :
+    « mille et un, mille et deux ». Si votre véhicule atteint ce repère avant la fin du comptage, la distance
+    est insuffisante. On peut aussi convertir la vitesse en m/s (vitesse km/h ÷ 3,6) puis multiplier par 2.
+  </p>
+  <ul>
+    <li>50 km/h ≈ 13,9 m/s → distance minimale ≈ 28 m</li>
+    <li>90 km/h = 25 m/s → distance minimale ≈ 50 m</li>
+    <li>110 km/h ≈ 30,6 m/s → distance minimale ≈ 61 m</li>
+    <li>130 km/h ≈ 36,1 m/s → distance minimale ≈ 72 m</li>
+  </ul>
+
+  <h3>2) Adaptation aux conditions réelles</h3>
+  <p>
+    Deux secondes est un minimum en conditions normales. Sous pluie, visibilité réduite ou chaussée dégradée,
+    il faut augmenter nettement l'intervalle. En pratique, viser 3 à 4 secondes améliore la marge de sécurité.
+    Sur neige, verglas ou brouillard dense, la distance doit encore être majorée.
+  </p>
+  <ul>
+    <li>Pluie: augmenter l'écart d'au moins 50 à 100 %</li>
+    <li>Faible adhérence: éviter toute conduite en suiveur rapproché</li>
+    <li>Nuit ou fatigue: allonger volontairement la distance</li>
+  </ul>
+
+  <h3>3) Effet de la charge véhicule en VTC</h3>
+  <p>
+    Un véhicule chargé (passagers, bagages, matériel) freine plus longuement et transfère davantage de masse vers l'avant.
+    Le chauffeur VTC doit donc ajuster son style : anticipation accrue, freinage progressif et distance majorée.
+    Cette discipline réduit les accidents, améliore le confort passager et limite l'usure prématurée des freins et pneus.
+  </p>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html display_name="Tableau des équipements VTC">
+  <h2>Équipements d'un véhicule VTC : obligatoires, recommandés, interdits</h2>
+  <p>
+    Le chauffeur VTC doit distinguer ce qui est légalement obligatoire de ce qui relève de la qualité de service.
+    En parallèle, certains équipements sont explicitement interdits car réservés à d'autres catégories de transport
+    (notamment taxi). Ce tableau permet de sécuriser la conformité lors des contrôles et d'améliorer l'expérience client.
+  </p>
+
+  <h3>Tableau comparatif</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Équipement</th>
+        <th>Statut</th>
+        <th>Remarque</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Gilet haute visibilité</td><td>Obligatoire</td><td>Conforme au code de la route, accessible rapidement.</td></tr>
+      <tr><td>Triangle de présignalisation</td><td>Obligatoire</td><td>À utiliser selon conditions de sécurité.</td></tr>
+      <tr><td>Documents véhicule et assurance</td><td>Obligatoire</td><td>Doivent être présentables en cas de contrôle.</td></tr>
+      <tr><td>Preuve de réservation préalable</td><td>Obligatoire</td><td>Élément clé du régime VTC.</td></tr>
+      <tr><td>Trousse de secours</td><td>Recommandé</td><td>Très utile pour incidents mineurs passager/chauffeur.</td></tr>
+      <tr><td>Chargeurs multi-connecteurs</td><td>Recommandé</td><td>Améliore la satisfaction client.</td></tr>
+      <tr><td>Eau, mouchoirs, gel hydroalcoolique</td><td>Recommandé</td><td>Renforce la qualité perçue du service.</td></tr>
+      <tr><td>Support smartphone/GPS sécurisé</td><td>Recommandé</td><td>Limite les risques de distraction.</td></tr>
+      <tr><td>Enseigne lumineuse taxi</td><td>Interdit</td><td>Équipement réservé aux taxis autorisés.</td></tr>
+      <tr><td>Compteur horokilométrique taxi</td><td>Interdit</td><td>Incompatible avec la tarification VTC contractualisée.</td></tr>
+      <tr><td>Gyrophare ou dispositif assimilé</td><td>Interdit</td><td>Usage non autorisé pour VTC.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Application pratique en exploitation</h3>
+  <p>
+    En pratique, un contrôle hebdomadaire de l'équipement évite les écarts : vérifier l'état du gilet, la présence du triangle,
+    la validité des documents et la disponibilité des accessoires recommandés. Le chauffeur peut aussi utiliser une checklist
+    de départ de service pour standardiser la préparation du véhicule. Cette routine réduit le risque de non-conformité et
+    améliore la régularité du service, surtout lors de prises en charge gares/aéroports ou de missions corporate.
+  </p>
+</html>

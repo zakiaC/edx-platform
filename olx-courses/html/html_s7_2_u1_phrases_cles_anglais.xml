@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html display_name="Phrases clés en anglais pour chauffeur VTC">
+  <h2>Anglais client VTC : phrases opérationnelles à utiliser en course</h2>
+  <p>
+    Le chauffeur n'a pas besoin d'un anglais académique complexe. Il doit maîtriser des phrases courtes, polies
+    et immédiatement utiles pour l'accueil, l'itinéraire, les bagages, le paiement et la fin de course. L'objectif
+    est la clarté, la courtoisie et la fluidité de service.
+  </p>
+
+  <h3>Tableau de référence FR / EN</h3>
+  <table>
+    <thead>
+      <tr><th>Situation</th><th>Français</th><th>English</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Accueil</td><td>Bonjour, je suis votre chauffeur.</td><td>Hello, I am your driver.</td></tr>
+      <tr><td>Vérification</td><td>Confirmez-vous la destination ?</td><td>Can you confirm the destination?</td></tr>
+      <tr><td>Bagages</td><td>Puis-je vous aider avec vos bagages ?</td><td>May I help you with your luggage?</td></tr>
+      <tr><td>Confort</td><td>La température vous convient-elle ?</td><td>Is the temperature comfortable for you?</td></tr>
+      <tr><td>Trafic</td><td>Il y a du trafic, je propose un autre itinéraire.</td><td>There is traffic, I suggest an alternative route.</td></tr>
+      <tr><td>Durée</td><td>Le trajet prendra environ 25 minutes.</td><td>The trip will take about 25 minutes.</td></tr>
+      <tr><td>Arrêt</td><td>Souhaitez-vous un arrêt rapide ?</td><td>Would you like a quick stop?</td></tr>
+      <tr><td>Sécurité</td><td>Merci d'attacher votre ceinture.</td><td>Please fasten your seat belt.</td></tr>
+      <tr><td>Paiement</td><td>Le paiement se fait via l'application.</td><td>Payment is made through the app.</td></tr>
+      <tr><td>Facture</td><td>Vous recevrez la facture par email.</td><td>You will receive the invoice by email.</td></tr>
+      <tr><td>Arrivée</td><td>Nous sommes arrivés à destination.</td><td>We have arrived at your destination.</td></tr>
+      <tr><td>Clôture</td><td>Merci, bonne journée.</td><td>Thank you, have a great day.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Bonnes pratiques de communication</h3>
+  <ul>
+    <li>Parler lentement et articuler plutôt que chercher des phrases compliquées.</li>
+    <li>Utiliser des phrases courtes, une idée par phrase.</li>
+    <li>Vérifier la compréhension: "Is that okay for you?"</li>
+    <li>Rester professionnel même si le client parle vite ou avec accent.</li>
+  </ul>
+  <p>
+    En cas d'incompréhension, reformuler simplement et montrer l'itinéraire sur l'écran de navigation. Cette approche
+    diminue le stress des deux côtés et renforce la confiance. Avec un vocabulaire ciblé, le chauffeur peut offrir un
+    service international fiable sans être bilingue complet.
+  </p>
+</html>
