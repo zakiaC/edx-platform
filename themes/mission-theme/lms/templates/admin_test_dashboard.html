@@ -120,6 +120,8 @@
     </div>
   </div>
 
+  <div id="mf-submit-banner" style="display:none;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;margin-bottom:16px;"></div>
+
   <script>
   document.querySelectorAll('.mf-test-form').forEach(function(form) {
     form.addEventListener('submit', function() {
@@ -127,6 +129,28 @@
       var email = document.getElementById('mf-test-email').value;
       form.querySelector('.mf-email-flag').value = checked ? '1' : '0';
       form.querySelector('.mf-email-to').value = email;
+
+      var suite = form.querySelector('[name=suite]').value.toUpperCase();
+      var banner = document.getElementById('mf-submit-banner');
+
+      if (checked && email) {
+        banner.style.display = 'block';
+        banner.style.background = '#e8faf3';
+        banner.style.color = '#00875a';
+        banner.textContent = 'Tests ' + suite + ' lances — resultats envoyes a ' + email + ' des la fin.';
+      } else {
+        banner.style.display = 'block';
+        banner.style.background = '#e8f0fe';
+        banner.style.color = '#0965D0';
+        banner.textContent = 'Tests ' + suite + ' en cours — patientez...';
+      }
+
+      // Desactiver tous les boutons pour eviter le double-clic
+      document.querySelectorAll('.mf-test-btn').forEach(function(btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'wait';
+      });
     });
   });
   </script>
