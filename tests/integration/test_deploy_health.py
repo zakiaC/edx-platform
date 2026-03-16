@@ -170,7 +170,78 @@ class TestGitSync:
                 )
 
 
-# ── 4. COLLECTSTATIC COMPLET ───────────────────────────────────────────────
+# ── 4. WEBPACK ASSETS ───────────────────────────────────────────────────────
+
+class TestWebpackAssets:
+    """webpack-stats.json doit exister — sinon toutes les pages crashent en 500."""
+
+    @pytest.mark.integration
+    def test_webpack_stats_exists(self):
+        """webpack-stats.json doit etre present dans le container.
+        Si absent, TOUTES les pages retournent 500 car main.html
+        appelle static.webpack('commons') qui lit ce fichier.
+        Fix: docker exec tutor_local-lms-1 bash -c 'cd /openedx/edx-platform && npm run webpack'
+             docker exec tutor_local-lms-1 ./manage.py lms collectstatic --noinput
+             docker restart tutor_local-lms-1"""
+        code, output = _exec_in_container(
+            "lms",
+            ["bash", "-c", "ls -la /openedx/staticfiles/webpack-stats.json 2>&1"],
+            timeout=10,
+        )
+        if code is None:
+            pytest.skip("Container LMS indisponible")
+        assert code == 0 and "No such file" not in (output or ""), (
+            "webpack-stats.json MANQUANT dans /openedx/staticfiles/. "
+            "Cela provoque un 500 sur TOUTES les pages. "
+            "Fix: docker exec tutor_local-lms-1 bash -c "
+            "'cd /openedx/edx-platform && npm run webpack' && "
+            "docker exec tutor_local-lms-1 ./manage.py lms collectstatic --noinput && "
+            "docker restart tutor_local-lms-1"
+        )
+
+    @pytest.mark.integration
+    def test_webpack_stats_not_empty(self):
+        """webpack-stats.json ne doit pas etre vide ou corrompu."""
+        code, output = _exec_in_container(
+            "lms",
+            ["bash", "-c", "python3 -c \"import json; json.load(open('/openedx/staticfiles/webpack-stats.json'))\" 2>&1"],
+            timeout=10,
+        )
+        if code is None:
+            pytest.skip("Container LMS indisponible")
+        if "No such file" in (output or ""):
+            pytest.skip("webpack-stats.json absent (couvert par test_webpack_stats_exists)")
+        assert code == 0, (
+            "webpack-stats.json est corrompu (JSON invalide). "
+            "Fix: npm run webpack + collectstatic + restart"
+        )
+
+    @pytest.mark.integration
+    def test_collectstatic_preserves_webpack(self):
+        """Apres un collectstatic --clear, webpack-stats.json doit encore etre la.
+        ATTENTION: collectstatic --clear supprime tout dans staticfiles/
+        y compris webpack-stats.json. Il faut TOUJOURS lancer npm run webpack
+        AVANT collectstatic, ou utiliser collectstatic SANS --clear."""
+        code, output = _exec_in_container(
+            "lms",
+            ["bash", "-c",
+             "test -f /openedx/staticfiles/webpack-stats.json && "
+             "python3 -c \"import json; d=json.load(open('/openedx/staticfiles/webpack-stats.json')); "
+             "assert d.get('status') == 'done' or 'chunks' in str(d), 'status not done'\" 2>&1"],
+            timeout=10,
+        )
+        if code is None:
+            pytest.skip("Container LMS indisponible")
+        # Ce test est informatif — le fix est le meme
+        if code != 0:
+            pytest.fail(
+                "webpack-stats.json absent ou status != 'done'. "
+                "Cause probable: collectstatic --clear a supprime le fichier. "
+                "Fix: npm run webpack && collectstatic --noinput (SANS --clear) && restart"
+            )
+
+
+# ── 5. COLLECTSTATIC COMPLET ───────────────────────────────────────────────
 
 class TestStaticFiles:
     """Les fichiers statiques du theme sont bien servis."""

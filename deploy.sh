@@ -21,8 +21,9 @@ if [ "$ENV" = "local" ]; then
   [ "$COUNT" = "0" ] && echo "ERREUR: CSS vide" && exit 1
 
   echo "--- 3/3 Collectstatic ---"
+  # IMPORTANT: PAS de --clear sinon webpack-stats.json est supprime → 500 sur toutes les pages
   docker exec $CONTAINER \
-    ./manage.py lms collectstatic --noinput --clear 2>&1 | tail -3
+    ./manage.py lms collectstatic --noinput 2>&1 | tail -3
 
 elif [ "$ENV" = "staging" ]; then
   CONTAINER="tutor_local-lms-1"
@@ -43,10 +44,11 @@ elif [ "$ENV" = "staging" ]; then
   echo "mf- occurrences: $COUNT"
   [ "$COUNT" = "0" ] && echo "ERREUR: CSS vide" && exit 1
 
-  echo "--- 3/4 Collectstatic --clear ---"
+  echo "--- 3/4 Collectstatic ---"
+  # IMPORTANT: PAS de --clear sinon webpack-stats.json est supprime → 500 sur toutes les pages
   ssh staging-openedx \
     "docker exec $CONTAINER \
-    ./manage.py lms collectstatic --noinput --clear 2>&1 | tail -3"
+    ./manage.py lms collectstatic --noinput 2>&1 | tail -3"
 
   echo "--- 4/4 Commit CSS compilés ---"
   ssh staging-openedx "cd /root/edx-platform && \
