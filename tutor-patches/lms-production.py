@@ -43,8 +43,8 @@ MEILISEARCH_ENABLED = True
 MEILISEARCH_URL = "http://meilisearch:7700"
 MEILISEARCH_PUBLIC_URL = "https://meilisearch.academie.staging.missionformations.com"
 MEILISEARCH_INDEX_PREFIX = "tutor_"
-MEILISEARCH_API_KEY = "cda467ae1bcfa30dadd2400dd6ea7003b1cbdc0c50628242e0002f803608fb8b"
-MEILISEARCH_MASTER_KEY = "6ixf3mqlduT6kM6WcqV02lPo"
+MEILISEARCH_API_KEY = os.environ.get("MEILISEARCH_API_KEY", "")
+MEILISEARCH_MASTER_KEY = os.environ.get("MEILISEARCH_MASTER_KEY", "")
 SEARCH_ENGINE = "search.meilisearch.MeilisearchEngine"
 
 # Common cache config
@@ -184,29 +184,30 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 
 JWT_AUTH["JWT_ISSUER"] = "https://academie.staging.missionformations.com/oauth2"
 JWT_AUTH["JWT_AUDIENCE"] = "openedx"
-JWT_AUTH["JWT_SECRET_KEY"] = "Nk7nEpAY2DIIIYG2jx2FsyNy"
+_JWT_SECRET = os.environ.get("JWT_SECRET_KEY", "")
+JWT_AUTH["JWT_SECRET_KEY"] = _JWT_SECRET
 JWT_AUTH["JWT_PRIVATE_SIGNING_JWK"] = json.dumps(
     {
-        "kid": "openedx",
+        "kid": os.environ.get("JWT_RSA_KID", "openedx"),
         "kty": "RSA",
-        "e": "AQAB",
-        "d": "JEejlTv7sWB21nWT3QcZc0r41jFnuWj__R4ld3keBb2ND8TYkGASZgeIpzFZechFWSqDZr1IWnf0w5RJng7Amnx-1SXflCs9mVkYV3444ATC0pTbeRfFN1hj6u2QJUAMc1G3C8Ng-RdkLDDIegv5dnOEbhth2njrVfeBubpfBS4ZiXpxAqBMgM8dCOozBDzKVd3A5RPs2hAhurH4K7_q-WBQljP3ob7-B5XvUHKw22K15zYwyV1JjeLDsCIUDCaXQCCMQZ3dNpzDRV3kZt7RpbXldqShBPrcKmIUpxjdnn_h7ohtxXiVAVeIi3razh26Z8crzw9p_Fz1r50oufMFAQ",
-        "n": "4rQ7STdIxYUuDsDJ-TzjKIdsZ1pcCo_y3vQmzP_wWbdte0MuaBhIAjH1CKQLNPYFHLOQueobhvCODFPl5BXWcAO-CeDfPo4zReAET3CuI3tJA-XJRi5u5GiMrQvKkIFPjrK7AgMLb1Awg7vE5usxEnodVIw0Fb4j5xMhB-kr7Mzus4mau6OYkZumRBPHZZKu8m9hgZgJD0u3o-8UdWK9Z0LpxmFehUU0sHConlx5iE4VLSQgP4RrQ9j9HBjc_lzI_NKKUq-XbhV9i4MLnFU29e05eOBLQzTYWJeIl9urBQll7XDfTREqSR7za_wp0CvmabgQSRYKZOvguj7g3do7kw",
-        "p": "72VIA8Q0nYACCVn3g8CkAOg__jL2OAlcnTFHaJm7eJZtK3TopBjCFqTro8dtE9ej8eeHxaGZb0CkP5uZIyYTJkTrfrDi-fnInWVsk-wdwEoE7-fPqQYbEvrylEu4HHxu1tMPtCD0u7TwdKYuNig704-Lb2xiTgd2KMgkkUE0BoM",
-        "q": "8m2ZAqHfelu29Mkg2tJvZeuGgkk9_GwiXfFLoPqBBuIiPd3Cl-qw0PKfmkLe9m7FcblOcON7N-IZjybslcNUSuC4Es3g86ebuBD4WkgPB6Wrew38uW_GwL8glY_1W5Vbedtx21uaIDpxCVdkviDMIY70434cxBVuP4waG38SabE",
-        "dq": "1sb-fnSHF1JV_vyJ3RP-mZ9WperZvd7Xe78hL9d_pGeHyqPDmO_WAuhROkvwWQe-aYiw1BbVvabU2hy0EeLhtQzuR8qad4OQ1DxEq0eX-UBvci_sLSW4Ql-SMK8_wwnJ52Xhs2OuYsskBhClMkTAVSLgFwRN2_LYn_gx0RZ9a6E",
-        "dp": "rpRsxRpjyGwekBVE9JcawvKcIFOnzUu-d4AFdFmQJquEp4lVUr4fZIYWtdRsTmkWzQWstMpZa5F3dk-RiNluY50lI7n5fJTU4Tuix-kL9TvFh_LENJ4YRmotV0o01MlFx3IZ5KGX9_9Gz7qUvrfukSUAaVxgAEleuPTj_e3P8-M",
-        "qi": "JKGPuVCsDspe1HhUcdRzro0oZaO_nyn08sBXHXjl_ENPut0JbXq_duyt4JVrPePd1ZGGuJAkAvxe30GxvaWEGoc5u89UK5OWkGOBeoOZg3a7yKD_ZfDx_Yeq9dRtLyf1F3mRR_VBz8squc2H3L0CJ_FK2VGgMemUa8-VFyDm5gA",
+        "e": os.environ.get("JWT_RSA_E", "AQAB"),
+        "d": os.environ.get("JWT_RSA_D", ""),
+        "n": os.environ.get("JWT_RSA_N", ""),
+        "p": os.environ.get("JWT_RSA_P", ""),
+        "q": os.environ.get("JWT_RSA_Q", ""),
+        "dq": os.environ.get("JWT_RSA_DQ", ""),
+        "dp": os.environ.get("JWT_RSA_DP", ""),
+        "qi": os.environ.get("JWT_RSA_QI", ""),
     }
 )
 JWT_AUTH["JWT_PUBLIC_SIGNING_JWK_SET"] = json.dumps(
     {
         "keys": [
             {
-                "kid": "openedx",
+                "kid": os.environ.get("JWT_RSA_KID", "openedx"),
                 "kty": "RSA",
-                "e": "AQAB",
-                "n": "4rQ7STdIxYUuDsDJ-TzjKIdsZ1pcCo_y3vQmzP_wWbdte0MuaBhIAjH1CKQLNPYFHLOQueobhvCODFPl5BXWcAO-CeDfPo4zReAET3CuI3tJA-XJRi5u5GiMrQvKkIFPjrK7AgMLb1Awg7vE5usxEnodVIw0Fb4j5xMhB-kr7Mzus4mau6OYkZumRBPHZZKu8m9hgZgJD0u3o-8UdWK9Z0LpxmFehUU0sHConlx5iE4VLSQgP4RrQ9j9HBjc_lzI_NKKUq-XbhV9i4MLnFU29e05eOBLQzTYWJeIl9urBQll7XDfTREqSR7za_wp0CvmabgQSRYKZOvguj7g3do7kw",
+                "e": os.environ.get("JWT_RSA_E", "AQAB"),
+                "n": os.environ.get("JWT_RSA_N", ""),
             }
         ]
     }
@@ -215,7 +216,7 @@ JWT_AUTH["JWT_ISSUERS"] = [
     {
         "ISSUER": "https://academie.staging.missionformations.com/oauth2",
         "AUDIENCE": "openedx",
-        "SECRET_KEY": "Nk7nEpAY2DIIIYG2jx2FsyNy"
+        "SECRET_KEY": _JWT_SECRET
     }
 ]
 
@@ -460,17 +461,5 @@ MFE_CONFIG["PARAGON_THEME_URLS"] = {"variants": {"light": {"urls": {"default": "
 
 MFE_CONFIG['INDIGO_ENABLE_DARK_TOGGLE'] = True
 MFE_CONFIG['INDIGO_FOOTER_NAV_LINKS'] = [{'title': 'About Us', 'url': '/about'}, {'title': 'Blog', 'url': '/blog'}, {'title': 'Donate', 'url': '/donate'}, {'title': 'Terms of Service', 'url': '/tos'}, {'title': 'Privacy Policy', 'url': '/privacy'}, {'title': 'Help', 'url': '/help'}, {'title': 'Contact Us', 'url': '/contact'}]
-# mission_theme_lock: enforce Mission themed auth stack
-DEFAULT_SITE_THEME = "mission-theme"
-FEATURES['ENABLE_AUTHN_MICROFRONTEND'] = False
-FEATURES['ENABLE_THIRD_PARTY_AUTH'] = False
-FEATURES['ENABLE_COMBINED_LOGIN_REGISTRATION'] = True
-ENABLE_LEARNER_HOME_MFE = False
-LEARNER_HOME_MFE_REDIRECT_PERCENTAGE = 0
-
-if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
-    COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")
-if "/openedx/themes/mission-theme/lms/static" not in STATICFILES_DIRS:
-    STATICFILES_DIRS.append("/openedx/themes/mission-theme/lms/static")
 
 PIPELINE['JS_COMPRESSOR'] = None

@@ -154,3 +154,23 @@ pii_report
 
 # Pyenv Python version file
 .python-version
+
+# Secrets (ne jamais commiter)
+tutor-patches/.secrets.env
+.secrets.env
+*.secrets.env
+
+# Codex artifacts
+.codex-renders/
+.codex-venv/
+
+# macOS
+.DS_Store
+
+# Docker socket
+docker.sock
+
+# Fichiers business/bureautique (ne pas commiter)
+*.xlsx
+*.docx
+*.pptx
