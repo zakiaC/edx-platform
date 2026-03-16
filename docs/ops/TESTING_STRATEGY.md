@@ -107,6 +107,76 @@ tests/
 pytest tests/integration/test_health.py -m integration -v
 ```
 
+---
+
+## COUCHE 1b — Sync disque / container Docker (test_deploy_health.py)
+
+> **Question** : "Est-ce que le code dans le container correspond au code sur le disque ?"
+
+### Contexte du probleme
+
+Sur notre stack Tutor, il y a **deux copies du code** :
+- `/root/edx-platform/` — le disque du serveur (mis a jour par `git pull`)
+- `/openedx/edx-platform/` — dans le container Docker (copie independante)
+
+**Un `git pull` met a jour le disque mais PAS le container.**
+Sans `docker cp`, le container continue de servir l'ancien code.
+
+Symptomes :
+- Page qui retourne 404 alors que la route existe dans le code
+- Vue qui retourne 500 car le fichier `views.py` dans le container est l'ancienne version
+- Template manquant alors qu'il est bien dans le repo
+
+### Tests disponibles
+
+| # | Test | Description | Action si FAIL |
+|---|------|-------------|----------------|
+| 1 | `test_plugin_code_synced` | Compare le hash md5 de `urls.py`, `views.py`, `models.py`, `tasks.py`, `apps.py` entre disque et container | `docker cp` du plugin + restart |
+| 2 | `test_templates_synced` | Compare le hash md5 des templates critiques entre disque et container | `docker cp` des themes + restart |
+| 3 | `test_new_routes_accessible` | Verifie que TOUTES les routes Django custom sont enregistrees dans le container | `docker cp` du plugin + restart |
+
+### Commande
+
+```bash
+pytest tests/integration/test_deploy_health.py::TestDiskContainerSync -m integration -v
+```
+
+### Fix quand ca echoue
+
+```bash
+# Copier le plugin mis a jour dans le container
+docker cp /root/edx-platform/lms/djangoapps/mission_central_admin/ \
+  tutor_local-lms-1:/openedx/edx-platform/lms/djangoapps/mission_central_admin/
+
+# Copier le theme mis a jour dans le container
+docker cp /root/edx-platform/themes/mission-theme/ \
+  tutor_local-lms-1:/openedx/themes/mission-theme/
+
+# Restart pour prendre en compte
+docker restart tutor_local-lms-1
+```
+
+### Prevention
+
+**Toujours utiliser `./deploy.sh staging`** au lieu de `git pull + restart`.
+Le script `deploy.sh` inclut automatiquement le `docker cp` (etape 1/6).
+
+### Diagnostic automatique
+
+Le script `tests/diagnose.py` inclut cette verification dans la couche 1b.
+Quand une desync est detectee, le diagnostic affiche :
+
+```
+CAUSE RACINE PRINCIPALE:
+============================================================
+  Code desynchronise entre disque et container Docker
+  Cascade: git pull → disque mis a jour → container garde l'ancien code → route manquante → 404/500
+  Origine: le container Docker a sa propre copie du code, independante du disque
+
+  Fix complet:
+  ./deploy.sh staging
+```
+
 ### Quand l'utiliser
 
 - Apres un reboot du serveur
@@ -506,12 +576,13 @@ Les administrateurs (superusers) ont acces a une interface web pour lancer les t
 | Couche | Fichier(s) | Nb tests | Type |
 |--------|-----------|----------|------|
 | 1. Infra | test_health.py | 9 | integration |
+| 1b. Sync | test_deploy_health.py (TestDiskContainerSync) | 3 | integration |
 | 2. Config | test_tutor_config.py + test_deploy_scripts.py | 28 | unit |
 | 3. App | test_auth.py + test_api.py | 15 | integration |
 | 4. Theme/Custom | test_theme_templates.py + test_plugin_logic.py + test_olx_structure.py | 82 | unit |
-| Deploy | test_deploy_health.py | 14 | integration |
+| Deploy | test_deploy_health.py (Mako, webpack, pages, static) | 14 | integration |
 | Smoke | test_smoke_prod.py | 13 | smoke |
-| **TOTAL** | **10 fichiers** | **~148** | |
+| **TOTAL** | **10 fichiers** | **~151** | |
 
 ---
 

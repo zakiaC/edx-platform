@@ -88,25 +88,29 @@
 
 ## 7. Déploiement
 
+> **IMPORTANT** : Toujours utiliser `./deploy.sh staging` — ne JAMAIS faire
+> un simple `git pull + restart`. Le script gere automatiquement la
+> synchronisation disque/container, le cache Mako et le collectstatic.
+
 - [ ] **Backup avant déploiement** :
   ```bash
-  tutor local do backup
-  # ou manuellement :
-  docker exec tutor_local_mongodb_1 mongodump --out /backup/$(date +%F)
-  docker exec tutor_local_mysql_1 mysqldump -u root openedx > /backup/openedx_$(date +%F).sql
+  ssh staging-openedx "docker exec tutor_local-mysql-1 mysqldump -u root openedx > /root/backup/openedx_$(date +%F).sql"
   ```
 - [ ] **Pull le code sur le serveur** :
   ```bash
-  cd /chemin/vers/edx-platform && git pull origin staging
+  ssh staging-openedx "cd /root/edx-platform && git stash && git pull origin staging && git stash pop 2>/dev/null"
   ```
-- [ ] **Rebuild l'image Docker** :
+- [ ] **Deployer avec le script** (sync container + sass + collectstatic + cache Mako + restart) :
   ```bash
-  tutor images build openedx --build-arg EDX_PLATFORM_REPOSITORY=...
+  ./deploy.sh staging
   ```
-- [ ] **Redémarrer** :
-  ```bash
-  tutor local stop && tutor local start -d
-  ```
+  Le script fait 6 etapes :
+  1. Permissions theme
+  2. **Sync disque → container** (`docker cp` plugin + theme + config)
+  3. Compilation Sass
+  4. Verification CSS
+  5. Collectstatic (SANS `--clear`)
+  6. Vider cache Mako + restart LMS
 - [ ] **Vérifier le site** : https://academie.staging.missionformations.com
 - [ ] **Vérifier Studio** : https://studio.staging.missionformations.com
 
@@ -114,11 +118,30 @@
 
 ## 8. Post-déploiement
 
+- [ ] **Lancer le diagnostic** :
+  ```bash
+  python3 tests/diagnose.py
+  ```
+- [ ] **Lancer les tests smoke** :
+  ```bash
+  pytest tests/smoke/ -m smoke -v
+  ```
 - [ ] **Rotation des secrets** (JWT, Meilisearch) car exposés dans l'historique git
 - [ ] **Tester le login/register** sur le thème Mission
 - [ ] **Vérifier les MFE** (account, discussions, learning, authoring)
 - [ ] **Monitorer les logs** pendant 30 min :
   ```bash
-  tutor local logs --follow lms
-  tutor local logs --follow cms
+  ssh staging-openedx "docker logs tutor_local-lms-1 --follow --tail 20"
   ```
+
+---
+
+## Depannage rapide
+
+| Symptome | Cause probable | Fix |
+|----------|---------------|-----|
+| TOUTES les pages en 500 | `webpack-stats.json` manquant | `docker exec tutor_local-lms-1 bash -c 'cd /openedx/edx-platform && npm run webpack' && docker exec tutor_local-lms-1 ./manage.py lms collectstatic --noinput && docker restart tutor_local-lms-1` |
+| UNE page en 500 | Cache Mako corrompu | `docker exec tutor_local-lms-1 bash -c 'find /tmp -name "*.mako.py" -delete' && docker restart tutor_local-lms-1` |
+| Page 404 apres deploy | Code non synce dans le container | `./deploy.sh staging` (inclut docker cp) |
+| `git pull` bloque | Fichiers modifies localement | `git stash && git pull && git stash pop` |
+| MySQL down | OOM ou disque plein | `docker restart tutor_local-mysql-1` puis verifier RAM/disque |
