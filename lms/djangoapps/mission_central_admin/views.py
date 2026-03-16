@@ -877,13 +877,85 @@ def test_dashboard(request):
                 ["bash", "-c", cmd],
                 capture_output=True, text=True, timeout=120,
             )
+            raw = proc.stdout or proc.stderr or "Aucune sortie"
+            # Parser la sortie pytest en donnees structurees
+            import re as _re
+            passed_tests = []
+            failed_tests = []
+            skipped_tests = []
+            for line in raw.splitlines():
+                line_s = line.strip()
+                if " PASSED" in line_s:
+                    name = line_s.split(" PASSED")[0].strip()
+                    # Extraire le nom court: fichier::classe::methode
+                    parts = name.rsplit("::", 1)
+                    short = parts[-1] if len(parts) > 1 else name
+                    module = parts[0].split("/")[-1] if len(parts) > 1 else ""
+                    passed_tests.append({"name": short, "module": module, "full": name})
+                elif " FAILED" in line_s:
+                    name = line_s.split(" FAILED")[0].strip()
+                    parts = name.rsplit("::", 1)
+                    short = parts[-1] if len(parts) > 1 else name
+                    module = parts[0].split("/")[-1] if len(parts) > 1 else ""
+                    failed_tests.append({"name": short, "module": module, "full": name})
+                elif " SKIPPED" in line_s:
+                    name = line_s.split(" SKIPPED")[0].strip()
+                    parts = name.rsplit("::", 1)
+                    short = parts[-1] if len(parts) > 1 else name
+                    module = parts[0].split("/")[-1] if len(parts) > 1 else ""
+                    skipped_tests.append({"name": short, "module": module, "full": name})
+
+            # Extraire la ligne de resume (ex: "81 passed, 53 skipped in 0.28s")
+            summary_line = ""
+            duration = ""
+            for line in raw.splitlines():
+                if "passed" in line and ("in " in line or "failed" in line):
+                    summary_line = line.strip().lstrip("=").rstrip("=").strip()
+                    dur_match = _re.search(r'in ([\d.]+)s', line)
+                    if dur_match:
+                        duration = dur_match.group(1) + "s"
+                    break
+
+            # Extraire les details des echecs (le --tb=short donne le contexte)
+            failure_details = []
+            in_failure = False
+            current_detail = []
+            for line in raw.splitlines():
+                if line.startswith("FAILED ") or line.startswith("_ "):
+                    if current_detail:
+                        failure_details.append("\n".join(current_detail))
+                    current_detail = [line]
+                    in_failure = True
+                elif in_failure and (line.startswith("    ") or line.startswith("E ") or line.startswith("> ")):
+                    current_detail.append(line)
+                elif in_failure and line.strip() == "":
+                    if current_detail:
+                        failure_details.append("\n".join(current_detail))
+                        current_detail = []
+                    in_failure = False
+            if current_detail:
+                failure_details.append("\n".join(current_detail))
+
             results = {
-                "output": proc.stdout or proc.stderr or "Aucune sortie",
+                "output": raw,
                 "returncode": proc.returncode,
                 "suite": suite,
+                "passed": passed_tests,
+                "failed": failed_tests,
+                "skipped": skipped_tests,
+                "summary": summary_line,
+                "duration": duration,
+                "failure_details": failure_details,
+                "total": len(passed_tests) + len(failed_tests) + len(skipped_tests),
             }
         except subprocess.TimeoutExpired:
-            results = {"output": "Timeout: les tests ont pris plus de 2 minutes.", "returncode": -1, "suite": suite}
+            results = {
+                "output": "Timeout: les tests ont pris plus de 2 minutes.",
+                "returncode": -1, "suite": suite,
+                "passed": [], "failed": [], "skipped": [],
+                "summary": "Timeout", "duration": ">120s",
+                "failure_details": [], "total": 0,
+            }
 
         if send_email and email_to and results:
             try:

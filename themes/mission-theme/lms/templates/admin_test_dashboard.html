@@ -12,188 +12,295 @@
   _dashboard_url = locals().get('dashboard_url', '/admin/mission-dashboard/')
 %>
 <style>
-  :root { --bleu:#0965D0; --vert:#01E8AE; --dark:#0a1628; --gris:#f5f7fa; }
-  .mf-test-page { max-width:960px; margin:40px auto; padding:0 24px; font-family:'Ubuntu',sans-serif; }
-  .mf-test-page h1 { font-size:28px; color:var(--dark); margin-bottom:8px; }
-  .mf-test-page .subtitle { color:#6b6b6b; margin-bottom:32px; }
-  .mf-test-page a.back { color:var(--bleu); text-decoration:none; font-size:14px; }
-  .mf-test-page a.back:hover { text-decoration:underline; }
+:root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--rouge:#d32f2f;--orange:#f57c00;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace}
+.mf-test-page{max-width:1060px;margin:40px auto;padding:0 24px;font-family:var(--body)}
+.mf-test-page h1{font-family:var(--heading);font-size:28px;color:var(--dark);margin-bottom:4px}
+.mf-test-page .subtitle{color:#6b6b6b;margin-bottom:28px;font-size:14px}
+.mf-test-page a.back{color:var(--bleu);text-decoration:none;font-size:13px}
+.mf-test-page a.back:hover{text-decoration:underline}
 
-  .mf-test-suites { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:32px; }
-  .mf-test-card { background:#fff; border:1px solid #e8e8e8; border-radius:12px; padding:24px; text-align:center; }
-  .mf-test-card h3 { margin:0 0 4px; font-size:16px; color:var(--dark); }
-  .mf-test-card p { font-size:13px; color:#6b6b6b; margin:0 0 16px; }
-  .mf-test-card .count { font-size:28px; font-weight:700; color:var(--bleu); }
-  .mf-test-card .count span { font-size:13px; font-weight:400; color:#6b6b6b; }
+/* Cards suite */
+.mf-suites{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+.mf-suite-card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:20px;text-align:center}
+.mf-suite-card h3{font-family:var(--heading);margin:0 0 2px;font-size:15px;color:var(--dark)}
+.mf-suite-card p{font-size:12px;color:#999;margin:0 0 10px}
+.mf-suite-card .num{font-size:26px;font-weight:700;color:var(--bleu)}
+.mf-suite-card .num span{font-size:12px;font-weight:400;color:#999}
 
-  .mf-test-actions { display:flex; gap:12px; flex-wrap:wrap; }
-  .mf-test-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all .15s ease; }
-  .mf-test-btn.primary { background:var(--bleu); color:#fff; }
-  .mf-test-btn.primary:hover { background:#074bb0; }
-  .mf-test-btn.secondary { background:var(--gris); color:var(--dark); border:1px solid #e8e8e8; }
-  .mf-test-btn.secondary:hover { background:#eee; }
-  .mf-test-btn.green { background:var(--vert); color:var(--dark); }
-  .mf-test-btn.green:hover { background:#00d4a0; }
+/* Actions */
+.mf-actions-box{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:20px;margin-bottom:20px}
+.mf-email-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.mf-email-row label{font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap}
+.mf-email-row input[type=email]{flex:1;padding:7px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;max-width:300px;font-family:var(--body)}
+.mf-email-row .cb-label{font-size:12px;color:#6b6b6b;display:flex;align-items:center;gap:5px}
+.mf-btns{display:flex;gap:10px;flex-wrap:wrap}
+.mf-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s ease;font-family:var(--body)}
+.mf-btn.bl{background:var(--bleu);color:#fff}.mf-btn.bl:hover{background:#074bb0}
+.mf-btn.gr{background:var(--vert);color:var(--dark)}.mf-btn.gr:hover{background:#00d4a0}
+.mf-btn.gy{background:var(--gris);color:var(--dark);border:1px solid #e0e0e0}.mf-btn.gy:hover{background:#eee}
 
-  .mf-test-output { background:var(--dark); color:#e0e0e0; border-radius:12px; padding:24px; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6; overflow-x:auto; white-space:pre-wrap; word-break:break-word; max-height:600px; overflow-y:auto; }
-  .mf-test-output .pass { color:#01E8AE; }
-  .mf-test-output .fail { color:#ff5252; }
-  .mf-test-output .warn { color:#ffab40; }
+/* Banner */
+.mf-banner{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px;display:none}
 
-  .mf-test-status { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:8px; font-size:14px; font-weight:600; margin-bottom:16px; }
-  .mf-test-status.ok { background:#e8faf3; color:#00875a; }
-  .mf-test-status.ko { background:#ffeaea; color:#d32f2f; }
+/* Resultats */
+.mf-results{margin-bottom:28px}
+.mf-res-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.mf-res-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:700;font-family:var(--heading)}
+.mf-res-badge.ok{background:#e8faf3;color:#00875a}
+.mf-res-badge.ko{background:#ffeaea;color:var(--rouge)}
+.mf-res-meta{font-size:12px;color:#999}
+.mf-res-meta b{color:var(--dark)}
 
-  .mf-test-doc { background:#fff; border:1px solid #e8e8e8; border-radius:12px; padding:24px; margin-top:32px; }
-  .mf-test-doc h2 { font-size:18px; color:var(--dark); margin:0 0 12px; }
-  .mf-test-doc table { width:100%; border-collapse:collapse; font-size:13px; }
-  .mf-test-doc th { text-align:left; padding:8px 12px; background:var(--gris); font-weight:600; }
-  .mf-test-doc td { padding:8px 12px; border-bottom:1px solid #f0f0f0; }
-  .mf-test-doc code { background:var(--gris); padding:2px 6px; border-radius:4px; font-size:12px; }
+/* KPI row */
+.mf-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.mf-kpi{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px;text-align:center}
+.mf-kpi .v{font-size:28px;font-weight:700;font-family:var(--heading)}
+.mf-kpi .v.green{color:#00875a}.mf-kpi .v.red{color:var(--rouge)}.mf-kpi .v.orange{color:var(--orange)}.mf-kpi .v.blue{color:var(--bleu)}
+.mf-kpi .l{font-size:11px;color:#999;margin-top:2px}
+
+/* Progress bar */
+.mf-progress-wrap{margin-bottom:20px}
+.mf-progress-bar{height:8px;background:#e8e8e8;border-radius:4px;overflow:hidden;display:flex}
+.mf-progress-bar .seg-pass{background:var(--vert);height:100%}
+.mf-progress-bar .seg-skip{background:#ffd54f;height:100%}
+.mf-progress-bar .seg-fail{background:var(--rouge);height:100%}
+.mf-progress-legend{display:flex;gap:16px;margin-top:6px;font-size:11px;color:#6b6b6b}
+.mf-progress-legend .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+
+/* Tests table */
+.mf-test-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e8e8e8}
+.mf-test-table th{text-align:left;padding:10px 14px;background:var(--gris);font-weight:600;font-size:12px;color:#6b6b6b;font-family:var(--heading)}
+.mf-test-table td{padding:8px 14px;border-bottom:1px solid #f5f5f5}
+.mf-test-table tr:last-child td{border-bottom:none}
+.mf-test-table .status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.mf-test-table .status.pass{background:var(--vert)}
+.mf-test-table .status.fail{background:var(--rouge)}
+.mf-test-table .status.skip{background:#ffd54f}
+.mf-test-table .module{font-size:11px;color:#999}
+.mf-test-table .name{font-family:var(--mono);font-size:12px}
+
+/* Failure details */
+.mf-failures{margin-top:20px}
+.mf-failure-card{background:#fff;border:1px solid #ffcdd2;border-left:4px solid var(--rouge);border-radius:8px;padding:16px;margin-bottom:12px}
+.mf-failure-card h4{font-family:var(--heading);font-size:14px;color:var(--rouge);margin:0 0 8px}
+.mf-failure-card pre{background:var(--dark);color:#e0e0e0;border-radius:8px;padding:12px;font-family:var(--mono);font-size:12px;line-height:1.5;overflow-x:auto;margin:0;white-space:pre-wrap;word-break:break-word}
+
+/* Raw output toggle */
+.mf-raw-toggle{font-size:12px;color:var(--bleu);cursor:pointer;margin-top:12px;display:inline-block}
+.mf-raw-toggle:hover{text-decoration:underline}
+.mf-raw-output{display:none;background:var(--dark);color:#e0e0e0;border-radius:10px;padding:20px;font-family:var(--mono);font-size:12px;line-height:1.5;overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;margin-top:8px}
+
+/* Doc */
+.mf-doc{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:20px;margin-top:28px}
+.mf-doc h2{font-family:var(--heading);font-size:16px;color:var(--dark);margin:0 0 10px}
+.mf-doc table{width:100%;border-collapse:collapse;font-size:12px}
+.mf-doc th{text-align:left;padding:6px 10px;background:var(--gris);font-weight:600}
+.mf-doc td{padding:6px 10px;border-bottom:1px solid #f0f0f0}
+.mf-doc code{background:var(--gris);padding:2px 5px;border-radius:3px;font-size:11px;font-family:var(--mono)}
+
+@media(max-width:700px){.mf-kpis{grid-template-columns:repeat(2,1fr)}.mf-suites{grid-template-columns:1fr 1fr}.mf-email-row{flex-direction:column;align-items:stretch}.mf-email-row input[type=email]{max-width:100%}}
 </style>
 
 <div class="mf-test-page">
   <a class="back" href="${_dashboard_url}">&larr; Retour au dashboard</a>
   <h1>Tests & Qualite</h1>
-  <p class="subtitle">Suite de tests automatises — 134 tests couvrant toutes les customisations Mission Formations</p>
+  <p class="subtitle">Suite de tests automatises — 151 tests couvrant toutes les customisations Mission Formations</p>
 
   % if _email_sent:
-  <div class="mf-test-status ok" style="margin-bottom:16px">Resultats envoyes par email</div>
+  <div style="padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px;background:#e8faf3;color:#00875a">Email envoye avec les resultats</div>
   % endif
 
-  <div class="mf-test-suites">
-    <div class="mf-test-card">
-      <h3>Unit</h3>
-      <p>Config, OLX, theme, plugin, scripts</p>
-      <div class="count">70 <span>tests</span></div>
-    </div>
-    <div class="mf-test-card">
-      <h3>Integration</h3>
-      <p>Services, auth, API, endpoints</p>
-      <div class="count">22 <span>tests</span></div>
-    </div>
-    <div class="mf-test-card">
-      <h3>Smoke</h3>
-      <p>Post-deploy, pages, TLS, assets</p>
-      <div class="count">12 <span>tests</span></div>
-    </div>
+  <div class="mf-suites">
+    <div class="mf-suite-card"><h3>Unit</h3><p>Config, OLX, theme, plugin</p><div class="num">82 <span>tests</span></div></div>
+    <div class="mf-suite-card"><h3>Integration</h3><p>Services, auth, API, deploy</p><div class="num">38 <span>tests</span></div></div>
+    <div class="mf-suite-card"><h3>Smoke</h3><p>Post-deploy, TLS, assets</p><div class="num">13 <span>tests</span></div></div>
+    <div class="mf-suite-card"><h3>Diagnostic</h3><p>Cause racine SSH</p><div class="num">CLI <span>script</span></div></div>
   </div>
 
-  <div style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:24px;margin-bottom:24px;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-      <label style="font-size:14px;font-weight:600;color:var(--dark);white-space:nowrap;">Recevoir par email :</label>
-      <input type="email" id="mf-test-email" value="${_user_email}" placeholder="votre@email.com" style="flex:1;padding:8px 12px;border:1px solid #e8e8e8;border-radius:8px;font-size:14px;max-width:320px;">
-      <label style="font-size:13px;color:#6b6b6b;display:flex;align-items:center;gap:6px;">
-        <input type="checkbox" id="mf-test-send-email" checked> Envoyer
-      </label>
+  <div class="mf-actions-box">
+    <div class="mf-email-row">
+      <label>Recevoir par email :</label>
+      <input type="email" id="mf-test-email" value="${_user_email}" placeholder="votre@email.com">
+      <span class="cb-label"><input type="checkbox" id="mf-test-send-email" checked> Envoyer</span>
     </div>
-
-    <div class="mf-test-actions">
+    <div class="mf-btns">
       <form method="post" style="display:inline" class="mf-test-form">
         <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
         <input type="hidden" name="suite" value="unit">
         <input type="hidden" name="send_email" value="0" class="mf-email-flag">
         <input type="hidden" name="email_to" value="" class="mf-email-to">
-        <button type="submit" class="mf-test-btn primary">Lancer les tests unitaires</button>
+        <button type="submit" class="mf-btn bl">Tests unitaires</button>
       </form>
       <form method="post" style="display:inline" class="mf-test-form">
         <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
         <input type="hidden" name="suite" value="integration">
         <input type="hidden" name="send_email" value="0" class="mf-email-flag">
         <input type="hidden" name="email_to" value="" class="mf-email-to">
-        <button type="submit" class="mf-test-btn secondary">Tests integration</button>
+        <button type="submit" class="mf-btn gy">Integration</button>
       </form>
       <form method="post" style="display:inline" class="mf-test-form">
         <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
         <input type="hidden" name="suite" value="smoke">
         <input type="hidden" name="send_email" value="0" class="mf-email-flag">
         <input type="hidden" name="email_to" value="" class="mf-email-to">
-        <button type="submit" class="mf-test-btn green">Tests smoke</button>
+        <button type="submit" class="mf-btn gr">Smoke</button>
       </form>
       <form method="post" style="display:inline" class="mf-test-form">
         <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
         <input type="hidden" name="suite" value="all">
         <input type="hidden" name="send_email" value="0" class="mf-email-flag">
         <input type="hidden" name="email_to" value="" class="mf-email-to">
-        <button type="submit" class="mf-test-btn secondary">Tout lancer</button>
+        <button type="submit" class="mf-btn gy">Tout lancer</button>
       </form>
     </div>
   </div>
 
-  <div id="mf-submit-banner" style="display:none;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;margin-bottom:16px;"></div>
+  <div id="mf-submit-banner" class="mf-banner"></div>
 
   <script>
-  document.querySelectorAll('.mf-test-form').forEach(function(form) {
-    form.addEventListener('submit', function() {
-      var checked = document.getElementById('mf-test-send-email').checked;
-      var email = document.getElementById('mf-test-email').value;
-      form.querySelector('.mf-email-flag').value = checked ? '1' : '0';
-      form.querySelector('.mf-email-to').value = email;
-
-      var suite = form.querySelector('[name=suite]').value.toUpperCase();
-      var banner = document.getElementById('mf-submit-banner');
-
-      if (checked && email) {
-        banner.style.display = 'block';
-        banner.style.background = '#e8faf3';
-        banner.style.color = '#00875a';
-        banner.textContent = 'Tests ' + suite + ' lances — resultats envoyes a ' + email + ' des la fin.';
-      } else {
-        banner.style.display = 'block';
-        banner.style.background = '#e8f0fe';
-        banner.style.color = '#0965D0';
-        banner.textContent = 'Tests ' + suite + ' en cours — patientez...';
-      }
-
-      // Desactiver tous les boutons pour eviter le double-clic
-      document.querySelectorAll('.mf-test-btn').forEach(function(btn) {
-        btn.disabled = true;
-        btn.style.opacity = '0.5';
-        btn.style.cursor = 'wait';
-      });
+  document.querySelectorAll('.mf-test-form').forEach(function(form){
+    form.addEventListener('submit',function(){
+      var ck=document.getElementById('mf-test-send-email').checked;
+      var em=document.getElementById('mf-test-email').value;
+      form.querySelector('.mf-email-flag').value=ck?'1':'0';
+      form.querySelector('.mf-email-to').value=em;
+      var suite=form.querySelector('[name=suite]').value.toUpperCase();
+      var b=document.getElementById('mf-submit-banner');
+      b.style.display='block';
+      if(ck&&em){b.style.background='#e8faf3';b.style.color='#00875a';b.textContent='Tests '+suite+' lances — resultats envoyes a '+em+' des la fin.';}
+      else{b.style.background='#e8f0fe';b.style.color='#0965D0';b.textContent='Tests '+suite+' en cours — patientez...';}
+      document.querySelectorAll('.mf-btn').forEach(function(btn){btn.disabled=true;btn.style.opacity='0.5';btn.style.cursor='wait';});
     });
   });
+  function toggleRaw(){var el=document.getElementById('mf-raw');el.style.display=el.style.display==='none'?'block':'none';}
   </script>
 
+  ## ── RESULTATS ──
   % if _results:
   <%
     _is_pass = _results.get('returncode', -1) == 0
-    _suite_name = _results.get('suite', 'unit')
-    _raw_output = _results.get('output', '')
-    _colored = _raw_output.replace('PASSED', '<span class="pass">PASSED</span>')
-    _colored = _colored.replace('FAILED', '<span class="fail">FAILED</span>')
-    _colored = _colored.replace('WARNING', '<span class="warn">WARNING</span>')
-    _colored = _colored.replace('ERROR', '<span class="fail">ERROR</span>')
-    _colored = _colored.replace('passed', '<span class="pass">passed</span>')
-    _colored = _colored.replace('failed', '<span class="fail">failed</span>')
+    _suite_name = _results.get('suite', 'unit').upper()
+    _passed = _results.get('passed', [])
+    _failed = _results.get('failed', [])
+    _skipped = _results.get('skipped', [])
+    _total = _results.get('total', 0) or (len(_passed) + len(_failed) + len(_skipped))
+    _summary = _results.get('summary', '')
+    _duration = _results.get('duration', '')
+    _failure_details = _results.get('failure_details', [])
+    _raw = _results.get('output', '')
+
+    _pass_pct = int(round(100.0 * len(_passed) / _total)) if _total else 0
+    _skip_pct = int(round(100.0 * len(_skipped) / _total)) if _total else 0
+    _fail_pct = 100 - _pass_pct - _skip_pct if _total else 0
   %>
-  <div class="mf-test-status ${'ok' if _is_pass else 'ko'}">
-    ${'TOUS LES TESTS PASSENT' if _is_pass else 'DES TESTS ONT ECHOUE'} — Suite: ${_suite_name}
+
+  <div class="mf-results">
+    <div class="mf-res-header">
+      <div class="mf-res-badge ${'ok' if _is_pass else 'ko'}">
+        ${'PASS' if _is_pass else 'FAIL'} — ${_suite_name}
+      </div>
+      <div class="mf-res-meta">
+        % if _duration:
+        Duree : <b>${_duration}</b> &nbsp;|&nbsp;
+        % endif
+        % if _summary:
+        ${_summary}
+        % endif
+      </div>
+    </div>
+
+    ## KPIs
+    <div class="mf-kpis">
+      <div class="mf-kpi"><div class="v blue">${_total}</div><div class="l">Total</div></div>
+      <div class="mf-kpi"><div class="v green">${len(_passed)}</div><div class="l">Passed</div></div>
+      <div class="mf-kpi"><div class="v red">${len(_failed)}</div><div class="l">Failed</div></div>
+      <div class="mf-kpi"><div class="v orange">${len(_skipped)}</div><div class="l">Skipped</div></div>
+    </div>
+
+    ## Progress bar
+    <div class="mf-progress-wrap">
+      <div class="mf-progress-bar">
+        <div class="seg-pass" style="width:${_pass_pct}%"></div>
+        <div class="seg-skip" style="width:${_skip_pct}%"></div>
+        <div class="seg-fail" style="width:${_fail_pct}%"></div>
+      </div>
+      <div class="mf-progress-legend">
+        <span><span class="dot" style="background:var(--vert)"></span>Passed ${_pass_pct}%</span>
+        <span><span class="dot" style="background:#ffd54f"></span>Skipped ${_skip_pct}%</span>
+        <span><span class="dot" style="background:var(--rouge)"></span>Failed ${_fail_pct}%</span>
+      </div>
+    </div>
+
+    ## Failures en premier (le plus important)
+    % if _failed:
+    <div class="mf-failures">
+      <h3 style="font-family:var(--heading);font-size:16px;color:var(--rouge);margin:0 0 12px">${len(_failed)} test(s) en echec</h3>
+      % for t in _failed:
+      <div class="mf-failure-card">
+        <h4>${t['name']}</h4>
+        <div style="font-size:12px;color:#999;margin-bottom:8px">${t['module']}</div>
+        % if _failure_details:
+        <%
+          # Trouver le detail correspondant
+          _detail = ''
+          for d in _failure_details:
+            if t['name'] in d or t.get('full','') in d:
+              _detail = d
+              break
+          if not _detail and _failure_details:
+            _detail = _failure_details[0]
+            _failure_details = _failure_details[1:]
+        %>
+        % if _detail:
+        <pre>${_detail}</pre>
+        % endif
+        % endif
+      </div>
+      % endfor
+    </div>
+    % endif
+
+    ## Tableau des tests passes
+    % if _passed or _skipped:
+    <details style="margin-top:16px" ${'open' if not _failed else ''}>
+      <summary style="font-family:var(--heading);font-size:14px;color:var(--dark);cursor:pointer;margin-bottom:10px;font-weight:600">
+        Tous les tests (${len(_passed)} passed, ${len(_skipped)} skipped)
+      </summary>
+      <table class="mf-test-table">
+        <thead><tr><th style="width:30px"></th><th>Test</th><th>Module</th></tr></thead>
+        <tbody>
+          % for t in _failed:
+          <tr><td><span class="status fail"></span></td><td class="name">${t['name']}</td><td class="module">${t['module']}</td></tr>
+          % endfor
+          % for t in _passed:
+          <tr><td><span class="status pass"></span></td><td class="name">${t['name']}</td><td class="module">${t['module']}</td></tr>
+          % endfor
+          % for t in _skipped:
+          <tr><td><span class="status skip"></span></td><td class="name">${t['name']}</td><td class="module">${t['module']}</td></tr>
+          % endfor
+        </tbody>
+      </table>
+    </details>
+    % endif
+
+    ## Raw output
+    <span class="mf-raw-toggle" onclick="toggleRaw()">Voir la sortie brute pytest</span>
+    <div id="mf-raw" class="mf-raw-output">${_raw}</div>
   </div>
-  <div class="mf-test-output">${_colored | n}</div>
   % endif
 
-  <div class="mf-test-doc">
+  ## ── DOCUMENTATION ──
+  <div class="mf-doc">
     <h2>Quand lancer les tests ?</h2>
     <table>
-      <thead>
-        <tr><th>Moment</th><th>Commande</th><th>Duree</th></tr>
-      </thead>
+      <thead><tr><th>Moment</th><th>Commande</th><th>Duree</th></tr></thead>
       <tbody>
-        <tr><td>Avant chaque commit</td><td><code>pytest tests/unit/ -m unit</code></td><td>~2 sec</td></tr>
-        <tr><td>Avant chaque deploy</td><td><code>pytest tests/integration/ -m integration</code></td><td>~30 sec</td></tr>
-        <tr><td>Apres chaque deploy</td><td><code>pytest tests/smoke/ -m smoke</code></td><td>~10 sec</td></tr>
-        <tr><td>Diagnostic complet</td><td><code>pytest tests/ -v</code></td><td>~1 min</td></tr>
+        <tr><td>Avant chaque commit</td><td><code>pytest tests/unit/ -m unit</code></td><td>~2s</td></tr>
+        <tr><td>Avant chaque deploy</td><td><code>pytest tests/integration/ -m integration</code></td><td>~30s</td></tr>
+        <tr><td>Apres chaque deploy</td><td><code>pytest tests/smoke/ -m smoke</code></td><td>~10s</td></tr>
+        <tr><td>Diagnostic cause racine</td><td><code>python3 tests/diagnose.py</code></td><td>~20s</td></tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="mf-test-doc" style="margin-top:16px">
-    <h2>Documentation</h2>
-    <p style="font-size:14px;color:#6b6b6b;">
-      La documentation complete de chaque test est dans <code>docs/ops/TESTING.md</code>.
-      Elle decrit les 134 tests, leur objectif, et quoi faire quand un test echoue.
-    </p>
   </div>
 </div>
 </%block>
