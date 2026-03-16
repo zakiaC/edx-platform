@@ -13,6 +13,7 @@ urlpatterns = [
     path("notifications/interne/", views.internal_notifications, name="mission-internal-notifications"),
     path("admin/mission-dashboard/", views.dashboard, name="mission-central-dashboard"),
     path("admin/mission-dashboard/formateur/", views.formateur_detail, name="mission-formateur-detail"),
+    path("admin/mission-dashboard/tests/", views.test_dashboard, name="mission-test-dashboard"),
     path("api/admin/formateurs-sessions/", views.formateurs_sessions_api, name="mission-central-api"),
     path("api/admin/formateurs-sessions/export.csv", views.formateurs_sessions_export_csv, name="mission-central-export-csv"),
 ]

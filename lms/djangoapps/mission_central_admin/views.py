@@ -845,6 +845,45 @@ def formateurs_sessions_export_csv(request):
     return response
 
 
+@login_required
+@require_http_methods(["GET", "POST"])
+def test_dashboard(request):
+    """Dashboard Qualite & Tests — execute pytest et affiche les resultats."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    import subprocess
+    import pathlib
+
+    results = None
+    if request.method == "POST":
+        suite = request.POST.get("suite", "unit")
+        allowed_suites = {"unit": "tests/unit/", "integration": "tests/integration/", "smoke": "tests/smoke/", "all": "tests/"}
+        test_path = allowed_suites.get(suite, "tests/unit/")
+        marker = f"-m {suite}" if suite != "all" else ""
+
+        project_root = pathlib.Path(settings.PROJECT_ROOT).parent if hasattr(settings, "PROJECT_ROOT") else pathlib.Path("/openedx/edx-platform")
+        cmd = f"cd {project_root} && python -m pytest {test_path} {marker} -v --tb=short --no-header 2>&1 | tail -80"
+        try:
+            proc = subprocess.run(
+                ["bash", "-c", cmd],
+                capture_output=True, text=True, timeout=120,
+            )
+            results = {
+                "output": proc.stdout or proc.stderr or "Aucune sortie",
+                "returncode": proc.returncode,
+                "suite": suite,
+            }
+        except subprocess.TimeoutExpired:
+            results = {"output": "Timeout: les tests ont pris plus de 2 minutes.", "returncode": -1, "suite": suite}
+
+    context = {
+        "results": results,
+        "dashboard_url": "/admin/mission-dashboard/",
+    }
+    return render_to_response("admin_test_dashboard.html", context)
+
+
 @require_http_methods(["GET", "POST"])
 def contact_view(request):
     field_names = ("prenom", "nom", "email", "telephone", "profil", "sujet", "message")

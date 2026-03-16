@@ -71,7 +71,22 @@
 
 ---
 
-## 6. Déploiement
+## 6. Tests (OBLIGATOIRE avant deploy)
+
+- [ ] **Lancer les tests unitaires** :
+  ```bash
+  pytest tests/unit/ -m unit -v
+  ```
+- [ ] **Lancer les tests d'integration** (containers actifs) :
+  ```bash
+  pytest tests/integration/ -m integration -v
+  ```
+- [ ] **Tous les tests passent** (0 FAILED)
+- [ ] Documentation tests : `docs/ops/TESTING.md`
+
+---
+
+## 7. Déploiement
 
 - [ ] **Backup avant déploiement** :
   ```bash
@@ -97,7 +112,7 @@
 
 ---
 
-## 7. Post-déploiement
+## 8. Post-déploiement
 
 - [ ] **Rotation des secrets** (JWT, Meilisearch) car exposés dans l'historique git
 - [ ] **Tester le login/register** sur le thème Mission

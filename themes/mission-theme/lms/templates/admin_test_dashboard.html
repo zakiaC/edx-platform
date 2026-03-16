@@ -1,0 +1,138 @@
+<%page expression_filter="h"/>
+<%inherit file="main.html" />
+
+<%block name="pagetitle">Tests & QA — Mission Formations</%block>
+<%block name="bodyclass">view-test-dashboard is-authenticated</%block>
+
+<%block name="content">
+<style>
+  :root { --bleu:#0965D0; --vert:#01E8AE; --dark:#0a1628; --gris:#f5f7fa; }
+  .mf-test-page { max-width:960px; margin:40px auto; padding:0 24px; font-family:'Ubuntu',sans-serif; }
+  .mf-test-page h1 { font-size:28px; color:var(--dark); margin-bottom:8px; }
+  .mf-test-page .subtitle { color:#6b6b6b; margin-bottom:32px; }
+  .mf-test-page a.back { color:var(--bleu); text-decoration:none; font-size:14px; }
+  .mf-test-page a.back:hover { text-decoration:underline; }
+
+  .mf-test-suites { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:32px; }
+  .mf-test-card { background:#fff; border:1px solid #e8e8e8; border-radius:12px; padding:24px; text-align:center; }
+  .mf-test-card h3 { margin:0 0 4px; font-size:16px; color:var(--dark); }
+  .mf-test-card p { font-size:13px; color:#6b6b6b; margin:0 0 16px; }
+  .mf-test-card .count { font-size:28px; font-weight:700; color:var(--bleu); }
+  .mf-test-card .count span { font-size:13px; font-weight:400; color:#6b6b6b; }
+
+  .mf-test-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+  .mf-test-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all .15s ease; }
+  .mf-test-btn.primary { background:var(--bleu); color:#fff; }
+  .mf-test-btn.primary:hover { background:#074bb0; }
+  .mf-test-btn.secondary { background:var(--gris); color:var(--dark); border:1px solid #e8e8e8; }
+  .mf-test-btn.secondary:hover { background:#eee; }
+  .mf-test-btn.green { background:var(--vert); color:var(--dark); }
+  .mf-test-btn.green:hover { background:#00d4a0; }
+
+  .mf-test-output { background:var(--dark); color:#e0e0e0; border-radius:12px; padding:24px; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6; overflow-x:auto; white-space:pre-wrap; word-break:break-word; max-height:600px; overflow-y:auto; }
+  .mf-test-output .pass { color:#01E8AE; }
+  .mf-test-output .fail { color:#ff5252; }
+  .mf-test-output .warn { color:#ffab40; }
+
+  .mf-test-status { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:8px; font-size:14px; font-weight:600; margin-bottom:16px; }
+  .mf-test-status.ok { background:#e8faf3; color:#00875a; }
+  .mf-test-status.ko { background:#ffeaea; color:#d32f2f; }
+
+  .mf-test-doc { background:#fff; border:1px solid #e8e8e8; border-radius:12px; padding:24px; margin-top:32px; }
+  .mf-test-doc h2 { font-size:18px; color:var(--dark); margin:0 0 12px; }
+  .mf-test-doc table { width:100%; border-collapse:collapse; font-size:13px; }
+  .mf-test-doc th { text-align:left; padding:8px 12px; background:var(--gris); font-weight:600; }
+  .mf-test-doc td { padding:8px 12px; border-bottom:1px solid #f0f0f0; }
+  .mf-test-doc code { background:var(--gris); padding:2px 6px; border-radius:4px; font-size:12px; }
+</style>
+
+<div class="mf-test-page">
+  <a class="back" href="${context.get('dashboard_url', '/admin/mission-dashboard/')}">&larr; Retour au dashboard</a>
+  <h1>Tests & Qualite</h1>
+  <p class="subtitle">Suite de tests automatises — 104 tests couvrant toutes les customisations Mission Formations</p>
+
+  <div class="mf-test-suites">
+    <div class="mf-test-card">
+      <h3>Unit</h3>
+      <p>Config, OLX, theme, plugin, scripts</p>
+      <div class="count">70 <span>tests</span></div>
+    </div>
+    <div class="mf-test-card">
+      <h3>Integration</h3>
+      <p>Services, auth, API, endpoints</p>
+      <div class="count">22 <span>tests</span></div>
+    </div>
+    <div class="mf-test-card">
+      <h3>Smoke</h3>
+      <p>Post-deploy, pages, TLS, assets</p>
+      <div class="count">12 <span>tests</span></div>
+    </div>
+  </div>
+
+  <div class="mf-test-actions">
+    <form method="post" style="display:inline">
+      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+      <input type="hidden" name="suite" value="unit">
+      <button type="submit" class="mf-test-btn primary">Lancer les tests unitaires</button>
+    </form>
+    <form method="post" style="display:inline">
+      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+      <input type="hidden" name="suite" value="integration">
+      <button type="submit" class="mf-test-btn secondary">Tests integration</button>
+    </form>
+    <form method="post" style="display:inline">
+      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+      <input type="hidden" name="suite" value="smoke">
+      <button type="submit" class="mf-test-btn green">Tests smoke</button>
+    </form>
+    <form method="post" style="display:inline">
+      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+      <input type="hidden" name="suite" value="all">
+      <button type="submit" class="mf-test-btn secondary">Tout lancer</button>
+    </form>
+  </div>
+
+  % if context.get('results'):
+  <%
+    res = context['results']
+    is_pass = res.get('returncode', -1) == 0
+    suite_name = res.get('suite', 'unit')
+    raw_output = res.get('output', '')
+    # Coloriser les PASSED/FAILED dans la sortie
+    colored = raw_output.replace('PASSED', '<span class="pass">PASSED</span>')
+    colored = colored.replace('FAILED', '<span class="fail">FAILED</span>')
+    colored = colored.replace('WARNING', '<span class="warn">WARNING</span>')
+    colored = colored.replace('ERROR', '<span class="fail">ERROR</span>')
+    colored = colored.replace('passed', '<span class="pass">passed</span>')
+    colored = colored.replace('failed', '<span class="fail">failed</span>')
+  %>
+  <div class="mf-test-status ${'ok' if is_pass else 'ko'}">
+    ${'TOUS LES TESTS PASSENT' if is_pass else 'DES TESTS ONT ECHOUE'} — Suite: ${suite_name}
+  </div>
+  <div class="mf-test-output">${colored | n}</div>
+  % endif
+
+  <div class="mf-test-doc">
+    <h2>Quand lancer les tests ?</h2>
+    <table>
+      <thead>
+        <tr><th>Moment</th><th>Commande</th><th>Duree</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Avant chaque commit</td><td><code>pytest tests/unit/ -m unit</code></td><td>~2 sec</td></tr>
+        <tr><td>Avant chaque deploy</td><td><code>pytest tests/integration/ -m integration</code></td><td>~30 sec</td></tr>
+        <tr><td>Apres chaque deploy</td><td><code>pytest tests/smoke/ -m smoke</code></td><td>~10 sec</td></tr>
+        <tr><td>Diagnostic complet</td><td><code>pytest tests/ -v</code></td><td>~1 min</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mf-test-doc" style="margin-top:16px">
+    <h2>Documentation</h2>
+    <p style="font-size:14px;color:#6b6b6b;">
+      La documentation complete de chaque test est dans <code>docs/ops/TESTING.md</code>.
+      Elle decrit les 104 tests, leur objectif, et quoi faire quand un test echoue.
+    </p>
+  </div>
+</div>
+</%block>
