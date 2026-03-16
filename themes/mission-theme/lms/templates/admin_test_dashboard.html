@@ -5,6 +5,12 @@
 <%block name="bodyclass">view-test-dashboard is-authenticated</%block>
 
 <%block name="content">
+<%
+  _results = locals().get('results', None)
+  _email_sent = locals().get('email_sent', False)
+  _user_email = locals().get('user_email', '')
+  _dashboard_url = locals().get('dashboard_url', '/admin/mission-dashboard/')
+%>
 <style>
   :root { --bleu:#0965D0; --vert:#01E8AE; --dark:#0a1628; --gris:#f5f7fa; }
   .mf-test-page { max-width:960px; margin:40px auto; padding:0 24px; font-family:'Ubuntu',sans-serif; }
@@ -20,7 +26,7 @@
   .mf-test-card .count { font-size:28px; font-weight:700; color:var(--bleu); }
   .mf-test-card .count span { font-size:13px; font-weight:400; color:#6b6b6b; }
 
-  .mf-test-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+  .mf-test-actions { display:flex; gap:12px; flex-wrap:wrap; }
   .mf-test-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all .15s ease; }
   .mf-test-btn.primary { background:var(--bleu); color:#fff; }
   .mf-test-btn.primary:hover { background:#074bb0; }
@@ -47,11 +53,11 @@
 </style>
 
 <div class="mf-test-page">
-  <a class="back" href="${context.get('dashboard_url', '/admin/mission-dashboard/')}">&larr; Retour au dashboard</a>
+  <a class="back" href="${_dashboard_url}">&larr; Retour au dashboard</a>
   <h1>Tests & Qualite</h1>
   <p class="subtitle">Suite de tests automatises — 134 tests couvrant toutes les customisations Mission Formations</p>
 
-  % if context.get('email_sent'):
+  % if _email_sent:
   <div class="mf-test-status ok" style="margin-bottom:16px">Resultats envoyes par email</div>
   % endif
 
@@ -76,7 +82,7 @@
   <div style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:24px;margin-bottom:24px;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
       <label style="font-size:14px;font-weight:600;color:var(--dark);white-space:nowrap;">Recevoir par email :</label>
-      <input type="email" id="mf-test-email" value="${context.get('user_email', '')}" placeholder="votre@email.com" style="flex:1;padding:8px 12px;border:1px solid #e8e8e8;border-radius:8px;font-size:14px;max-width:320px;">
+      <input type="email" id="mf-test-email" value="${_user_email}" placeholder="votre@email.com" style="flex:1;padding:8px 12px;border:1px solid #e8e8e8;border-radius:8px;font-size:14px;max-width:320px;">
       <label style="font-size:13px;color:#6b6b6b;display:flex;align-items:center;gap:6px;">
         <input type="checkbox" id="mf-test-send-email" checked> Envoyer
       </label>
@@ -125,24 +131,22 @@
   });
   </script>
 
-  % if context.get('results'):
+  % if _results:
   <%
-    res = context['results']
-    is_pass = res.get('returncode', -1) == 0
-    suite_name = res.get('suite', 'unit')
-    raw_output = res.get('output', '')
-    # Coloriser les PASSED/FAILED dans la sortie
-    colored = raw_output.replace('PASSED', '<span class="pass">PASSED</span>')
-    colored = colored.replace('FAILED', '<span class="fail">FAILED</span>')
-    colored = colored.replace('WARNING', '<span class="warn">WARNING</span>')
-    colored = colored.replace('ERROR', '<span class="fail">ERROR</span>')
-    colored = colored.replace('passed', '<span class="pass">passed</span>')
-    colored = colored.replace('failed', '<span class="fail">failed</span>')
+    _is_pass = _results.get('returncode', -1) == 0
+    _suite_name = _results.get('suite', 'unit')
+    _raw_output = _results.get('output', '')
+    _colored = _raw_output.replace('PASSED', '<span class="pass">PASSED</span>')
+    _colored = _colored.replace('FAILED', '<span class="fail">FAILED</span>')
+    _colored = _colored.replace('WARNING', '<span class="warn">WARNING</span>')
+    _colored = _colored.replace('ERROR', '<span class="fail">ERROR</span>')
+    _colored = _colored.replace('passed', '<span class="pass">passed</span>')
+    _colored = _colored.replace('failed', '<span class="fail">failed</span>')
   %>
-  <div class="mf-test-status ${'ok' if is_pass else 'ko'}">
-    ${'TOUS LES TESTS PASSENT' if is_pass else 'DES TESTS ONT ECHOUE'} — Suite: ${suite_name}
+  <div class="mf-test-status ${'ok' if _is_pass else 'ko'}">
+    ${'TOUS LES TESTS PASSENT' if _is_pass else 'DES TESTS ONT ECHOUE'} — Suite: ${_suite_name}
   </div>
-  <div class="mf-test-output">${colored | n}</div>
+  <div class="mf-test-output">${_colored | n}</div>
   % endif
 
   <div class="mf-test-doc">
@@ -164,7 +168,7 @@
     <h2>Documentation</h2>
     <p style="font-size:14px;color:#6b6b6b;">
       La documentation complete de chaque test est dans <code>docs/ops/TESTING.md</code>.
-      Elle decrit les 104 tests, leur objectif, et quoi faire quand un test echoue.
+      Elle decrit les 134 tests, leur objectif, et quoi faire quand un test echoue.
     </p>
   </div>
 </div>
