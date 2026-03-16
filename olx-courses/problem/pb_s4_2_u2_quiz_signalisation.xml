@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : signalisation" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Un panneau rond a fond bleu indique :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Une interdiction</choice>
+      <choice correct="true">Une obligation</choice>
+      <choice correct="false">Un danger</choice>
+      <choice correct="false">Une indication</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quel panneau autorise le stationnement des vehicules de transport de personnes ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Le panneau C1a (sens interdit)</choice>
+      <choice correct="true">Le panneau de zone de depose-minute</choice>
+      <choice correct="false">Le panneau de zone 30</choice>
+      <choice correct="false">Le panneau de voie de bus</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

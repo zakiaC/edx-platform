@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Scenario : dialogue client type" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Un client monte dans votre vehicule. Quelle est la premiere chose a faire ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Demarrer immediatement</choice>
+      <choice correct="true">Saluer le client, confirmer la destination et proposer un itineraire</choice>
+      <choice correct="false">Mettre la musique et partir</choice>
+      <choice correct="false">Demander un pourboire a l'avance</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Un client souhaite modifier sa destination en cours de route. Vous devez :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Refuser car la course est deja validee</choice>
+      <choice correct="true">Accepter et mettre a jour l'application de reservation</choice>
+      <choice correct="false">Facturer un supplement fixe de 10 euros</choice>
+      <choice correct="false">Arreter le vehicule et demander au client de reserver une nouvelle course</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

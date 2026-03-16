@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz diagnostic" max_attempts="3" weight="1.0" rerandomize="always">
+  <multiplechoiceresponse>
+    <label>Quel statut juridique est obligatoire pour exercer le metier de chauffeur VTC en France ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Salarie d'une entreprise de taxi</choice>
+      <choice correct="true">Inscrit au registre des VTC avec carte professionnelle</choice>
+      <choice correct="false">Auto-entrepreneur sans formalite particuliere</choice>
+      <choice correct="false">Benevole avec permis de conduire valide</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quelle est la difference principale entre un taxi et un VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Le type de vehicule utilise</choice>
+      <choice correct="true">Le VTC ne peut prendre que des clients ayant reserve a l'avance</choice>
+      <choice correct="false">Le VTC n'a pas besoin de permis de conduire</choice>
+      <choice correct="false">Le taxi est toujours moins cher</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Depuis quelle annee le secteur VTC est-il reglemente en France ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">2008</choice>
+      <choice correct="false">2010</choice>
+      <choice correct="true">2014 (loi Thevenoud)</choice>
+      <choice correct="false">2018</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

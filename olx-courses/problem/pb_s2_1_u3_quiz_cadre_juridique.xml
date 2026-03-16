@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : cadre juridique" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>La loi Thevenoud de 2014 impose aux chauffeurs VTC de :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Disposer d'un compteur horokilometrique</choice>
+      <choice correct="true">Justifier d'une reservation prealable pour chaque course</choice>
+      <choice correct="false">Stationner sur la voie publique en attente de clients</choice>
+      <choice correct="false">Porter un uniforme reglementaire</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quelle entite delivre la carte professionnelle VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">La mairie</choice>
+      <choice correct="true">La prefecture</choice>
+      <choice correct="false">La chambre de commerce</choice>
+      <choice correct="false">Le ministere des transports</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quelle est la duree de validite de la carte professionnelle VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">3 ans</choice>
+      <choice correct="true">5 ans</choice>
+      <choice correct="false">10 ans</choice>
+      <choice correct="false">Illimitee</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

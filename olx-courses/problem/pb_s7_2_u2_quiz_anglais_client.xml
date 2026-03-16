@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : anglais client" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>How do you greet a client in English when they enter the vehicle?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">What do you want?</choice>
+      <choice correct="true">Good morning, welcome aboard. May I confirm your destination?</choice>
+      <choice correct="false">Where are we going?</choice>
+      <choice correct="false">Hurry up, please.</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>A client asks: "How long will it take to get to the airport?" The best answer is:</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">I don't know.</choice>
+      <choice correct="true">Based on current traffic, it should take approximately 45 minutes.</choice>
+      <choice correct="false">It depends.</choice>
+      <choice correct="false">Very fast, don't worry.</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Translate: "La climatisation est-elle trop forte pour vous ?"</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Is the music too loud for you?</choice>
+      <choice correct="true">Is the air conditioning too strong for you?</choice>
+      <choice correct="false">Is the heating too warm for you?</choice>
+      <choice correct="false">Do you want me to open the window?</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

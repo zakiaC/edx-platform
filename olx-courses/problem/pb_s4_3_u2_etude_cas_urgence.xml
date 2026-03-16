@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Exercice : etude de cas d'urgence" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Un passager fait un malaise a l'arriere de votre vehicule. Quelle est la premiere action a effectuer ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">S'arreter en securite et appeler le 15 (SAMU)</choice>
+      <choice correct="false">Accelerer pour rejoindre l'hopital le plus proche</choice>
+      <choice correct="false">Demander au passager de sortir du vehicule</choice>
+      <choice correct="false">Continuer la course et signaler l'incident apres</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>En cas d'accident corporel impliquant votre VTC, vous devez :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Deplacer le vehicule immediatement</choice>
+      <choice correct="false">Negocier un arrangement amiable</choice>
+      <choice correct="true">Proteger, alerter, secourir (PAS)</choice>
+      <choice correct="false">Attendre que les passagers appellent les secours</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Le numero d'urgence europeen est :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">15</choice>
+      <choice correct="false">17</choice>
+      <choice correct="true">112</choice>
+      <choice correct="false">18</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

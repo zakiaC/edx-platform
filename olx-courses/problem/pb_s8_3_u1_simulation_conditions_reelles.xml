@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Simulation conditions reelles" max_attempts="1" weight="3.0">
+  <multiplechoiceresponse>
+    <label>Vous arrivez a l'aeroport CDG pour recuperer un client VIP. Il n'est pas au point de rencontre. Que faites-vous ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Vous repartez apres 5 minutes</choice>
+      <choice correct="true">Vous appelez le client, envoyez un SMS avec votre localisation et attendez le temps prevu au contrat</choice>
+      <choice correct="false">Vous klaxonnez pour signaler votre presence</choice>
+      <choice correct="false">Vous annulez la course et facturez des frais d'annulation</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Pendant une course, vous constatez que votre vehicule a un voyant moteur allume. Vous devez :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Continuer la course normalement</choice>
+      <choice correct="true">Informer le client, evaluer la gravite, et si necessaire s'arreter en securite et organiser un vehicule de remplacement</choice>
+      <choice correct="false">Eteindre le voyant en redemarrant le vehicule</choice>
+      <choice correct="false">Deposer le client au bord de la route</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Un client oublie son telephone dans votre vehicule. La procedure correcte est :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Garder le telephone et attendre que le client vous recontacte</choice>
+      <choice correct="false">Deposer le telephone au commissariat</choice>
+      <choice correct="true">Signaler l'objet trouve via la plateforme, contacter le client et organiser la restitution</choice>
+      <choice correct="false">Eteindre le telephone et le mettre dans la boite a gants</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Votre note client descend en dessous de 4.5/5. Quelle est la meilleure strategie ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Demander aux clients de mettre 5 etoiles</choice>
+      <choice correct="true">Analyser les retours negatifs, ameliorer le service (proprete, ponctualite, communication) et solliciter naturellement les avis</choice>
+      <choice correct="false">Changer de plateforme</choice>
+      <choice correct="false">Contester les avis negatifs aupres de la plateforme</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

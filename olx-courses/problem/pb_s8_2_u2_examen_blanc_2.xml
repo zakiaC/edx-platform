@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Examen blanc 2" max_attempts="2" weight="2.0" rerandomize="onreset">
+  <multiplechoiceresponse>
+    <label>Quelle est la sanction en cas d'exercice illegal de l'activite VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Un simple avertissement</choice>
+      <choice correct="true">Jusqu'a 1 an d'emprisonnement et 15 000 euros d'amende</choice>
+      <choice correct="false">Une amende de 135 euros</choice>
+      <choice correct="false">Le retrait du permis de conduire</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Le registre des VTC est gere par :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">La prefecture</choice>
+      <choice correct="false">L'URSSAF</choice>
+      <choice correct="true">Le ministere charge des transports (via le registre national)</choice>
+      <choice correct="false">La CCI</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Un VTC doit afficher de maniere visible :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">La signalisation VTC (vignette verte) sur le pare-brise</choice>
+      <choice correct="false">Le tarif au kilometre</choice>
+      <choice correct="false">Le nom de la plateforme partenaire</choice>
+      <choice correct="false">Aucune signalisation n'est requise</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

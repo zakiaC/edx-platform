@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Exercice : calcul de distances" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>A 90 km/h, quelle est la distance de securite minimale a respecter (regle des 2 secondes) ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">25 metres</choice>
+      <choice correct="true">50 metres</choice>
+      <choice correct="false">75 metres</choice>
+      <choice correct="false">100 metres</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Sur chaussee mouillee, la distance de freinage est multipliee par :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">1.5</choice>
+      <choice correct="true">2</choice>
+      <choice correct="false">3</choice>
+      <choice correct="false">4</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <numericalresponse answer="100">
+    <label>A 50 km/h, la distance de securite est d'environ combien de metres ? (arrondir)</label>
+    <responseparam type="tolerance" default="10"/>
+    <formulaequationinput/>
+  </numericalresponse>
+</problem>

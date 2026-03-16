@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : equipements obligatoires" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Quel equipement est obligatoire dans un vehicule VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Un GPS integre au tableau de bord</choice>
+      <choice correct="true">Une signalisation specifique VTC (macaron)</choice>
+      <choice correct="false">Un refrigerateur pour les boissons</choice>
+      <choice correct="false">Un ecran video pour les passagers</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quelle est la puissance minimale requise pour un vehicule VTC (hors hybride/electrique) ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">4 CV fiscaux</choice>
+      <choice correct="true">6 CV fiscaux</choice>
+      <choice correct="false">8 CV fiscaux</choice>
+      <choice correct="false">Aucune puissance minimale</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

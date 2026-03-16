@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Simulation : client difficile" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Un client se montre agressif verbalement pendant la course. Quelle est la meilleure reaction ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Repondre sur le meme ton pour se faire respecter</choice>
+      <choice correct="false">Ignorer completement le client</choice>
+      <choice correct="true">Rester calme, ecouter, reformuler et proposer une solution</choice>
+      <choice correct="false">Arreter le vehicule et demander au client de descendre immediatement</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Un client refuse de payer a la fin de la course. Vous devez :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Le retenir dans le vehicule</choice>
+      <choice correct="false">Le menacer d'appeler la police</choice>
+      <choice correct="true">Signaler l'incident via la plateforme et deposer une main courante si necessaire</choice>
+      <choice correct="false">Accepter la perte et ne rien faire</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

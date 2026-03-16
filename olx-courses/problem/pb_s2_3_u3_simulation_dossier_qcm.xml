@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Exercice : simulation de dossier (QCM)" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Pour obtenir la carte professionnelle VTC, quel document est obligatoire ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Un diplome universitaire</choice>
+      <choice correct="true">L'attestation de reussite a l'examen VTC</choice>
+      <choice correct="false">Une lettre de motivation</choice>
+      <choice correct="false">Un certificat medical sportif</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quelle anciennete minimale du permis B est requise pour la carte VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">1 an</choice>
+      <choice correct="false">2 ans</choice>
+      <choice correct="true">3 ans</choice>
+      <choice correct="false">5 ans</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Le casier judiciaire demande pour la carte VTC est le bulletin :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">N°1</choice>
+      <choice correct="true">N°2</choice>
+      <choice correct="false">N°3</choice>
+      <choice correct="false">Aucun bulletin n'est demande</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

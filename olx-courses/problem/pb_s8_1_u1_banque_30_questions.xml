@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Banque de 30 questions aleatoires" max_attempts="2" weight="2.0" rerandomize="always">
+  <multiplechoiceresponse>
+    <label>1. La carte professionnelle VTC est delivree par :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">La prefecture du departement de domiciliation</choice>
+      <choice correct="false">La chambre de commerce</choice>
+      <choice correct="false">Le ministere des transports</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>2. Un VTC peut-il stationner sur la voie publique en attente de clients ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">Non, c'est interdit</choice>
+      <choice correct="false">Oui, dans les zones de stationnement VTC</choice>
+      <choice correct="false">Oui, apres 22h</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>3. L'age minimum du vehicule VTC est de :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">3 ans</choice>
+      <choice correct="false">5 ans</choice>
+      <choice correct="true">6 ans maximum (sauf vehicule electrique/hybride)</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>4. Le controle technique VTC doit etre realise :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">Tous les ans</choice>
+      <choice correct="false">Tous les 2 ans</choice>
+      <choice correct="false">Tous les 6 mois</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>5. La formation continue VTC est-elle obligatoire ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">Oui, tous les 5 ans pour le renouvellement de la carte</choice>
+      <choice correct="false">Non, elle est facultative</choice>
+      <choice correct="false">Oui, tous les ans</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

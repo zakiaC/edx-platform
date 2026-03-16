@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : loi Grandguillaume" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>La loi Grandguillaume (2016) a principalement pour objectif de :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Supprimer les VTC en France</choice>
+      <choice correct="true">Renforcer la regulation et les conditions d'exercice des VTC</choice>
+      <choice correct="false">Fusionner les statuts taxi et VTC</choice>
+      <choice correct="false">Reduire le prix des courses VTC</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Depuis la loi Grandguillaume, l'examen VTC est organise par :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">La prefecture</choice>
+      <choice correct="true">Les chambres des metiers et de l'artisanat (CMA)</choice>
+      <choice correct="false">Le ministere de l'interieur</choice>
+      <choice correct="false">Les auto-ecoles agreees</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

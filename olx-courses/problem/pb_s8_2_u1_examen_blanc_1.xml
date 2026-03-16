@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Examen blanc 1" max_attempts="2" weight="2.0" rerandomize="onreset">
+  <multiplechoiceresponse>
+    <label>L'assurance responsabilite civile professionnelle est-elle obligatoire pour un VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">Oui, elle est obligatoire</choice>
+      <choice correct="false">Non, l'assurance auto standard suffit</choice>
+      <choice correct="false">Seulement pour les flottes de plus de 3 vehicules</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Le tarif d'une course VTC est determine par :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Un compteur horokilometrique reglemente</choice>
+      <choice correct="true">Un prix convenu a l'avance ou un forfait via la plateforme</choice>
+      <choice correct="false">Le tarif prefectoral en vigueur</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Un chauffeur VTC peut-il refuser une course ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">Oui, il n'a pas d'obligation de prise en charge</choice>
+      <choice correct="false">Non, il est oblige d'accepter toutes les courses</choice>
+      <choice correct="false">Seulement si le trajet depasse 50 km</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Le nombre minimum de places assises (hors conducteur) pour un VTC est de :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">2 places</choice>
+      <choice correct="true">4 places</choice>
+      <choice correct="false">6 places</choice>
+      <choice correct="false">8 places</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

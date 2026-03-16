@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : vocabulaire" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>Que signifie l'acronyme VTC ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">Vehicule de Tourisme Collectif</choice>
+      <choice correct="true">Voiture de Transport avec Chauffeur</choice>
+      <choice correct="false">Vehicule de Transport Commercial</choice>
+      <choice correct="false">Voiture de Taxi et Course</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Le terme "maraude electronique" designe :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">La publicite en ligne pour les VTC</choice>
+      <choice correct="true">La recherche de clients via une application sans reservation prealable</choice>
+      <choice correct="false">L'envoi de SMS aux clients potentiels</choice>
+      <choice correct="false">La geolocalisation des VTC concurrents</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Un "exploitant VTC" est :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">La personne morale ou physique titulaire de l'inscription au registre VTC</choice>
+      <choice correct="false">Le passager qui utilise un service VTC</choice>
+      <choice correct="false">Le constructeur du vehicule</choice>
+      <choice correct="false">L'agent de la prefecture</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>

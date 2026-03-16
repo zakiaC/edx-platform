@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problem display_name="Quiz : fiscalite VTC" max_attempts="3" weight="1.0">
+  <multiplechoiceresponse>
+    <label>En micro-entreprise, le seuil de franchise de TVA pour les prestations de services est de :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">25 000 euros</choice>
+      <choice correct="true">36 800 euros</choice>
+      <choice correct="false">50 000 euros</choice>
+      <choice correct="false">72 600 euros</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Quel regime fiscal est le plus courant pour un chauffeur VTC debutant ?</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="true">Micro-entreprise (BIC)</choice>
+      <choice correct="false">Regime reel simplifie</choice>
+      <choice correct="false">Regime de la declaration controlee</choice>
+      <choice correct="false">Societe anonyme (SA)</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+  <multiplechoiceresponse>
+    <label>Les cotisations sociales d'un micro-entrepreneur VTC representent environ :</label>
+    <choicegroup type="MultipleChoice">
+      <choice correct="false">12% du CA</choice>
+      <choice correct="true">22% du CA</choice>
+      <choice correct="false">35% du CA</choice>
+      <choice correct="false">45% du CA</choice>
+    </choicegroup>
+  </multiplechoiceresponse>
+</problem>
