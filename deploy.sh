@@ -45,7 +45,12 @@ elif [ "$ENV" = "staging" ]; then
       $CONTAINER:/openedx/themes/mission-theme/ && \
     docker cp $EDX_ROOT/tutor-patches/ \
       $CONTAINER:/openedx/edx-platform/tutor-patches/ && \
-    echo 'Sync OK: plugin + theme + config copies dans le container'"
+    docker exec -u root $CONTAINER rm -rf /openedx/edx-platform/tests/ && \
+    docker cp $EDX_ROOT/tests/ \
+      $CONTAINER:/openedx/edx-platform/tests/ && \
+    docker exec -u root $CONTAINER chown -R 1000:1000 /openedx/edx-platform/tests/ && \
+    docker exec $CONTAINER pip install pytest -q 2>/dev/null && \
+    echo 'Sync OK: plugin + theme + config + tests copies dans le container'"
 
   echo "--- 2/6 Compilation Sass ---"
   ssh staging-openedx \

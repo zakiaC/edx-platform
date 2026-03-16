@@ -13,7 +13,11 @@ import subprocess
 
 import pytest
 
-from tests.conftest import ROOT_DIR, CUSTOM_INFRA_DIR
+from tests.conftest import ROOT_DIR, CUSTOM_INFRA_DIR, IN_DOCKER
+
+# Ces tests ne tournent qu'en local (deploy.sh, .gitignore, etc. n'existent
+# pas dans le container Docker)
+pytestmark = pytest.mark.skipif(IN_DOCKER, reason="Tests locaux uniquement — fichiers absents dans le container Docker")
 
 # ── 1. DEPLOY.SH ───────────────────────────────────────────────────────────
 

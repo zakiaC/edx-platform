@@ -6,17 +6,29 @@ Utilisation:
     pytest tests/unit/          # avant chaque commit
     pytest tests/integration/   # avant chaque deploy
     pytest tests/smoke/         # apres chaque deploy
+
+Fonctionne dans 2 environnements:
+- Local (Mac/Linux): /Users/.../edx-platform/
+- Container Docker: /openedx/edx-platform/ (theme dans /openedx/themes/)
 """
 import os
 import pathlib
 
 import pytest
 
-# ── Chemins racine ──────────────────────────────────────────────────────────
+# ── Chemins racine (auto-detection local vs container) ──────────────────────
 
 ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent
+
+# Dans le container Docker Tutor, le theme est monte dans /openedx/themes/
+# pas dans /openedx/edx-platform/themes/
+_CONTAINER_THEME = pathlib.Path("/openedx/themes/mission-theme")
+_LOCAL_THEME = ROOT_DIR / "themes" / "mission-theme"
+
+IN_DOCKER = _CONTAINER_THEME.exists()
+
+THEME_DIR = _CONTAINER_THEME if IN_DOCKER else _LOCAL_THEME
 TUTOR_PATCHES_DIR = ROOT_DIR / "tutor-patches"
-THEME_DIR = ROOT_DIR / "themes" / "mission-theme"
 OLX_DIR = ROOT_DIR / "olx-courses"
 PLUGIN_DIR = ROOT_DIR / "lms" / "djangoapps" / "mission_central_admin"
 CUSTOM_INFRA_DIR = ROOT_DIR / "custom-infra"

@@ -13,7 +13,13 @@ import re
 
 import pytest
 
-from tests.conftest import TUTOR_PATCHES_DIR
+from tests.conftest import TUTOR_PATCHES_DIR, IN_DOCKER
+
+# tutor-patches/ n'existe que sur le disque local, pas dans le container Docker
+pytestmark = pytest.mark.skipif(
+    IN_DOCKER and not TUTOR_PATCHES_DIR.exists(),
+    reason="tutor-patches/ absent dans le container Docker — tests locaux uniquement"
+)
 
 # ── Fichiers a tester ───────────────────────────────────────────────────────
 

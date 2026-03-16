@@ -866,7 +866,12 @@ def test_dashboard(request):
         marker = f"-m {suite}" if suite != "all" else ""
 
         project_root = pathlib.Path(settings.PROJECT_ROOT).parent if hasattr(settings, "PROJECT_ROOT") else pathlib.Path("/openedx/edx-platform")
-        cmd = f"cd {project_root} && python -m pytest {test_path} {marker} -v --tb=short --no-header 2>&1 | tail -80"
+        # -o addopts= ecrase les arguments de setup.cfg qui entrent en conflit
+        # -c tests/pytest.ini force notre propre config au lieu de setup.cfg
+        cmd = (
+            f"cd {project_root} && python -m pytest {test_path} {marker} "
+            f"-c tests/pytest.ini -o 'addopts=-v --tb=short' --no-header 2>&1 | tail -80"
+        )
         try:
             proc = subprocess.run(
                 ["bash", "-c", cmd],
