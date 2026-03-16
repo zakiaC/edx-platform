@@ -856,8 +856,11 @@ def test_dashboard(request):
     import pathlib
 
     results = None
+    email_sent = False
     if request.method == "POST":
         suite = request.POST.get("suite", "unit")
+        send_email = request.POST.get("send_email") == "1"
+        email_to = (request.POST.get("email_to") or request.user.email or "").strip()
         allowed_suites = {"unit": "tests/unit/", "integration": "tests/integration/", "smoke": "tests/smoke/", "all": "tests/"}
         test_path = allowed_suites.get(suite, "tests/unit/")
         marker = f"-m {suite}" if suite != "all" else ""
@@ -877,8 +880,31 @@ def test_dashboard(request):
         except subprocess.TimeoutExpired:
             results = {"output": "Timeout: les tests ont pris plus de 2 minutes.", "returncode": -1, "suite": suite}
 
+        if send_email and email_to and results:
+            try:
+                status = "PASS" if results["returncode"] == 0 else "FAIL"
+                send_mail(
+                    subject=f"[Mission Formations] Tests {suite.upper()} — {status}",
+                    message=(
+                        f"Resultats des tests {suite.upper()}\n"
+                        f"Statut : {status}\n"
+                        f"Lance par : {request.user.username} ({request.user.email})\n"
+                        f"Date : {timezone.now().strftime('%d/%m/%Y %H:%M')}\n"
+                        f"\n{'=' * 60}\n\n"
+                        f"{results['output']}"
+                    ),
+                    from_email=getattr(settings, "DEFAULT_FROM_EMAIL", "") or "no-reply@missionformations.com",
+                    recipient_list=[email_to],
+                    fail_silently=False,
+                )
+                email_sent = True
+            except Exception:
+                email_sent = False
+
     context = {
         "results": results,
+        "email_sent": email_sent,
+        "user_email": request.user.email or "",
         "dashboard_url": "/admin/mission-dashboard/",
     }
     return render_to_response("admin_test_dashboard.html", context)

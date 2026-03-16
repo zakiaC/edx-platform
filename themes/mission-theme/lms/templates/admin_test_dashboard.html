@@ -49,7 +49,11 @@
 <div class="mf-test-page">
   <a class="back" href="${context.get('dashboard_url', '/admin/mission-dashboard/')}">&larr; Retour au dashboard</a>
   <h1>Tests & Qualite</h1>
-  <p class="subtitle">Suite de tests automatises — 104 tests couvrant toutes les customisations Mission Formations</p>
+  <p class="subtitle">Suite de tests automatises — 134 tests couvrant toutes les customisations Mission Formations</p>
+
+  % if context.get('email_sent'):
+  <div class="mf-test-status ok" style="margin-bottom:16px">Resultats envoyes par email</div>
+  % endif
 
   <div class="mf-test-suites">
     <div class="mf-test-card">
@@ -69,28 +73,57 @@
     </div>
   </div>
 
-  <div class="mf-test-actions">
-    <form method="post" style="display:inline">
-      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
-      <input type="hidden" name="suite" value="unit">
-      <button type="submit" class="mf-test-btn primary">Lancer les tests unitaires</button>
-    </form>
-    <form method="post" style="display:inline">
-      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
-      <input type="hidden" name="suite" value="integration">
-      <button type="submit" class="mf-test-btn secondary">Tests integration</button>
-    </form>
-    <form method="post" style="display:inline">
-      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
-      <input type="hidden" name="suite" value="smoke">
-      <button type="submit" class="mf-test-btn green">Tests smoke</button>
-    </form>
-    <form method="post" style="display:inline">
-      <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
-      <input type="hidden" name="suite" value="all">
-      <button type="submit" class="mf-test-btn secondary">Tout lancer</button>
-    </form>
+  <div style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:24px;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <label style="font-size:14px;font-weight:600;color:var(--dark);white-space:nowrap;">Recevoir par email :</label>
+      <input type="email" id="mf-test-email" value="${context.get('user_email', '')}" placeholder="votre@email.com" style="flex:1;padding:8px 12px;border:1px solid #e8e8e8;border-radius:8px;font-size:14px;max-width:320px;">
+      <label style="font-size:13px;color:#6b6b6b;display:flex;align-items:center;gap:6px;">
+        <input type="checkbox" id="mf-test-send-email" checked> Envoyer
+      </label>
+    </div>
+
+    <div class="mf-test-actions">
+      <form method="post" style="display:inline" class="mf-test-form">
+        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+        <input type="hidden" name="suite" value="unit">
+        <input type="hidden" name="send_email" value="0" class="mf-email-flag">
+        <input type="hidden" name="email_to" value="" class="mf-email-to">
+        <button type="submit" class="mf-test-btn primary">Lancer les tests unitaires</button>
+      </form>
+      <form method="post" style="display:inline" class="mf-test-form">
+        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+        <input type="hidden" name="suite" value="integration">
+        <input type="hidden" name="send_email" value="0" class="mf-email-flag">
+        <input type="hidden" name="email_to" value="" class="mf-email-to">
+        <button type="submit" class="mf-test-btn secondary">Tests integration</button>
+      </form>
+      <form method="post" style="display:inline" class="mf-test-form">
+        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+        <input type="hidden" name="suite" value="smoke">
+        <input type="hidden" name="send_email" value="0" class="mf-email-flag">
+        <input type="hidden" name="email_to" value="" class="mf-email-to">
+        <button type="submit" class="mf-test-btn green">Tests smoke</button>
+      </form>
+      <form method="post" style="display:inline" class="mf-test-form">
+        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+        <input type="hidden" name="suite" value="all">
+        <input type="hidden" name="send_email" value="0" class="mf-email-flag">
+        <input type="hidden" name="email_to" value="" class="mf-email-to">
+        <button type="submit" class="mf-test-btn secondary">Tout lancer</button>
+      </form>
+    </div>
   </div>
+
+  <script>
+  document.querySelectorAll('.mf-test-form').forEach(function(form) {
+    form.addEventListener('submit', function() {
+      var checked = document.getElementById('mf-test-send-email').checked;
+      var email = document.getElementById('mf-test-email').value;
+      form.querySelector('.mf-email-flag').value = checked ? '1' : '0';
+      form.querySelector('.mf-email-to').value = email;
+    });
+  });
+  </script>
 
   % if context.get('results'):
   <%
