@@ -216,6 +216,74 @@ def check_infra(host, container):
     return True
 
 
+# ── Couche 1b: Sync disque / container ──────────────────────────────────────
+
+def check_disk_container_sync(host, container):
+    print(f"\n{BOLD}=== COUCHE 1b — Sync disque ↔ container Docker ==={RESET}")
+
+    critical_files = [
+        ("lms/djangoapps/mission_central_admin/urls.py", "Plugin URLs"),
+        ("lms/djangoapps/mission_central_admin/views.py", "Plugin Views"),
+        ("lms/djangoapps/mission_central_admin/models.py", "Plugin Models"),
+    ]
+
+    desync = []
+    for filepath, label in critical_files:
+        # Hash dans le container
+        code, container_hash, _ = ssh(host,
+            f"docker exec {container} md5sum /openedx/edx-platform/{filepath} 2>/dev/null | awk '{{print $1}}'")
+        # Hash sur le disque
+        code2, disk_hash, _ = ssh(host,
+            f"md5sum /root/edx-platform/{filepath} 2>/dev/null | awk '{{print $1}}'")
+
+        if container_hash and disk_hash and container_hash != disk_hash:
+            desync.append((filepath, label))
+            fail(f"{label} ({filepath}) DESYNCHRONISE",
+                 fix=f"docker cp /root/edx-platform/{filepath} {container}:/openedx/edx-platform/{filepath}",
+                 cause=f"git pull a mis a jour le disque mais pas le container. "
+                       f"Le container sert l'ancienne version du fichier.")
+        elif container_hash and disk_hash:
+            ok(f"{label} synchronise")
+        else:
+            warn(f"{label} — impossible de comparer (fichier absent)")
+
+    # Verifier les routes Django
+    code, out, _ = ssh(host,
+        f"docker exec {container} python3 -c \""
+        f"import django; django.setup(); "
+        f"from django.urls import reverse; "
+        f"missing = []; "
+        f"[missing.append(n) for n in ['mission-test-dashboard','mission-central-dashboard','contact'] "
+        f"if not (lambda n: (reverse(n) and False) or True)(n)]; "  # noqa
+        f"\" 2>&1")
+    # Plus simple: tester une par une
+    expected_routes = ["mission-central-dashboard", "mission-test-dashboard", "contact"]
+    missing_routes = []
+    for route in expected_routes:
+        code, out, _ = ssh(host,
+            f"docker exec {container} python3 -c \""
+            f"import django; django.setup(); "
+            f"from django.urls import reverse; "
+            f"print(reverse('{route}'))\" 2>&1")
+        if code != 0:
+            missing_routes.append(route)
+
+    if missing_routes:
+        fail(f"Routes Django manquantes: {missing_routes}",
+             fix=f"docker cp /root/edx-platform/lms/djangoapps/mission_central_admin/ "
+                 f"{container}:/openedx/edx-platform/lms/djangoapps/mission_central_admin/ "
+                 f"&& docker restart {container}",
+             cause="urls.py ou views.py dans le container est une ancienne version. "
+                   "Le git pull met a jour le disque mais pas le container Docker.")
+    else:
+        ok(f"Toutes les routes Django enregistrees ({len(expected_routes)} verifiees)")
+
+    if desync:
+        print(f"\n  {RED}{BOLD}→ Sync necessaire: ./deploy.sh staging (inclut docker cp automatique){RESET}")
+
+    return len(desync) == 0 and len(missing_routes) == 0
+
+
 # ── Couche 2: Config (webpack, fichiers critiques) ──────────────────────────
 
 def check_config(host, container):
@@ -437,7 +505,17 @@ def print_report():
         print(f"CAUSE RACINE PRINCIPALE:")
         print(f"{'=' * 60}{RESET}")
 
-        if "webpack" in causes_text:
+        if "desynchronise" in causes_text or "ancienne version" in causes_text:
+            print(f"  {RED}{BOLD}Code desynchronise entre disque et container Docker{RESET}")
+            print(f"  Cascade: git pull → disque mis a jour → container garde l'ancien code → route/vue manquante → 404/500")
+            print(f"  Origine: le container Docker a sa propre copie du code, independante du disque")
+            print(f"\n  {YELLOW}Fix complet:{RESET}")
+            print(f"  ./deploy.sh staging   (inclut le docker cp automatiquement)")
+            print(f"  Ou manuellement:")
+            print(f"  docker cp /root/edx-platform/lms/djangoapps/mission_central_admin/ tutor_local-lms-1:/openedx/edx-platform/lms/djangoapps/mission_central_admin/")
+            print(f"  docker cp /root/edx-platform/themes/mission-theme/ tutor_local-lms-1:/openedx/themes/mission-theme/")
+            print(f"  docker restart tutor_local-lms-1")
+        elif "webpack" in causes_text:
             print(f"  {RED}{BOLD}webpack-stats.json manquant ou corrompu{RESET}")
             print(f"  Cascade: webpack absent → main.html crash → 500 sur TOUTES les pages")
             print(f"  Origine probable: collectstatic --clear a supprime le fichier")
@@ -506,6 +584,7 @@ def main():
 
     infra_ok = check_infra(args.host, args.container)
     if infra_ok:
+        check_disk_container_sync(args.host, args.container)
         check_config(args.host, args.container)
     check_app(args.url, args.host, args.container)
     if infra_ok:

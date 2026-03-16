@@ -170,7 +170,169 @@ class TestGitSync:
                 )
 
 
-# ── 4. WEBPACK ASSETS ───────────────────────────────────────────────────────
+# ── 4. SYNC DISQUE / CONTAINER ──────────────────────────────────────────────
+
+class TestDiskContainerSync:
+    """Le code dans le container Docker doit etre identique au code sur le disque.
+
+    Contexte: /root/edx-platform (disque serveur) et /openedx/edx-platform (container)
+    sont deux copies SEPAREES. Un git pull met a jour le disque mais PAS le container.
+    Si on oublie le docker cp, le container sert l'ancien code → pages manquantes, bugs.
+
+    Ce test compare les fichiers critiques entre disque et container pour detecter
+    toute desynchronisation AVANT que ca casse en production."""
+
+    # Fichiers critiques a verifier (ceux qu'on modifie le plus souvent)
+    CRITICAL_FILES = [
+        "lms/djangoapps/mission_central_admin/urls.py",
+        "lms/djangoapps/mission_central_admin/views.py",
+        "lms/djangoapps/mission_central_admin/models.py",
+        "lms/djangoapps/mission_central_admin/tasks.py",
+        "lms/djangoapps/mission_central_admin/apps.py",
+    ]
+
+    CRITICAL_TEMPLATES = [
+        "themes/mission-theme/lms/templates/admin_test_dashboard.html",
+        "themes/mission-theme/lms/templates/admin_central_dashboard.html",
+        "themes/mission-theme/lms/templates/dashboard.html",
+        "themes/mission-theme/lms/templates/_mf_dashboard_sidebar.html",
+        "themes/mission-theme/lms/templates/index.html",
+    ]
+
+    @pytest.mark.integration
+    def test_plugin_code_synced(self):
+        """Le code du plugin dans le container doit correspondre au disque serveur.
+        Si ce test echoue: docker cp /root/edx-platform/lms/djangoapps/mission_central_admin/
+        tutor_local-lms-1:/openedx/edx-platform/lms/djangoapps/mission_central_admin/
+        && docker restart tutor_local-lms-1"""
+        desync = []
+        for filepath in self.CRITICAL_FILES:
+            code, output = _exec_in_container(
+                "lms",
+                ["bash", "-c",
+                 f"md5sum /openedx/edx-platform/{filepath} 2>/dev/null | awk '{{print $1}}'"],
+                timeout=10,
+            )
+            if code is None:
+                pytest.skip("Container LMS indisponible")
+            container_hash = (output or "").strip()
+
+            # Hash sur le disque serveur (via docker exec qui a acces au mount)
+            import subprocess as sp
+            result = sp.run(
+                ["ssh", "-o", "ConnectTimeout=5", "staging-openedx",
+                 f"md5sum /root/edx-platform/{filepath} 2>/dev/null | awk '{{print $1}}'"],
+                capture_output=True, text=True, timeout=15,
+            )
+            disk_hash = result.stdout.strip() if result.returncode == 0 else ""
+
+            if container_hash and disk_hash and container_hash != disk_hash:
+                desync.append(filepath)
+
+        assert not desync, (
+            f"DESYNCHRONISATION disque/container detectee sur {len(desync)} fichier(s):\n"
+            + "\n".join(f"  - {f}" for f in desync) +
+            "\n\nLe git pull a mis a jour le disque mais PAS le container Docker."
+            "\nFix: for f in " + " ".join(desync) + "; do "
+            "docker cp /root/edx-platform/$f tutor_local-lms-1:/openedx/edx-platform/$f; done "
+            "&& docker restart tutor_local-lms-1"
+        )
+
+    @pytest.mark.integration
+    def test_templates_synced(self):
+        """Les templates dans le container doivent correspondre au disque serveur.
+        Si ce test echoue: docker cp /root/edx-platform/themes/
+        tutor_local-lms-1:/openedx/edx-platform/themes/
+        && docker restart tutor_local-lms-1"""
+        desync = []
+        for filepath in self.CRITICAL_TEMPLATES:
+            code, output = _exec_in_container(
+                "lms",
+                ["bash", "-c",
+                 f"md5sum /openedx/edx-platform/{filepath} 2>/dev/null | awk '{{print $1}}'"],
+                timeout=10,
+            )
+            if code is None:
+                pytest.skip("Container LMS indisponible")
+            container_hash = (output or "").strip()
+
+            import subprocess as sp
+            result = sp.run(
+                ["ssh", "-o", "ConnectTimeout=5", "staging-openedx",
+                 f"md5sum /root/edx-platform/{filepath} 2>/dev/null | awk '{{print $1}}'"],
+                capture_output=True, text=True, timeout=15,
+            )
+            disk_hash = result.stdout.strip() if result.returncode == 0 else ""
+
+            if container_hash and disk_hash and container_hash != disk_hash:
+                desync.append(filepath)
+
+        assert not desync, (
+            f"DESYNCHRONISATION templates disque/container sur {len(desync)} fichier(s):\n"
+            + "\n".join(f"  - {f}" for f in desync) +
+            "\n\nFix: docker cp /root/edx-platform/themes/ "
+            "tutor_local-lms-1:/openedx/edx-platform/themes/ "
+            "&& docker restart tutor_local-lms-1"
+        )
+
+    @pytest.mark.integration
+    def test_new_routes_accessible(self):
+        """Toutes les routes custom Mission doivent etre enregistrees dans Django.
+        Si une route manque, c'est que urls.py dans le container est desynchronise."""
+        expected_routes = [
+            "mission-central-dashboard",
+            "mission-test-dashboard",
+            "mission-formateur-detail",
+            "mission-internal-messaging",
+            "mission-internal-notifications",
+            "mission-central-api",
+            "mission-central-export-csv",
+            "contact",
+        ]
+        code, output = _exec_in_container(
+            "lms",
+            ["python3", "-c",
+             "import django; django.setup(); "
+             "from django.urls import reverse; "
+             "missing = []; "
+             f"names = {expected_routes!r}; "
+             "[missing.append(n) if not reverse(n, args=None, kwargs=None) else None "
+             "for n in names]; "  # reverse raises if missing, so we catch
+             "print('ALL_OK')"
+             ],
+            timeout=15,
+        )
+        if code is None:
+            pytest.skip("Container LMS indisponible")
+
+        # Si reverse echoue, python3 retourne exit code != 0
+        if code != 0:
+            # Identifier quelles routes manquent
+            missing = []
+            for route in expected_routes:
+                code2, out2 = _exec_in_container(
+                    "lms",
+                    ["python3", "-c",
+                     f"import django; django.setup(); "
+                     f"from django.urls import reverse; "
+                     f"print(reverse('{route}'))"],
+                    timeout=10,
+                )
+                if code2 != 0:
+                    missing.append(route)
+
+            assert not missing, (
+                f"Routes Django manquantes dans le container: {missing}\n"
+                "Cause: urls.py dans le container est desynchronise du disque.\n"
+                "Fix: docker cp /root/edx-platform/lms/djangoapps/mission_central_admin/urls.py "
+                "tutor_local-lms-1:/openedx/edx-platform/lms/djangoapps/mission_central_admin/urls.py "
+                "&& docker cp /root/edx-platform/lms/djangoapps/mission_central_admin/views.py "
+                "tutor_local-lms-1:/openedx/edx-platform/lms/djangoapps/mission_central_admin/views.py "
+                "&& docker restart tutor_local-lms-1"
+            )
+
+
+# ── 5. WEBPACK ASSETS ───────────────────────────────────────────────────────
 
 class TestWebpackAssets:
     """webpack-stats.json doit exister — sinon toutes les pages crashent en 500."""
