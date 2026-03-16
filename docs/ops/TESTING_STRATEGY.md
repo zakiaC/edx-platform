@@ -353,6 +353,31 @@ pytest tests/smoke/ -m smoke -v
 
 ---
 
+## Tests post-deploy (test_deploy_health.py) — NOUVEAU
+
+> Detecte les regressions causees par le deploiement lui-meme.
+
+| # | Test | Description | Action si FAIL |
+|---|------|-------------|----------------|
+| 1 | `test_no_500_on_admin_pages` | Aucune page admin en 500 | Verifier logs LMS |
+| 2 | `test_dashboard_renders_without_error` | Dashboard admin pas de Server Error | Vider cache Mako + restart |
+| 3 | `test_test_dashboard_renders_without_error` | Page Tests & QA pas de Server Error | Vider cache Mako + restart |
+| 4 | `test_homepage_renders_mission_theme` | Homepage a les classes CSS mf- | collectstatic + restart |
+| 5 | `test_git_no_uncommitted_theme_changes` | Pas de modifs non commitees dans themes/ | git commit ou git checkout |
+| 6 | `test_container_has_latest_code` | Container a le dernier commit | git pull + restart |
+| 7 | `test_theme_css_served` | CSS theme servi en HTTP | collectstatic |
+| 8 | `test_theme_js_served` | JS dashboard servi en HTTP | collectstatic |
+
+**Commande** : `pytest tests/integration/test_deploy_health.py -m integration -v`
+
+**Fix cache Mako** (la cause la plus frequente de 500 apres deploy) :
+```bash
+docker exec tutor_local-lms-1 bash -c 'find /tmp -name "*.mako.py" -delete'
+docker restart tutor_local-lms-1
+```
+
+---
+
 ## Procedure de diagnostic en cas de bug production
 
 ```
@@ -365,11 +390,12 @@ pytest tests/smoke/ -m smoke -v
          │
          ▼
 3. Lancer les tests de la couche concernee:
-   - Infra cassee → pytest tests/integration/test_health.py
-   - Auth cassee  → pytest tests/integration/test_auth.py
-   - API cassee   → pytest tests/integration/test_api.py
-   - Theme casse  → pytest tests/unit/test_theme_templates.py
-   - Config cassee → pytest tests/unit/test_tutor_config.py
+   - Infra cassee     → pytest tests/integration/test_health.py
+   - Auth cassee      → pytest tests/integration/test_auth.py
+   - API cassee       → pytest tests/integration/test_api.py
+   - Theme casse      → pytest tests/unit/test_theme_templates.py
+   - Config cassee    → pytest tests/unit/test_tutor_config.py
+   - Regression deploy → pytest tests/integration/test_deploy_health.py
          │
          ▼
 4. Le test qui echoue indique:
