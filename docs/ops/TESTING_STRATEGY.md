@@ -353,27 +353,105 @@ pytest tests/smoke/ -m smoke -v
 
 ---
 
-## Tests post-deploy (test_deploy_health.py) — NOUVEAU
+## Tests post-deploy (test_deploy_health.py)
 
 > Detecte les regressions causees par le deploiement lui-meme.
+> **A lancer systematiquement apres chaque deploy sur staging ou production.**
+
+### Tests — Pages admin (pas de 500)
 
 | # | Test | Description | Action si FAIL |
 |---|------|-------------|----------------|
-| 1 | `test_no_500_on_admin_pages` | Aucune page admin en 500 | Verifier logs LMS |
-| 2 | `test_dashboard_renders_without_error` | Dashboard admin pas de Server Error | Vider cache Mako + restart |
-| 3 | `test_test_dashboard_renders_without_error` | Page Tests & QA pas de Server Error | Vider cache Mako + restart |
-| 4 | `test_homepage_renders_mission_theme` | Homepage a les classes CSS mf- | collectstatic + restart |
-| 5 | `test_git_no_uncommitted_theme_changes` | Pas de modifs non commitees dans themes/ | git commit ou git checkout |
-| 6 | `test_container_has_latest_code` | Container a le dernier commit | git pull + restart |
-| 7 | `test_theme_css_served` | CSS theme servi en HTTP | collectstatic |
-| 8 | `test_theme_js_served` | JS dashboard servi en HTTP | collectstatic |
+| 1 | `test_no_500_on_admin_pages[/admin/mission-dashboard/]` | Dashboard admin ne crash pas | Verifier logs LMS |
+| 2 | `test_no_500_on_admin_pages[/admin/mission-dashboard/tests/]` | Page Tests & QA ne crash pas | Verifier logs LMS |
+| 3 | `test_no_500_on_admin_pages[/contact/]` | Page contact ne crash pas | Verifier logs LMS |
+| 4 | `test_no_500_on_admin_pages[/messagerie/interne/]` | Messagerie ne crash pas | Verifier logs LMS |
 
-**Commande** : `pytest tests/integration/test_deploy_health.py -m integration -v`
+### Tests — Cache Mako
 
-**Fix cache Mako** (la cause la plus frequente de 500 apres deploy) :
+| # | Test | Description | Action si FAIL |
+|---|------|-------------|----------------|
+| 5 | `test_dashboard_renders_without_error` | Dashboard admin pas de "Server Error" | Vider cache Mako + restart |
+| 6 | `test_test_dashboard_renders_without_error` | Page Tests & QA pas de "Server Error" | Vider cache Mako + restart |
+| 7 | `test_homepage_renders_mission_theme` | Homepage contient les classes CSS `mf-` | collectstatic + restart |
+
+> **Qu'est-ce que le cache Mako ?**
+> Mako compile les templates `.html` en fichiers Python `.mako.py` dans `/tmp/`.
+> Apres un deploy, l'ancien cache peut rester et servir une version perimee du template.
+> Symptome : erreur 500 ou page cassee alors que le code est correct.
+
+**Fix cache Mako :**
 ```bash
 docker exec tutor_local-lms-1 bash -c 'find /tmp -name "*.mako.py" -delete'
 docker restart tutor_local-lms-1
+```
+
+### Tests — Webpack (CRITIQUE)
+
+| # | Test | Description | Action si FAIL |
+|---|------|-------------|----------------|
+| 8 | `test_webpack_stats_exists` | `webpack-stats.json` present dans le container | `npm run webpack` + collectstatic + restart |
+| 9 | `test_webpack_stats_not_empty` | `webpack-stats.json` est un JSON valide | `npm run webpack` + collectstatic + restart |
+| 10 | `test_collectstatic_preserves_webpack` | webpack status = "done" apres collectstatic | Relancer webpack avant collectstatic |
+
+> **Pourquoi ces tests sont critiques ?**
+> `main.html` (le template parent de TOUTES les pages) appelle `static.webpack('commons')`.
+> Cette fonction lit `webpack-stats.json`. Si le fichier est absent → `OSError` → **500 sur TOUTES les pages**.
+>
+> **Cause la plus frequente :** `collectstatic --clear` supprime tout dans `/openedx/staticfiles/`,
+> y compris `webpack-stats.json`. C'est pourquoi `deploy.sh` utilise `--noinput` SANS `--clear`.
+
+**Fix webpack-stats.json manquant :**
+```bash
+docker exec tutor_local-lms-1 bash -c 'cd /openedx/edx-platform && npm run webpack'
+docker exec tutor_local-lms-1 ./manage.py lms collectstatic --noinput
+docker restart tutor_local-lms-1
+```
+
+### Tests — Synchronisation git / serveur
+
+| # | Test | Description | Action si FAIL |
+|---|------|-------------|----------------|
+| 11 | `test_git_no_uncommitted_theme_changes` | Pas de modifs non commitees dans `themes/` | `git commit` ou `git checkout` |
+| 12 | `test_container_has_latest_code` | Container a le dernier commit staging | `git pull` + restart |
+
+### Tests — Fichiers statiques
+
+| # | Test | Description | Action si FAIL |
+|---|------|-------------|----------------|
+| 13 | `test_theme_css_served` | CSS theme accessible via HTTP | collectstatic + restart |
+| 14 | `test_theme_js_served` | JS dashboard accessible via HTTP | collectstatic + restart |
+
+### Commande
+
+```bash
+pytest tests/integration/test_deploy_health.py -m integration -v
+```
+
+### Quand l'utiliser
+
+- **Apres chaque deploy** (staging ou production)
+- Quand une page affiche "erreur temporaire" ou "Server Error"
+- Apres un `collectstatic`
+- Apres un `docker restart` du LMS
+
+### Arbre de decision des erreurs 500
+
+```
+Page retourne 500
+       │
+       ├── TOUTES les pages en 500 ?
+       │       OUI → webpack-stats.json manquant
+       │              Fix: npm run webpack + collectstatic + restart
+       │
+       ├── UNE SEULE page en 500 ?
+       │       OUI → Template Mako corrompu ou bug dans le code
+       │              Fix: vider cache Mako + restart
+       │              Si persiste: docker logs tutor_local-lms-1 --tail 50
+       │
+       └── Pages OK puis 500 apres deploy ?
+               OUI → collectstatic --clear a supprime webpack-stats.json
+                      Fix: npm run webpack + collectstatic --noinput + restart
 ```
 
 ---
@@ -431,8 +509,9 @@ Les administrateurs (superusers) ont acces a une interface web pour lancer les t
 | 2. Config | test_tutor_config.py + test_deploy_scripts.py | 28 | unit |
 | 3. App | test_auth.py + test_api.py | 15 | integration |
 | 4. Theme/Custom | test_theme_templates.py + test_plugin_logic.py + test_olx_structure.py | 82 | unit |
+| Deploy | test_deploy_health.py | 14 | integration |
 | Smoke | test_smoke_prod.py | 13 | smoke |
-| **TOTAL** | **9 fichiers** | **~134** | |
+| **TOTAL** | **10 fichiers** | **~148** | |
 
 ---
 
