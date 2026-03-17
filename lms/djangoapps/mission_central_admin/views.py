@@ -754,6 +754,138 @@ def dashboard(request):
     )
     context["admin_initials"] = _initials(context["admin_name"])
     context["internal_notifications"] = _internal_notifications_for_user(request.user)
+
+    # ── Données réelles pour la page APPRENANTS ──
+    all_enrollments = CourseEnrollment.objects.filter(
+        is_active=True, user__is_staff=False, user__is_superuser=False,
+    ).select_related("user").order_by("-created")[:200]
+
+    learner_rows = []
+    for enr in all_enrollments:
+        learner = enr.user
+        learner_profile = getattr(learner, "profile", None)
+        learner_name = (
+            getattr(learner_profile, "name", "") or
+            learner.get_full_name().strip() or
+            learner.username
+        )
+        initials_src = (learner_name or learner.username).strip()
+        initials = "".join([p[0] for p in initials_src.split()[:2]]).upper() if initials_src else "AP"
+
+        course_key = str(enr.course_id)
+        course_name = course_key
+        try:
+            overview = CourseOverview.get_from_id(enr.course_id)
+            if overview:
+                course_name = getattr(overview, "display_name_with_default", None) or course_key
+        except Exception:
+            pass
+
+        name_l = course_name.lower()
+        if "vtc" in name_l:
+            academy_tag = ("VTC", "vert")
+        elif any(t in name_l for t in ("it", "dev", "python", "data")):
+            academy_tag = ("IT", "bleu")
+        else:
+            academy_tag = ("MF", "violet")
+
+        last_login_text = ""
+        if learner.last_login:
+            delta = (timezone.now() - learner.last_login).total_seconds()
+            if delta < 3600:
+                last_login_text = f"Il y a {int(delta/60)} min"
+            elif delta < 86400:
+                last_login_text = f"Il y a {int(delta/3600)}h"
+            elif delta < 604800:
+                last_login_text = f"Il y a {int(delta/86400)}j"
+            else:
+                last_login_text = learner.last_login.strftime("%d/%m/%Y")
+        else:
+            last_login_text = "Jamais"
+
+        learner_rows.append({
+            "username": learner.username,
+            "name": learner_name,
+            "email": learner.email or "",
+            "initials": initials[:2],
+            "course_name": course_name,
+            "academy_tag": academy_tag[0],
+            "academy_color": academy_tag[1],
+            "last_login": last_login_text,
+            "enrolled_date": enr.created.strftime("%d/%m/%Y") if enr.created else "--",
+        })
+    context["learner_rows"] = learner_rows
+
+    # ── Données réelles pour la page FORMATIONS ──
+    course_overviews = CourseOverview.objects.order_by("-start")[:100]
+    now = timezone.now()
+    formation_rows = []
+    for overview in course_overviews:
+        course_key = str(overview.id)
+        enrolled = CourseEnrollment.objects.filter(
+            course_id=overview.id, is_active=True,
+            user__is_staff=False, user__is_superuser=False,
+        ).count()
+
+        start = getattr(overview, "start", None)
+        end = getattr(overview, "end", None)
+        if end and now > end:
+            status_label, status_class = "Terminee", "archived"
+        elif start and now < start:
+            status_label, status_class = "A venir", "draft"
+        else:
+            status_label, status_class = "En cours", "active"
+
+        name = getattr(overview, "display_name_with_default", None) or course_key
+        name_l = name.lower()
+        if "vtc" in name_l:
+            academy_tag = ("VTC", "vert")
+        elif any(t in name_l for t in ("it", "dev", "python", "data")):
+            academy_tag = ("IT", "bleu")
+        else:
+            academy_tag = ("MF", "violet")
+
+        formation_rows.append({
+            "course_key": course_key,
+            "name": name,
+            "academy_tag": academy_tag[0],
+            "academy_color": academy_tag[1],
+            "enrolled": enrolled,
+            "status_label": status_label,
+            "status_class": status_class,
+            "start_date": start.strftime("%d/%m/%Y") if start else "--",
+        })
+    context["formation_rows"] = formation_rows
+
+    # ── Données réelles pour la page NOTIFICATIONS ──
+    from openedx.core.djangoapps.notifications.models import Notification as DjangoNotification
+    notif_list = DjangoNotification.objects.filter(
+        user_id=request.user.id,
+    ).order_by("-created")[:50]
+    notif_rows = []
+    for n in notif_list:
+        content = n.content_context or {}
+        subject = content.get("subject", "") or content.get("email_subject", "") or str(n.notification_type or "")
+        body = content.get("email_greeting", "") or content.get("message", "") or ""
+        is_read = n.last_read is not None
+        created_delta = (timezone.now() - n.created).total_seconds() if n.created else 0
+        if created_delta < 3600:
+            time_text = f"Il y a {max(1, int(created_delta/60))} min"
+        elif created_delta < 86400:
+            time_text = f"Il y a {int(created_delta/3600)}h"
+        else:
+            time_text = f"Il y a {int(created_delta/86400)}j"
+
+        notif_rows.append({
+            "id": n.id,
+            "subject": subject[:80],
+            "body": body[:120],
+            "is_read": is_read,
+            "time": time_text,
+            "app": n.app_name or "",
+        })
+    context["notif_rows"] = notif_rows
+
     return render_to_response("admin_central_dashboard.html", context)
 
 

@@ -783,81 +783,64 @@ svg.ic-xl{width:22px;height:22px}
 <!-- ===================== PAGE: APPRENANTS ===================== -->
 <div class="mf-admin-page" id="page-apprenants">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div class="filters"><button class="flt on">Tous (${mission_total_learners})</button><button class="flt">VTC (${mission_vtc_count})</button><button class="flt">IT (${mission_it_count})</button><button class="flt">Marketing (${mission_marketing_count})</button></div>
-    <div style="display:flex;gap:8px"><button class="btn outline"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter CSV</button><button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Inscrire</button></div>
+    <div class="filters"><button class="flt on">Tous (${len(learner_rows)})</button><button class="flt" onclick="filterLearners('VTC')">VTC</button><button class="flt" onclick="filterLearners('IT')">IT</button><button class="flt" onclick="filterLearners('MF')">Autres</button><button class="flt" onclick="filterLearners('')">Tous</button></div>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="learner-search" placeholder="Rechercher..." oninput="filterLearners()" style="padding:6px 10px;border:1px solid var(--gris4);border-radius:6px;font-size:11px;min-width:180px">
+      <a class="btn outline" href="${export_url}"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter CSV</a>
+    </div>
   </div>
   <div class="card">
     <table class="tbl">
-      <thead><tr><th>Apprenant</th><th>Formation</th><th>Académie</th><th>Progression</th><th>Dernière connexion</th><th>Quiz moyen</th><th>Statut</th><th></th></tr></thead>
-      <tbody>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">KD</div><div><div class="tbl-name">Karim Diallo</div><div class="tbl-sub">karim.diallo@gmail.com</div></div></div></td><td>VTC Classique</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:73%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">73%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Il y a 2h</td><td style="font-family:var(--mono);font-weight:700">16.2/20</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">AM</div><div><div class="tbl-name">Amina Moussaoui</div><div class="tbl-sub">amina.m@outlook.fr</div></div></div></td><td>VTC Continue</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:91%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">91%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Il y a 5h</td><td style="font-family:var(--mono);font-weight:700">18.5/20</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--violet),#6c3483)">TM</div><div><div class="tbl-name">Thomas Martin</div><div class="tbl-sub">t.martin@free.fr</div></div></div></td><td>Création entreprise</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:45%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">45%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Hier</td><td style="font-family:var(--mono);font-weight:700">14.0/20</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--orange),#d35400)">SB</div><div><div class="tbl-name">Sophie Bertrand</div><div class="tbl-sub">sophie.b@laposte.net</div></div></div></td><td>VTC Classique</td><td><span style="font-size:10px;font-weight:700;color:var(--vert2);background:var(--vert-pale);padding:2px 6px;border-radius:4px">VTC</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:12%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">12%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Il y a 3j</td><td style="font-family:var(--mono);font-weight:700">—</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--vert2),#27ae60)">OC</div><div><div class="tbl-name">Omar Cissé</div><div class="tbl-sub">omar.cisse@gmail.com</div></div></div></td><td>IT DevOps</td><td><span style="font-size:10px;font-weight:700;color:var(--bleu);background:var(--bleu-pale);padding:2px 6px;border-radius:4px">IT</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:5%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">5%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Aujourd'hui</td><td style="font-family:var(--mono);font-weight:700">—</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
-        <tr><td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--rouge),#c0392b)">LR</div><div><div class="tbl-name">Léa Rousseau</div><div class="tbl-sub">lea.r@icloud.com</div></div></div></td><td>Marketing digital</td><td><span style="font-size:10px;font-weight:700;color:var(--violet);background:var(--violet-pale);padding:2px 6px;border-radius:4px">MKT</span></td><td><div style="display:flex;align-items:center;gap:5px"><div class="pb" style="width:60px"><div class="pf" style="width:2%"></div></div><span style="font-family:var(--mono);font-size:10px;font-weight:700">2%</span></div></td><td style="font-size:10.5px;color:var(--gris2)">Aujourd'hui</td><td style="font-family:var(--mono);font-weight:700">—</td><td><span class="status active">Actif</span></td><td><div class="tbl-actions"><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="tbl-btn"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button></div></td></tr>
+      <thead><tr><th>Apprenant</th><th>Formation</th><th>Academie</th><th>Derniere connexion</th><th>Inscrit le</th><th>Statut</th></tr></thead>
+      <tbody id="learner-tbody">
+        % for lr in learner_rows:
+        <tr class="learner-row" data-academy="${lr['academy_tag']}" data-search="${lr['name'].lower()} ${lr['email'].lower()} ${lr['course_name'].lower()}">
+          <td><div class="tbl-user"><div class="tbl-av" style="background:linear-gradient(135deg,var(--bleu),var(--vert))">${lr['initials']}</div><div><div class="tbl-name">${lr['name']}</div><div class="tbl-sub">${lr['email']}</div></div></div></td>
+          <td>${lr['course_name']}</td>
+          <td><span style="font-size:10px;font-weight:700;color:var(--${lr['academy_color']});background:var(--${lr['academy_color']}-pale,var(--gris4));padding:2px 6px;border-radius:4px">${lr['academy_tag']}</span></td>
+          <td style="font-size:10.5px;color:var(--gris2)">${lr['last_login']}</td>
+          <td style="font-size:10.5px;color:var(--gris2)">${lr['enrolled_date']}</td>
+          <td><span class="status active">Actif</span></td>
+        </tr>
+        % endfor
+        % if not learner_rows:
+        <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--gris2)">Aucun apprenant inscrit.</td></tr>
+        % endif
       </tbody>
     </table>
-    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:10.5px;color:var(--gris2)">Affichage 1-6 sur 156</div><div style="display:flex;gap:4px"><button class="btn outline" style="padding:5px 10px;font-size:10px">← Précédent</button><button class="btn outline" style="padding:5px 10px;font-size:10px">Suivant →</button></div></div>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:10.5px;color:var(--gris2)">Total : ${len(learner_rows)} inscription(s)</div></div>
   </div>
 </div>
 
 <!-- ===================== PAGE: FORMATIONS ===================== -->
 <div class="mf-admin-page" id="page-formations">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div class="filters"><button class="flt on">Toutes (12)</button><button class="flt">VTC (6)</button><button class="flt">IT (3)</button><button class="flt">Marketing (2)</button><button class="flt">Compta (1)</button></div>
-    <button class="btn primary"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Créer une formation</button>
+    <div class="filters"><button class="flt on">Toutes (${len(formation_rows)})</button></div>
+    <a class="btn primary" href="${mission_studio_home_url}" target="_blank"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Creer dans Studio</a>
   </div>
-  <div class="g6">
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Formation VTC Classique</div><div class="fc-meta">Mme Nadia · 42h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">38</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">82%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.6</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--dark),var(--bleu))"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">VTC Continue 2025</div><div class="fc-meta">Mme Nadia · 14h · 6 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">91%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.7</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,#0f3460,#16213e)"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Création entreprise VTC</div><div class="fc-meta">M. Nabil · 8h · 10 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">31</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">45%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.8</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--violet),#6c3483)"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Marketing digital VTC</div><div class="fc-meta">Mme Traoré · 6h · 5 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">24</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">32%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.2</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--bleu2),var(--dark))"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">IT DevOps Fondamentaux</div><div class="fc-meta">Externe · 20h · 12 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">18</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">34%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.1</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--orange),#d35400)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Comptabilité VTC</div><div class="fc-meta">M. Dupont · 12h · 8 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">21</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">58%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">3.9</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card"><div class="fc-header" style="background:linear-gradient(135deg,var(--rouge),#c0392b)"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="fc-badge"><span class="status active">Active</span></div></div><div class="fc-body"><div class="fc-name">Sécurité routière</div><div class="fc-meta">M. Konaté · 10h · 7 modules</div><div class="fc-stats"><div class="fc-stat"><div class="fc-stat-v">15</div><div class="fc-stat-l">Inscrits</div></div><div class="fc-stat"><div class="fc-stat-v">67%</div><div class="fc-stat-l">Complétion</div></div><div class="fc-stat"><div class="fc-stat-v">4.5</div><div class="fc-stat-l">Note</div></div></div></div></div>
-    <div class="formation-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:180px;opacity:.5"><div style="text-align:center;padding:20px"><svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--gris3);fill:none;stroke-width:1.5;margin-bottom:8px;stroke-linecap:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><div style="font-family:var(--heading);font-size:11px;font-weight:700;color:var(--gris2)">Nouvelle formation</div></div></div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Formation</th><th>Academie</th><th>Inscrits</th><th>Debut</th><th>Statut</th></tr></thead>
+      <tbody>
+        % for fr in formation_rows:
+        <tr>
+          <td><div class="tbl-name">${fr['name']}</div><div class="tbl-sub" style="font-family:var(--mono);font-size:10px">${fr['course_key'][:50]}</div></td>
+          <td><span style="font-size:10px;font-weight:700;color:var(--${fr['academy_color']});background:var(--${fr['academy_color']}-pale,var(--gris4));padding:2px 6px;border-radius:4px">${fr['academy_tag']}</span></td>
+          <td style="font-family:var(--mono);font-weight:700">${fr['enrolled']}</td>
+          <td style="font-size:10.5px;color:var(--gris2)">${fr['start_date']}</td>
+          <td><span class="status ${fr['status_class']}">${fr['status_label']}</span></td>
+        </tr>
+        % endfor
+        % if not formation_rows:
+        <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--gris2)">Aucune formation.</td></tr>
+        % endif
+      </tbody>
+    </table>
+    <div style="margin-top:12px;font-size:10.5px;color:var(--gris2)">Total : ${len(formation_rows)} formation(s)</div>
   </div>
 </div>
 
-<!-- ===================== PAGE: ACADEMIES ===================== -->
-<div class="mf-admin-page" id="page-academies">
-  <div class="g7">
-    <div class="card" style="border:2px solid rgba(1,232,174,.15)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--vert2),var(--vert));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:700;color:#fff">V</div><div><div style="font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark)">Académie VTC</div><div style="font-size:10px;color:var(--gris2)">vtc.missionformations.com</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">101</div><div style="font-size:9px;color:var(--gris2)">Apprenants</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">6</div><div style="font-size:9px;color:var(--gris2)">Formations</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">4</div><div style="font-size:9px;color:var(--gris2)">Formateurs</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--vert2)">32 400€</div><div style="font-size:9px;color:var(--gris2)">CA/mois</div></div>
-      </div>
-      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:78%"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:9.5px"><span style="color:var(--gris2)">Complétion moy.</span><span style="font-family:var(--mono);font-weight:700;color:var(--vert2)">78%</span></div>
-    </div>
-    <div class="card" style="border:2px solid rgba(9,101,208,.12)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--bleu),var(--bleu2));display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:700;color:#fff">I</div><div><div style="font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark)">Académie IT</div><div style="font-size:10px;color:var(--gris2)">it.missionformations.com</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">32</div><div style="font-size:9px;color:var(--gris2)">Apprenants</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">3</div><div style="font-size:9px;color:var(--gris2)">Formations</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">2</div><div style="font-size:9px;color:var(--gris2)">Formateurs</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--bleu)">9 800€</div><div style="font-size:9px;color:var(--gris2)">CA/mois</div></div>
-      </div>
-      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:42%;background:var(--bleu)"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:9.5px"><span style="color:var(--gris2)">Complétion moy.</span><span style="font-family:var(--mono);font-weight:700;color:var(--bleu)">42%</span></div>
-    </div>
-    <div class="card" style="border:2px solid rgba(142,68,173,.12)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--violet),#6c3483);display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:700;color:#fff">M</div><div><div style="font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark)">Marketing</div><div style="font-size:10px;color:var(--gris2)">mkt.missionformations.com</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">23</div><div style="font-size:9px;color:var(--gris2)">Apprenants</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">2</div><div style="font-size:9px;color:var(--gris2)">Formations</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark)">1</div><div style="font-size:9px;color:var(--gris2)">Formateurs</div></div>
-        <div style="background:var(--fond);padding:10px;border-radius:8px;text-align:center"><div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--violet)">5 080€</div><div style="font-size:9px;color:var(--gris2)">CA/mois</div></div>
-      </div>
-      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:32%;background:var(--violet)"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:9.5px"><span style="color:var(--gris2)">Complétion moy.</span><span style="font-family:var(--mono);font-weight:700;color:var(--violet)">32%</span></div>
-    </div>
-  </div>
-</div>
+<!-- PAGE ACADEMIES supprimee — remplacee par /academy-manager/ -->
 
 <!-- ===================== PAGE: PLANNING ===================== -->
 <div class="mf-admin-page" id="page-planning">
@@ -1017,4 +1000,15 @@ svg.ic-xl{width:22px;height:22px}
 
 <%block name="js_extra">
 <script src="${static.url('js/mf-super-admin-tabs.js')}"></script>
+<script>
+function filterLearners(academy){
+  var q=(document.getElementById('learner-search')||{}).value||'';
+  q=q.toLowerCase();
+  document.querySelectorAll('.learner-row').forEach(function(row){
+    var matchAcademy=!academy||row.dataset.academy===academy;
+    var matchSearch=!q||row.dataset.search.indexOf(q)!==-1;
+    row.style.display=(matchAcademy&&matchSearch)?'':'none';
+  });
+}
+</script>
 </%block>
