@@ -1,0 +1,145 @@
+<%page expression_filter="h"/>
+<%inherit file="main.html" />
+
+<%block name="pagetitle">Gestion utilisateurs — Mission Formations</%block>
+<%block name="bodyclass">view-delete-user is-authenticated</%block>
+
+<%block name="content">
+<%
+  _users = locals().get('users', [])
+  _target = locals().get('target', None)
+  _success = locals().get('success_message', '')
+  _error = locals().get('error_message', '')
+  _dashboard_url = locals().get('dashboard_url', '/admin/mission-dashboard/')
+%>
+<style>
+:root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--rouge:#d32f2f;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace}
+.mf-users-page{max-width:1060px;margin:40px auto;padding:0 24px;font-family:var(--body)}
+.mf-users-page h1{font-family:var(--heading);font-size:24px;color:var(--dark);margin-bottom:4px}
+.mf-users-page .subtitle{color:#6b6b6b;margin-bottom:24px;font-size:13px}
+.mf-users-page a.back{color:var(--bleu);text-decoration:none;font-size:13px}
+
+.mf-msg{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px}
+.mf-msg.ok{background:#e8faf3;color:#00875a}
+.mf-msg.ko{background:#ffeaea;color:var(--rouge)}
+
+.mf-search{display:flex;gap:10px;margin-bottom:16px}
+.mf-search input{flex:1;padding:8px 14px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:var(--body)}
+.mf-search input:focus{border-color:var(--bleu);outline:none}
+
+.mf-users-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;font-size:13px}
+.mf-users-table th{text-align:left;padding:10px 14px;background:var(--gris);font-weight:600;font-size:11px;color:#6b6b6b;font-family:var(--heading);text-transform:uppercase;letter-spacing:.5px}
+.mf-users-table td{padding:8px 14px;border-bottom:1px solid #f5f5f5}
+.mf-users-table tr:hover{background:rgba(9,101,208,.02)}
+.mf-users-table .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.mf-users-table .badge.staff{background:#e8f0fe;color:var(--bleu)}
+.mf-users-table .badge.super{background:#ffeaea;color:var(--rouge)}
+.mf-users-table .badge.user{background:var(--gris);color:#6b6b6b}
+
+.mf-btn-del{padding:5px 12px;background:transparent;border:1px solid var(--rouge);color:var(--rouge);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--heading);transition:.15s}
+.mf-btn-del:hover{background:var(--rouge);color:#fff}
+.mf-btn-del:disabled{opacity:.3;cursor:not-allowed}
+
+/* Confirm modal */
+.mf-confirm{background:#fff;border:1px solid #ffcdd2;border-left:4px solid var(--rouge);border-radius:10px;padding:24px;margin-bottom:20px}
+.mf-confirm h3{font-family:var(--heading);color:var(--rouge);margin:0 0 8px;font-size:16px}
+.mf-confirm p{font-size:13px;color:#6b6b6b;margin:0 0 16px}
+.mf-confirm .info{background:var(--gris);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px}
+.mf-confirm .info b{color:var(--dark)}
+.mf-confirm .btns{display:flex;gap:10px}
+.mf-confirm .btn-cancel{padding:8px 20px;background:var(--gris);border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;color:var(--dark);font-family:var(--heading)}
+.mf-confirm .btn-delete{padding:8px 20px;background:var(--rouge);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;color:#fff;font-family:var(--heading)}
+.mf-confirm .btn-delete:hover{background:#b71c1c}
+</style>
+
+<div class="mf-users-page">
+  <a class="back" href="${_dashboard_url}">&larr; Retour au dashboard</a>
+  <h1>Gestion des utilisateurs</h1>
+  <p class="subtitle">Supprimer un utilisateur en toute securite — gere les contraintes de base de donnees automatiquement</p>
+
+  % if _success:
+  <div class="mf-msg ok">${_success}</div>
+  % endif
+  % if _error:
+  <div class="mf-msg ko">${_error}</div>
+  % endif
+
+  ## Confirmation de suppression
+  % if _target:
+  <div class="mf-confirm">
+    <h3>Confirmer la suppression</h3>
+    <p>Cette action est irreversible. L'utilisateur et toutes ses donnees seront supprimes definitivement.</p>
+    <div class="info">
+      <b>Utilisateur :</b> ${_target.username} &nbsp;|&nbsp;
+      <b>Email :</b> ${_target.email} &nbsp;|&nbsp;
+      <b>ID :</b> ${_target.id} &nbsp;|&nbsp;
+      <b>Staff :</b> ${'Oui' if _target.is_staff else 'Non'} &nbsp;|&nbsp;
+      <b>Superuser :</b> ${'Oui' if _target.is_superuser else 'Non'}
+    </div>
+    <div class="btns">
+      <a class="btn-cancel" href="/admin/mission-dashboard/users/delete/">Annuler</a>
+      <form method="post" style="display:inline">
+        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+        <input type="hidden" name="id" value="${_target.id}">
+        <button type="submit" class="btn-delete">Supprimer definitivement</button>
+      </form>
+    </div>
+  </div>
+  % endif
+
+  ## Recherche
+  <div class="mf-search">
+    <input type="text" id="mf-user-search" placeholder="Rechercher par nom, email ou username..." oninput="filterUsers()">
+  </div>
+
+  ## Tableau utilisateurs
+  <table class="mf-users-table" id="mf-users-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Nom</th>
+        <th>Role</th>
+        <th>Inscription</th>
+        <th>Dernier login</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      % for u in _users:
+      <%
+        role_class = 'super' if u['is_superuser'] else ('staff' if u['is_staff'] else 'user')
+        role_label = 'Superuser' if u['is_superuser'] else ('Staff' if u['is_staff'] else 'Apprenant')
+        date_joined = u['date_joined'].strftime('%d/%m/%Y') if u.get('date_joined') else '--'
+        last_login = u['last_login'].strftime('%d/%m/%Y') if u.get('last_login') else 'Jamais'
+        full_name = ((u.get('first_name') or '') + ' ' + (u.get('last_name') or '')).strip() or '--'
+      %>
+      <tr class="mf-user-row" data-search="${u['username'].lower()} ${(u.get('email') or '').lower()} ${full_name.lower()}">
+        <td><b>${u['username']}</b></td>
+        <td>${u.get('email') or '--'}</td>
+        <td>${full_name}</td>
+        <td><span class="badge ${role_class}">${role_label}</span></td>
+        <td>${date_joined}</td>
+        <td>${last_login}</td>
+        <td>
+          % if u['is_superuser']:
+          <button class="mf-btn-del" disabled title="Impossible de supprimer un superuser">Protege</button>
+          % else:
+          <a class="mf-btn-del" href="/admin/mission-dashboard/users/delete/?id=${u['id']}">Supprimer</a>
+          % endif
+        </td>
+      </tr>
+      % endfor
+    </tbody>
+  </table>
+</div>
+
+<script>
+function filterUsers(){
+  var q=document.getElementById('mf-user-search').value.toLowerCase();
+  document.querySelectorAll('.mf-user-row').forEach(function(row){
+    row.style.display=row.dataset.search.indexOf(q)!==-1?'':'none';
+  });
+}
+</script>
+</%block>

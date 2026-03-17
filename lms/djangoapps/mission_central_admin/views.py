@@ -987,6 +987,79 @@ def test_dashboard(request):
     return render_to_response("admin_test_dashboard.html", context)
 
 
+@login_required
+@require_http_methods(["GET", "POST"])
+def delete_user(request):
+    """Suppression securisee d'un utilisateur — gere les foreign keys CMS."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    import logging
+    logger = logging.getLogger(__name__)
+    User = get_user_model()
+
+    user_id = request.GET.get("id") or request.POST.get("id")
+    target = User.objects.filter(id=user_id).first() if user_id else None
+
+    error_message = ""
+    success_message = ""
+
+    if request.method == "POST" and target:
+        if target.is_superuser:
+            error_message = "Impossible de supprimer un superuser."
+        elif target.id == request.user.id:
+            error_message = "Impossible de supprimer votre propre compte."
+        else:
+            try:
+                from django.db import connection
+                username = target.username
+                uid = target.id
+
+                # Tables CMS partagees avec foreign key vers auth_user
+                # que Django LMS ne connait pas dans son CASCADE
+                orphan_tables = [
+                    "course_creators_coursecreator",
+                    "social_django_usersocialauth",
+                    "social_django_nonce",
+                    "social_django_association",
+                    "social_django_code",
+                    "social_django_partial",
+                ]
+                cleaned = []
+                with connection.cursor() as cursor:
+                    for table in orphan_tables:
+                        try:
+                            cursor.execute(f"DELETE FROM {table} WHERE user_id = %s", [uid])
+                            if cursor.rowcount > 0:
+                                cleaned.append(f"{table}: {cursor.rowcount}")
+                        except Exception:
+                            pass  # Table n'existe pas, on continue
+
+                # Maintenant le CASCADE Django peut fonctionner
+                target.delete()
+                success_message = f"Utilisateur {username} (id={uid}) supprime. Nettoyage: {', '.join(cleaned) or 'aucune table orpheline'}."
+                logger.info(f"[MF-ADMIN] User deleted: {username} (id={uid}) by {request.user.username}. Cleaned: {cleaned}")
+                target = None
+            except Exception as exc:
+                error_message = f"Erreur lors de la suppression: {exc}"
+                logger.error(f"[MF-ADMIN] Delete failed for user_id={user_id}: {exc}")
+
+    # Liste des utilisateurs pour la page GET
+    users = User.objects.filter(is_active=True).order_by("username").values(
+        "id", "username", "email", "first_name", "last_name",
+        "is_staff", "is_superuser", "date_joined", "last_login",
+    )[:200]
+
+    context = {
+        "users": list(users),
+        "target": target,
+        "success_message": success_message,
+        "error_message": error_message,
+        "dashboard_url": "/admin/mission-dashboard/",
+    }
+    return render_to_response("admin_delete_user.html", context)
+
+
 @require_http_methods(["GET", "POST"])
 def contact_view(request):
     field_names = ("prenom", "nom", "email", "telephone", "profil", "sujet", "message")
