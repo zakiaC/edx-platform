@@ -37,6 +37,12 @@ PLUGIN_TEMPLATES = [
     THEME_DIR / "lms" / "templates" / "admin_central_dashboard.html",
     THEME_DIR / "lms" / "templates" / "admin_formateur_detail.html",
     THEME_DIR / "lms" / "templates" / "admin_test_dashboard.html",
+    THEME_DIR / "lms" / "templates" / "admin_delete_user.html",
+    THEME_DIR / "lms" / "templates" / "aide" / "index.html",
+    # Academy Manager templates
+    THEME_DIR / "lms" / "templates" / "academy_manager" / "dashboard.html",
+    THEME_DIR / "lms" / "templates" / "academy_manager" / "create.html",
+    THEME_DIR / "lms" / "templates" / "academy_manager" / "detail.html",
     # Template dans le plugin
     PLUGIN_DIR / "templates" / "mission_central_admin" / "contact.html",
 ]
@@ -44,11 +50,15 @@ PLUGIN_TEMPLATES = [
 # URLs attendues du plugin
 EXPECTED_URLS = [
     ("/contact/", "contact"),
+    ("/aide/", "mission-aide"),
     ("/messagerie/interne/", "mission-internal-messaging"),
     ("/notifications/interne/", "mission-internal-notifications"),
     ("/admin/mission-dashboard/", "mission-central-dashboard"),
     ("/admin/mission-dashboard/formateur/", "mission-formateur-detail"),
     ("/admin/mission-dashboard/tests/", "mission-test-dashboard"),
+    ("/admin/mission-dashboard/users/delete/", "mission-delete-user"),
+    ("/academy-manager/", "academy-manager"),
+    ("/academy-manager/create/", "academy-create"),
     ("/api/admin/formateurs-sessions/", "mission-central-api"),
     ("/api/admin/formateurs-sessions/export.csv", "mission-central-export-csv"),
 ]
@@ -236,6 +246,187 @@ class TestPluginTemplates:
             pytest.skip("mission_internal_messaging.html absent")
         content = messaging.read_text(encoding="utf-8", errors="ignore")
         assert "<form" in content, "messaging: balise <form> manquante"
+
+
+# ── 5b. SECTION AIDE ───────────────────────────────────────────────────────
+
+class TestAideSection:
+    """La section Aide est complete avec les 8 guides."""
+
+    @pytest.mark.unit
+    def test_aide_template_exists(self):
+        aide = THEME_DIR / "lms" / "templates" / "aide" / "index.html"
+        assert aide.exists(), "Template aide/index.html manquant"
+
+    @pytest.mark.unit
+    def test_aide_has_all_guides(self):
+        """Les 8 guides doivent etre presents dans le template."""
+        aide = THEME_DIR / "lms" / "templates" / "aide" / "index.html"
+        if not aide.exists():
+            pytest.skip("aide/index.html absent")
+        content = aide.read_text(encoding="utf-8", errors="ignore")
+        guides = [
+            "guide-accueil",
+            "guide-demarrer",
+            "guide-naviguer",
+            "guide-contenus",
+            "guide-exercices",
+            "guide-progression",
+            "guide-certificat",
+            "guide-discussions",
+            "guide-faq",
+        ]
+        for guide_id in guides:
+            assert guide_id in content, (
+                f"aide/index.html: guide '{guide_id}' manquant"
+            )
+
+    @pytest.mark.unit
+    def test_aide_has_sidebar_nav(self):
+        aide = THEME_DIR / "lms" / "templates" / "aide" / "index.html"
+        if not aide.exists():
+            pytest.skip("aide/index.html absent")
+        content = aide.read_text(encoding="utf-8", errors="ignore")
+        assert "sb-guide" in content, "aide: navigation sidebar manquante"
+        assert "aide-sidebar" in content, "aide: sidebar container manquant"
+
+    @pytest.mark.unit
+    def test_aide_has_faq_items(self):
+        aide = THEME_DIR / "lms" / "templates" / "aide" / "index.html"
+        if not aide.exists():
+            pytest.skip("aide/index.html absent")
+        content = aide.read_text(encoding="utf-8", errors="ignore")
+        faq_count = content.count("faq-item")
+        assert faq_count >= 9, (
+            f"aide: seulement {faq_count // 2} questions FAQ (attendu: 9+)"
+        )
+
+    @pytest.mark.unit
+    def test_aide_has_page_args(self):
+        """Le template doit utiliser <%page args> (pas locals().get)."""
+        aide = THEME_DIR / "lms" / "templates" / "aide" / "index.html"
+        if not aide.exists():
+            pytest.skip("aide/index.html absent")
+        content = aide.read_text(encoding="utf-8", errors="ignore")
+        assert "<%page" in content and "args=" in content, (
+            "aide: doit utiliser <%page args=...> pour les variables de contexte"
+        )
+        assert "locals().get" not in content, (
+            "aide: ne doit PAS utiliser locals().get() — utiliser <%page args>"
+        )
+
+    @pytest.mark.unit
+    def test_aide_has_showguide_js(self):
+        aide = THEME_DIR / "lms" / "templates" / "aide" / "index.html"
+        if not aide.exists():
+            pytest.skip("aide/index.html absent")
+        content = aide.read_text(encoding="utf-8", errors="ignore")
+        assert "function showGuide" in content, (
+            "aide: fonction JavaScript showGuide() manquante"
+        )
+
+
+# ── 5c. ACADEMY MANAGER ────────────────────────────────────────────────────
+
+class TestAcademyManager:
+    """Les templates et modeles Academy Manager sont complets."""
+
+    ACADEMY_TEMPLATES = [
+        "academy_manager/dashboard.html",
+        "academy_manager/create.html",
+        "academy_manager/detail.html",
+    ]
+
+    @pytest.mark.unit
+    @pytest.mark.parametrize("template", ACADEMY_TEMPLATES)
+    def test_academy_template_exists(self, template):
+        filepath = THEME_DIR / "lms" / "templates" / template
+        assert filepath.exists(), f"Template manquant: {template}"
+
+    @pytest.mark.unit
+    @pytest.mark.parametrize("template", ACADEMY_TEMPLATES)
+    def test_academy_template_uses_page_args(self, template):
+        filepath = THEME_DIR / "lms" / "templates" / template
+        if not filepath.exists():
+            pytest.skip(f"{template} absent")
+        content = filepath.read_text(encoding="utf-8", errors="ignore")
+        assert "<%page" in content and "args=" in content, (
+            f"{template}: doit utiliser <%page args=...>"
+        )
+        assert "locals().get" not in content, (
+            f"{template}: ne doit PAS utiliser locals().get()"
+        )
+
+    @pytest.mark.unit
+    def test_academy_model_in_models_py(self):
+        models_file = PLUGIN_DIR / "models.py"
+        if not models_file.exists():
+            pytest.skip("models.py absent")
+        content = models_file.read_text(encoding="utf-8")
+        required_models = ["Academy", "AcademyAdmin", "AcademyCourse", "AcademyEnrollment"]
+        for model in required_models:
+            assert f"class {model}" in content, (
+                f"models.py: modele '{model}' manquant"
+            )
+
+    @pytest.mark.unit
+    def test_academy_model_has_required_fields(self):
+        models_file = PLUGIN_DIR / "models.py"
+        if not models_file.exists():
+            pytest.skip("models.py absent")
+        content = models_file.read_text(encoding="utf-8")
+        required_fields = [
+            "name", "short_name", "slug", "academy_type", "subdomain",
+            "primary_color", "secondary_color", "is_active",
+            "organization_id", "client_name", "max_seats",
+        ]
+        for field in required_fields:
+            assert field in content, (
+                f"models.py: champ Academy.{field} manquant"
+            )
+
+    @pytest.mark.unit
+    def test_academy_migration_exists(self):
+        migration = PLUGIN_DIR / "migrations" / "0002_academy_academyadmin_academycourse_academyenrollment.py"
+        assert migration.exists(), "Migration 0002 Academy manquante"
+
+    @pytest.mark.unit
+    def test_academy_create_has_form(self):
+        filepath = THEME_DIR / "lms" / "templates" / "academy_manager" / "create.html"
+        if not filepath.exists():
+            pytest.skip("create.html absent")
+        content = filepath.read_text(encoding="utf-8", errors="ignore")
+        assert "<form" in content, "create.html: balise <form> manquante"
+        assert "csrf_token" in content, "create.html: token CSRF manquant"
+        assert "primary_color" in content, "create.html: champ couleur manquant"
+
+    @pytest.mark.unit
+    def test_academy_detail_has_tabs(self):
+        filepath = THEME_DIR / "lms" / "templates" / "academy_manager" / "detail.html"
+        if not filepath.exists():
+            pytest.skip("detail.html absent")
+        content = filepath.read_text(encoding="utf-8", errors="ignore")
+        tabs = ["overview", "courses", "learners", "admins", "settings"]
+        for tab in tabs:
+            assert tab in content, f"detail.html: onglet '{tab}' manquant"
+
+    @pytest.mark.unit
+    def test_delete_user_template_exists(self):
+        filepath = THEME_DIR / "lms" / "templates" / "admin_delete_user.html"
+        assert filepath.exists(), "Template admin_delete_user.html manquant"
+
+    @pytest.mark.unit
+    def test_delete_user_has_confirmation(self):
+        filepath = THEME_DIR / "lms" / "templates" / "admin_delete_user.html"
+        if not filepath.exists():
+            pytest.skip("admin_delete_user.html absent")
+        content = filepath.read_text(encoding="utf-8", errors="ignore")
+        assert "Confirmer" in content or "confirmer" in content, (
+            "admin_delete_user.html: confirmation de suppression manquante"
+        )
+        assert "csrf_token" in content, (
+            "admin_delete_user.html: token CSRF manquant"
+        )
 
 
 # ── 6. CONFIGURATION APP ───────────────────────────────────────────────────

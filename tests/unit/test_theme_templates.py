@@ -34,6 +34,12 @@ REQUIRED_TEMPLATES = [
     "_mf_dashboard_admin.html",
     "_mf_dashboard_formateur.html",
     "includes/_mf_brand_panel.html",
+    "admin_delete_user.html",
+    "admin_test_dashboard.html",
+    "aide/index.html",
+    "academy_manager/dashboard.html",
+    "academy_manager/create.html",
+    "academy_manager/detail.html",
 ]
 
 REQUIRED_STATIC_TEMPLATES = [
