@@ -987,6 +987,222 @@ def test_dashboard(request):
     return render_to_response("admin_test_dashboard.html", context)
 
 
+# ── ACADEMY MANAGER ─────────────────────────────────────────────────────────
+
+@login_required
+def academy_list(request):
+    """Dashboard Academy Manager — liste toutes les academies."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .models import Academy, AcademyEnrollment
+    from django.db.models import Count
+
+    academies = Academy.objects.annotate(
+        course_count=Count("courses", distinct=True),
+        learner_count=Count("academy_enrollments", distinct=True),
+    ).order_by("academy_type", "name")
+
+    internal = [a for a in academies if a.academy_type == "internal"]
+    b2b = [a for a in academies if a.academy_type == "b2b"]
+
+    # Stats globales
+    total_learners = AcademyEnrollment.objects.values("user").distinct().count()
+    total_courses = sum(a.course_count for a in academies)
+    total_active = sum(1 for a in academies if a.is_active)
+
+    context = {
+        "internal_academies": internal,
+        "b2b_academies": b2b,
+        "total_academies": len(internal) + len(b2b),
+        "total_learners": total_learners,
+        "total_courses": total_courses,
+        "total_active": total_active,
+        "dashboard_url": "/admin/mission-dashboard/",
+    }
+    return render_to_response("academy_manager/dashboard.html", context)
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def academy_create(request):
+    """Formulaire de creation d'une nouvelle academie."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .models import Academy, AcademyAdmin as AcadAdmin
+
+    error_message = ""
+    success_message = ""
+
+    if request.method == "POST":
+        name = (request.POST.get("name") or "").strip()
+        short_name = (request.POST.get("short_name") or "").strip().upper()
+        academy_type = request.POST.get("academy_type", "internal")
+        description = (request.POST.get("description") or "").strip()
+        primary_color = request.POST.get("primary_color", "#0965D0").strip()
+        secondary_color = request.POST.get("secondary_color", "#01E8AE").strip()
+        admin_email = (request.POST.get("admin_email") or "").strip()
+
+        # B2B fields
+        client_name = (request.POST.get("client_name") or "").strip()
+        client_contact = (request.POST.get("client_contact") or "").strip()
+        contract_start = request.POST.get("contract_start") or None
+        contract_end = request.POST.get("contract_end") or None
+        max_seats = int(request.POST.get("max_seats") or 0)
+
+        if not name or not short_name:
+            error_message = "Nom et identifiant sont obligatoires."
+        elif Academy.objects.filter(short_name=short_name).exists():
+            error_message = f"L'identifiant {short_name} existe deja."
+        else:
+            try:
+                academy = Academy.objects.create(
+                    name=name,
+                    short_name=short_name,
+                    academy_type=academy_type,
+                    description=description,
+                    primary_color=primary_color,
+                    secondary_color=secondary_color,
+                    client_name=client_name,
+                    client_contact=client_contact,
+                    contract_start=contract_start,
+                    contract_end=contract_end,
+                    max_seats=max_seats,
+                )
+
+                # Creer l'organisation OpenEdX
+                try:
+                    from organizations.models import Organization
+                    org, _ = Organization.objects.get_or_create(
+                        short_name=short_name,
+                        defaults={"name": name, "active": True},
+                    )
+                    academy.organization_id = str(org.id)
+                    academy.save(update_fields=["organization_id"])
+                except Exception:
+                    pass
+
+                # Assigner l'admin si email fourni
+                if admin_email:
+                    User = get_user_model()
+                    admin_user = User.objects.filter(email__iexact=admin_email).first()
+                    if admin_user:
+                        role = "client_admin" if academy_type == "b2b" else "academy_admin"
+                        AcadAdmin.objects.get_or_create(
+                            academy=academy, user=admin_user,
+                            defaults={"role": role},
+                        )
+
+                return redirect(f"/academy-manager/{academy.slug}/")
+            except Exception as exc:
+                error_message = f"Erreur: {exc}"
+
+    context = {
+        "error_message": error_message,
+        "success_message": success_message,
+        "dashboard_url": "/admin/mission-dashboard/",
+    }
+    return render_to_response("academy_manager/create.html", context)
+
+
+@login_required
+def academy_detail(request, slug):
+    """Page de gestion d'une academie (onglets cours/apprenants/stats)."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .models import Academy, AcademyCourse, AcademyEnrollment, AcademyAdmin as AcadAdmin
+
+    try:
+        academy = Academy.objects.get(slug=slug)
+    except Academy.DoesNotExist:
+        raise Http404("Academie introuvable")
+
+    courses = AcademyCourse.objects.filter(academy=academy).order_by("order")
+    enrollments = AcademyEnrollment.objects.filter(academy=academy).select_related("user").order_by("-enrolled_at")[:100]
+    admins = AcadAdmin.objects.filter(academy=academy).select_related("user")
+
+    # Stats
+    total_learners = enrollments.count()
+    total_courses = courses.count()
+
+    # Cours disponibles pour rattachement
+    from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+    all_courses = CourseOverview.objects.order_by("-start")[:200]
+    attached_keys = set(courses.values_list("course_key", flat=True))
+    available_courses = [c for c in all_courses if str(c.id) not in attached_keys]
+
+    tab = request.GET.get("tab", "overview")
+
+    context = {
+        "academy": academy,
+        "courses": courses,
+        "enrollments": enrollments,
+        "admins": admins,
+        "total_learners": total_learners,
+        "total_courses": total_courses,
+        "available_courses": available_courses,
+        "tab": tab,
+        "dashboard_url": "/admin/mission-dashboard/",
+    }
+    return render_to_response("academy_manager/detail.html", context)
+
+
+@login_required
+@require_http_methods(["POST"])
+def academy_attach_course(request, slug):
+    """Rattacher un cours a une academie."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .models import Academy, AcademyCourse
+
+    try:
+        academy = Academy.objects.get(slug=slug)
+    except Academy.DoesNotExist:
+        raise Http404("Academie introuvable")
+
+    course_key = (request.POST.get("course_key") or "").strip()
+    if course_key:
+        AcademyCourse.objects.get_or_create(
+            academy=academy, course_key=course_key,
+        )
+    return redirect(f"/academy-manager/{slug}/?tab=courses")
+
+
+@login_required
+@require_http_methods(["POST"])
+def academy_invite(request, slug):
+    """Inviter des apprenants a une academie (par email)."""
+    if not _admin_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .models import Academy, AcademyEnrollment
+
+    try:
+        academy = Academy.objects.get(slug=slug)
+    except Academy.DoesNotExist:
+        raise Http404("Academie introuvable")
+
+    emails_raw = (request.POST.get("emails") or "").strip()
+    emails = [e.strip().lower() for e in emails_raw.replace(",", "\n").splitlines() if e.strip()]
+
+    User = get_user_model()
+    invited = 0
+    for email in emails:
+        user = User.objects.filter(email__iexact=email).first()
+        if user:
+            _, created = AcademyEnrollment.objects.get_or_create(
+                academy=academy, user=user,
+                defaults={"invited_by": request.user},
+            )
+            if created:
+                invited += 1
+
+    return redirect(f"/academy-manager/{slug}/?tab=learners&invited={invited}")
+
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def delete_user(request):

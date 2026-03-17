@@ -1,0 +1,121 @@
+<%page expression_filter="h"/>
+<%inherit file="../main.html" />
+<%block name="pagetitle">Academy Manager — Mission Formations</%block>
+<%block name="bodyclass">view-academy-manager is-authenticated</%block>
+
+<%block name="content">
+<%
+  _internal = locals().get('internal_academies', [])
+  _b2b = locals().get('b2b_academies', [])
+  _total = locals().get('total_academies', 0)
+  _learners = locals().get('total_learners', 0)
+  _courses = locals().get('total_courses', 0)
+  _active = locals().get('total_active', 0)
+  _dashboard_url = locals().get('dashboard_url', '/admin/mission-dashboard/')
+%>
+<style>
+:root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif}
+.am{max-width:1100px;margin:40px auto;padding:0 24px;font-family:var(--body)}
+.am h1{font-family:var(--heading);font-size:26px;color:var(--dark);margin-bottom:4px}
+.am .sub{color:#6b6b6b;font-size:13px;margin-bottom:28px}
+.am a.back{color:var(--bleu);text-decoration:none;font-size:13px}
+
+.am-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.am-kpi{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:18px;text-align:center}
+.am-kpi .v{font-size:30px;font-weight:700;font-family:var(--heading);color:var(--bleu)}
+.am-kpi .l{font-size:11px;color:#999;margin-top:2px}
+
+.am-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.am-col{background:#fff;border:1px solid #e8e8e8;border-radius:12px;overflow:hidden}
+.am-col-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f0f0}
+.am-col-head h2{font-family:var(--heading);font-size:15px;margin:0;color:var(--dark)}
+.am-col-head .count{background:var(--gris);padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;color:var(--bleu)}
+.am-col-body{padding:8px 0;max-height:400px;overflow-y:auto}
+
+.am-item{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid #f8f8f8;transition:.1s}
+.am-item:hover{background:rgba(9,101,208,.02)}
+.am-item:last-child{border-bottom:none}
+.am-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.am-dot.active{background:var(--vert)}
+.am-dot.inactive{background:#e0e0e0}
+.am-item-info{flex:1;min-width:0}
+.am-item-name{font-weight:600;font-size:13px;color:var(--dark)}
+.am-item-meta{font-size:11px;color:#999}
+.am-item-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.am-item-badge.mf{background:#e8f0fe;color:var(--bleu)}
+.am-item-badge.b2b{background:#fef3e2;color:#e67e22}
+.am-item a{text-decoration:none;color:inherit}
+
+.am-add{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bleu);color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;font-family:var(--heading)}
+.am-add:hover{background:#074bb0;color:#fff;text-decoration:none}
+.am-add.sec{background:var(--gris);color:var(--dark);border:1px solid #e0e0e0}
+.am-add.sec:hover{background:#eee}
+
+@media(max-width:700px){.am-kpis{grid-template-columns:repeat(2,1fr)}.am-cols{grid-template-columns:1fr}}
+</style>
+
+<div class="am">
+  <a class="back" href="${_dashboard_url}">&larr; Dashboard admin</a>
+  <h1>Academy Manager</h1>
+  <p class="sub">Gestion des academies Mission Formations et clients B2B</p>
+
+  <div class="am-kpis">
+    <div class="am-kpi"><div class="v">${_total}</div><div class="l">Academies</div></div>
+    <div class="am-kpi"><div class="v">${_active}</div><div class="l">Actives</div></div>
+    <div class="am-kpi"><div class="v">${_courses}</div><div class="l">Cours rattaches</div></div>
+    <div class="am-kpi"><div class="v">${_learners}</div><div class="l">Apprenants</div></div>
+  </div>
+
+  <div class="am-cols">
+    <div class="am-col">
+      <div class="am-col-head">
+        <h2>Academies MF</h2>
+        <span class="count">${len(_internal)}</span>
+      </div>
+      <div class="am-col-body">
+        % for a in _internal:
+        <a href="/academy-manager/${a.slug}/" class="am-item">
+          <span class="am-dot ${'active' if a.is_active else 'inactive'}"></span>
+          <div class="am-item-info">
+            <div class="am-item-name">${a.name}</div>
+            <div class="am-item-meta">${a.short_name} · ${a.course_count} cours · ${a.learner_count} apprenants</div>
+          </div>
+          <span class="am-item-badge mf">${a.short_name}</span>
+        </a>
+        % endfor
+        % if not _internal:
+        <div style="padding:20px;text-align:center;color:#999;font-size:13px">Aucune academie MF creee</div>
+        % endif
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid #f0f0f0">
+        <a class="am-add" href="/academy-manager/create/?type=internal">+ Nouvelle academie</a>
+      </div>
+    </div>
+
+    <div class="am-col">
+      <div class="am-col-head">
+        <h2>Clients B2B</h2>
+        <span class="count">${len(_b2b)}</span>
+      </div>
+      <div class="am-col-body">
+        % for a in _b2b:
+        <a href="/academy-manager/${a.slug}/" class="am-item">
+          <span class="am-dot ${'active' if a.is_active else 'inactive'}"></span>
+          <div class="am-item-info">
+            <div class="am-item-name">${a.client_name or a.name}</div>
+            <div class="am-item-meta">${a.subdomain}.academie... · ${a.learner_count}/${a.max_seats or 'illimite'} sieges</div>
+          </div>
+          <span class="am-item-badge b2b">B2B</span>
+        </a>
+        % endfor
+        % if not _b2b:
+        <div style="padding:20px;text-align:center;color:#999;font-size:13px">Aucun client B2B</div>
+        % endif
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid #f0f0f0">
+        <a class="am-add sec" href="/academy-manager/create/?type=b2b">+ Ajouter un client</a>
+      </div>
+    </div>
+  </div>
+</div>
+</%block>

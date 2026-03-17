@@ -1,0 +1,193 @@
+<%page expression_filter="h"/>
+<%inherit file="../main.html" />
+<%block name="pagetitle">Nouvelle academie — Mission Formations</%block>
+<%block name="bodyclass">view-academy-create is-authenticated</%block>
+
+<%block name="content">
+<%
+  _error = locals().get('error_message', '')
+  _success = locals().get('success_message', '')
+%>
+<style>
+:root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--rouge:#d32f2f;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif}
+.ac{max-width:720px;margin:40px auto;padding:0 24px;font-family:var(--body)}
+.ac h1{font-family:var(--heading);font-size:24px;color:var(--dark);margin-bottom:4px}
+.ac .sub{color:#6b6b6b;font-size:13px;margin-bottom:24px}
+.ac a.back{color:var(--bleu);text-decoration:none;font-size:13px}
+
+.ac-msg{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px}
+.ac-msg.ko{background:#ffeaea;color:var(--rouge)}
+.ac-msg.ok{background:#e8faf3;color:#00875a}
+
+.ac-form{background:#fff;border:1px solid #e8e8e8;border-radius:12px;overflow:hidden}
+.ac-section{padding:20px 24px;border-bottom:1px solid #f0f0f0}
+.ac-section:last-child{border-bottom:none}
+.ac-section h2{font-family:var(--heading);font-size:14px;color:var(--bleu);margin:0 0 14px;display:flex;align-items:center;gap:8px}
+.ac-section h2 .step{background:var(--bleu);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+.ac-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.ac-row.full{grid-template-columns:1fr}
+.ac-field label{display:block;font-size:11px;font-weight:600;color:var(--dark);margin-bottom:4px;font-family:var(--heading)}
+.ac-field input,.ac-field select,.ac-field textarea{width:100%;padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:var(--body)}
+.ac-field input:focus,.ac-field select:focus,.ac-field textarea:focus{border-color:var(--bleu);outline:none}
+.ac-field textarea{min-height:80px;resize:vertical}
+.ac-field .hint{font-size:10px;color:#999;margin-top:2px}
+
+.ac-colors{display:flex;gap:14px;align-items:flex-end}
+.ac-colors input[type=color]{width:50px;height:36px;border:1px solid #e0e0e0;border-radius:8px;padding:2px;cursor:pointer}
+.ac-colors input[type=text]{max-width:100px}
+
+.ac-preview{margin-top:14px;border-radius:10px;overflow:hidden;border:1px solid #e0e0e0}
+.ac-preview-header{padding:16px 20px;color:#fff;display:flex;align-items:center;gap:10px}
+.ac-preview-header .logo{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
+.ac-preview-body{padding:16px 20px;background:#fff;font-size:12px;color:#6b6b6b}
+
+.ac-b2b{display:none}
+.ac-b2b.show{display:block}
+
+.ac-submit{display:flex;gap:10px;padding:20px 24px;background:var(--gris)}
+.ac-btn{padding:10px 24px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--heading)}
+.ac-btn.primary{background:var(--bleu);color:#fff}
+.ac-btn.primary:hover{background:#074bb0}
+.ac-btn.cancel{background:#fff;border:1px solid #e0e0e0;color:var(--dark);text-decoration:none;display:inline-flex;align-items:center}
+</style>
+
+<div class="ac">
+  <a class="back" href="/academy-manager/">&larr; Academy Manager</a>
+  <h1>Creer une academie</h1>
+  <p class="sub">Remplissez le formulaire — l'organisation OpenEdX sera creee automatiquement</p>
+
+  % if _error:
+  <div class="ac-msg ko">${_error}</div>
+  % endif
+
+  <form method="post" class="ac-form" enctype="multipart/form-data">
+    <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+
+    <div class="ac-section">
+      <h2><span class="step">1</span> Identite</h2>
+      <div class="ac-row">
+        <div class="ac-field">
+          <label>Nom de l'academie *</label>
+          <input type="text" name="name" id="ac-name" required placeholder="Ex: Academie Management">
+        </div>
+        <div class="ac-field">
+          <label>Identifiant court *</label>
+          <input type="text" name="short_name" id="ac-short" required placeholder="Ex: MF-MGMT" maxlength="30" style="text-transform:uppercase">
+          <div class="hint">Sera utilise comme organisation OpenEdX</div>
+        </div>
+      </div>
+      <div class="ac-row">
+        <div class="ac-field">
+          <label>Type</label>
+          <select name="academy_type" id="ac-type" onchange="toggleB2B()">
+            <option value="internal">Academie MF (interne)</option>
+            <option value="b2b">Client entreprise (B2B)</option>
+          </select>
+        </div>
+        <div class="ac-field">
+          <label>Admin principal (email)</label>
+          <input type="email" name="admin_email" placeholder="admin@exemple.com">
+          <div class="hint">Recevra une invitation par email</div>
+        </div>
+      </div>
+      <div class="ac-row full">
+        <div class="ac-field">
+          <label>Description</label>
+          <textarea name="description" placeholder="Description courte de l'academie..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-section">
+      <h2><span class="step">2</span> Branding</h2>
+      <div class="ac-colors">
+        <div class="ac-field">
+          <label>Couleur principale</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="color" id="ac-color1" value="#0965D0" onchange="document.getElementById('ac-color1-txt').value=this.value;updatePreview()">
+            <input type="text" id="ac-color1-txt" name="primary_color" value="#0965D0" maxlength="7" onchange="document.getElementById('ac-color1').value=this.value;updatePreview()">
+          </div>
+        </div>
+        <div class="ac-field">
+          <label>Couleur secondaire</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="color" id="ac-color2" value="#01E8AE" onchange="document.getElementById('ac-color2-txt').value=this.value;updatePreview()">
+            <input type="text" id="ac-color2-txt" name="secondary_color" value="#01E8AE" maxlength="7" onchange="document.getElementById('ac-color2').value=this.value;updatePreview()">
+          </div>
+        </div>
+      </div>
+      <div class="ac-preview" id="ac-preview">
+        <div class="ac-preview-header" id="ac-preview-header" style="background:linear-gradient(135deg,#0965D0,#01E8AE)">
+          <div class="logo" id="ac-preview-logo">M</div>
+          <div>
+            <div style="font-weight:700;font-size:14px" id="ac-preview-name">Nouvelle academie</div>
+            <div style="font-size:11px;opacity:.7">academie.missionformations.com</div>
+          </div>
+        </div>
+        <div class="ac-preview-body">Previsualisation du branding en temps reel</div>
+      </div>
+    </div>
+
+    <div class="ac-section ac-b2b" id="ac-b2b">
+      <h2><span class="step">3</span> Client B2B</h2>
+      <div class="ac-row">
+        <div class="ac-field">
+          <label>Nom de l'entreprise *</label>
+          <input type="text" name="client_name" placeholder="Ex: Acme Industries">
+        </div>
+        <div class="ac-field">
+          <label>Email contact RH *</label>
+          <input type="email" name="client_contact" placeholder="rh@acme.fr">
+        </div>
+      </div>
+      <div class="ac-row">
+        <div class="ac-field">
+          <label>Debut contrat</label>
+          <input type="date" name="contract_start">
+        </div>
+        <div class="ac-field">
+          <label>Fin contrat</label>
+          <input type="date" name="contract_end">
+        </div>
+      </div>
+      <div class="ac-row">
+        <div class="ac-field">
+          <label>Nombre de sieges max</label>
+          <input type="number" name="max_seats" value="0" min="0">
+          <div class="hint">0 = illimite</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-submit">
+      <button type="submit" class="ac-btn primary">Creer l'academie</button>
+      <a href="/academy-manager/" class="ac-btn cancel">Annuler</a>
+    </div>
+  </form>
+</div>
+
+<script>
+function toggleB2B(){
+  var t=document.getElementById('ac-type').value;
+  document.getElementById('ac-b2b').className='ac-section ac-b2b'+(t==='b2b'?' show':'');
+}
+function updatePreview(){
+  var c1=document.getElementById('ac-color1').value;
+  var c2=document.getElementById('ac-color2').value;
+  document.getElementById('ac-preview-header').style.background='linear-gradient(135deg,'+c1+','+c2+')';
+}
+document.getElementById('ac-name').addEventListener('input',function(){
+  var name=this.value||'Nouvelle academie';
+  document.getElementById('ac-preview-name').textContent=name;
+  var letter=(name[0]||'M').toUpperCase();
+  document.getElementById('ac-preview-logo').textContent=letter;
+  // Auto-generate short_name
+  var short=document.getElementById('ac-short');
+  if(!short.dataset.manual){
+    short.value='MF-'+name.replace(/[^a-zA-Z]/g,'').substring(0,6).toUpperCase();
+  }
+});
+document.getElementById('ac-short').addEventListener('input',function(){this.dataset.manual='1';});
+</script>
+</%block>
