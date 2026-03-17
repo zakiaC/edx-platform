@@ -1,8 +1,8 @@
 # Strategie de Tests & Diagnostic — Mission Formations
 
 > Document de reference pour les equipes QA et DevOps.
-> 134 tests automatises couvrant toutes les customisations du projet.
-> Derniere mise a jour : 2026-03-16
+> 151+ tests automatises couvrant toutes les customisations du projet.
+> Derniere mise a jour : 2026-03-17
 
 ---
 

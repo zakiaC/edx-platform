@@ -1,7 +1,7 @@
 # Checklist pré-déploiement — Mission Formations
 
 > À valider **avant chaque mise en production** sur le VPS OVH.
-> Dernière mise à jour : 2026-03-16
+> Dernière mise à jour : 2026-03-17
 
 ---
 
