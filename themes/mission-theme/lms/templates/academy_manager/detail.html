@@ -1,19 +1,19 @@
-<%page expression_filter="h"/>
+<%page expression_filter="h" args="academy=None, courses=[], enrollments=[], admins=[], total_learners=0, total_courses=0, available_courses=[], tab='overview', dashboard_url='/admin/mission-dashboard/'"/>
 <%inherit file="../main.html" />
-<%block name="pagetitle">${locals().get('academy', None) and academy.name or 'Academie'} — Academy Manager</%block>
+<%block name="pagetitle">${academy.name if academy else 'Academie'} — Academy Manager</%block>
 <%block name="bodyclass">view-academy-detail is-authenticated</%block>
 
 <%block name="content">
 <%
-  _academy = locals().get('academy', None)
-  _courses = locals().get('courses', [])
-  _enrollments = locals().get('enrollments', [])
-  _admins = locals().get('admins', [])
-  _total_learners = locals().get('total_learners', 0)
-  _total_courses = locals().get('total_courses', 0)
-  _available_courses = locals().get('available_courses', [])
-  _tab = locals().get('tab', 'overview')
-  _invited = request.GET.get('invited', '')
+  _academy = academy
+  _courses = courses
+  _enrollments = enrollments
+  _admins = admins
+  _total_learners = total_learners
+  _total_courses = total_courses
+  _available_courses = available_courses
+  _tab = tab
+  _invited = request.GET.get('invited', '') if hasattr(request, 'GET') else ''
 %>
 <style>
 :root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--rouge:#d32f2f;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace}

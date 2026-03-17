@@ -1,4 +1,4 @@
-<%page expression_filter="h"/>
+<%page expression_filter="h" args="results=None, email_sent=False, user_email='', dashboard_url='/admin/mission-dashboard/'"/>
 <%inherit file="main.html" />
 
 <%block name="pagetitle">Tests & QA — Mission Formations</%block>
@@ -6,10 +6,10 @@
 
 <%block name="content">
 <%
-  _results = locals().get('results', None)
-  _email_sent = locals().get('email_sent', False)
-  _user_email = locals().get('user_email', '')
-  _dashboard_url = locals().get('dashboard_url', '/admin/mission-dashboard/')
+  _results = results
+  _email_sent = email_sent
+  _user_email = user_email
+  _dashboard_url = dashboard_url
 %>
 <style>
 :root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--rouge:#d32f2f;--orange:#f57c00;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace}

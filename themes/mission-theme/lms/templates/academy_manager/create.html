@@ -1,12 +1,12 @@
-<%page expression_filter="h"/>
+<%page expression_filter="h" args="error_message='', success_message='', dashboard_url='/admin/mission-dashboard/'"/>
 <%inherit file="../main.html" />
 <%block name="pagetitle">Nouvelle academie — Mission Formations</%block>
 <%block name="bodyclass">view-academy-create is-authenticated</%block>
 
 <%block name="content">
 <%
-  _error = locals().get('error_message', '')
-  _success = locals().get('success_message', '')
+  _error = error_message
+  _success = success_message
 %>
 <style>
 :root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--rouge:#d32f2f;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif}

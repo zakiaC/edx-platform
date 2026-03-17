@@ -1,17 +1,17 @@
-<%page expression_filter="h"/>
+<%page expression_filter="h" args="internal_academies=[], b2b_academies=[], total_academies=0, total_learners=0, total_courses=0, total_active=0, dashboard_url='/admin/mission-dashboard/'"/>
 <%inherit file="../main.html" />
 <%block name="pagetitle">Academy Manager — Mission Formations</%block>
 <%block name="bodyclass">view-academy-manager is-authenticated</%block>
 
 <%block name="content">
 <%
-  _internal = locals().get('internal_academies', [])
-  _b2b = locals().get('b2b_academies', [])
-  _total = locals().get('total_academies', 0)
-  _learners = locals().get('total_learners', 0)
-  _courses = locals().get('total_courses', 0)
-  _active = locals().get('total_active', 0)
-  _dashboard_url = locals().get('dashboard_url', '/admin/mission-dashboard/')
+  _internal = internal_academies
+  _b2b = b2b_academies
+  _total = total_academies
+  _learners = total_learners
+  _courses = total_courses
+  _active = total_active
+  _dashboard_url = dashboard_url
 %>
 <style>
 :root{--bleu:#0965D0;--vert:#01E8AE;--dark:#0a1628;--gris:#f5f7fa;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif}
