@@ -1,0 +1,274 @@
+<%page expression_filter="h" args="dashboard_url='/dashboard'"/>
+<%inherit file="../main.html" />
+<%block name="pagetitle">Centre d'aide — Academie Mission Formations</%block>
+<%block name="bodyclass">view-aide</%block>
+
+<%block name="head_extra">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;900&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;--vert:#01E8AE;--vert2:#00c494;--vert-pale:#e6faf4;--dark:#0a1628;--dark2:#0f1f3a;--dark3:#162d50;--noir:#3B3B3B;--gris:#6b6b6b;--gris2:#999;--gris3:#ccc;--gris4:#e8e8e8;--fond:#f5f7fa;--blanc:#ffffff;--rouge:#e74c3c;--orange:#e67e22;--jaune:#f1c40f;--violet:#8e44ad;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace;--radius:14px}
+.aide-wrap{display:flex;min-height:calc(100vh - 60px);font-family:var(--body)}
+.aide-sidebar{width:260px;min-width:260px;background:var(--blanc);border-right:1px solid var(--gris4);padding:20px 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+.aide-main{flex:1;min-width:0;background:var(--blanc)}
+.sb-guide{display:flex;align-items:center;gap:8px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--gris);cursor:pointer;transition:all .12s;border:none;background:none;width:100%;text-align:left;border-radius:0;text-decoration:none}
+.sb-guide svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;opacity:.5}
+.sb-guide:hover{color:var(--noir);background:var(--fond);text-decoration:none}
+.sb-guide.active{color:var(--bleu);background:var(--bleu-pale);font-weight:700}
+.sb-guide.active svg{opacity:1;stroke:var(--bleu)}
+.guide-page{display:none}.guide-page.active{display:block}
+.guide-main-content{padding:32px 48px 60px;max-width:760px}
+.guide-title{font-family:var(--heading);font-size:26px;font-weight:700;color:var(--dark);line-height:1.3}
+.guide-subtitle{font-size:14px;color:var(--gris2);margin-bottom:28px;line-height:1.6}
+.doc-bread-g{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--gris2);margin-bottom:20px}
+.doc-bread-g strong{color:var(--dark);font-weight:700}
+.g-card{background:var(--blanc);border:1px solid var(--gris4);border-radius:16px;padding:24px 28px;margin-bottom:18px;transition:all .2s}
+.g-card:hover{border-color:rgba(9,101,208,.12);box-shadow:0 8px 28px rgba(9,101,208,.04)}
+.g-card-title{font-family:var(--heading);font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.g-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.g-p{font-size:13.5px;color:var(--gris);line-height:1.8;margin-bottom:10px}
+.g-list{margin:0 0 10px 18px;font-size:13.5px;color:var(--gris)}.g-list li{margin-bottom:5px;line-height:1.7}.g-list strong{color:var(--dark);font-weight:700}
+.g-callout{border-radius:12px;padding:14px 18px;margin:12px 0;display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.7}
+.g-callout svg{flex-shrink:0;margin-top:2px}.g-callout strong{font-weight:700}
+.g-callout.info{background:var(--bleu-pale);border:1px solid rgba(9,101,208,.1);color:var(--bleu2)}
+.g-callout.success{background:var(--vert-pale);border:1px solid rgba(0,196,148,.1);color:#00704f}
+.g-callout.warning{background:#fef3e2;border:1px solid rgba(230,126,34,.12);color:#8a4b00}
+.g-callout.tip{background:#f3e8fd;border:1px solid rgba(142,68,173,.1);color:#5b2d7a}
+.g-mini{background:var(--fond);border:1px solid var(--gris4);border-radius:12px;padding:14px;text-align:center}
+.g-mini-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.g-mini-title{font-family:var(--heading);font-size:11.5px;font-weight:700;color:var(--dark);margin-bottom:3px}
+.g-mini-desc{font-size:10.5px;color:var(--gris2);line-height:1.4}
+.guide-nav-bar{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:28px;border-top:1px solid var(--gris4)}
+.guide-nav-btn{padding:10px 20px;border-radius:10px;font-family:var(--heading);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;border:1px solid var(--gris4);background:var(--fond);color:var(--gris)}
+.guide-nav-btn:hover{border-color:rgba(9,101,208,.2);background:var(--bleu-pale);color:var(--bleu)}
+.guide-nav-btn.next{background:linear-gradient(135deg,var(--bleu),var(--vert));color:#fff;border:none;margin-left:auto}
+.guide-nav-btn.next:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(9,101,208,.25)}
+.landing-card-g{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:var(--blanc);border:1px solid var(--gris4);cursor:pointer;transition:all .2s}
+.landing-card-g:hover{border-color:var(--bleu);box-shadow:0 8px 24px rgba(9,101,208,.07);transform:translateY(-2px)}
+.faq-item{border:1px solid var(--gris4);border-radius:12px;margin-bottom:10px;overflow:hidden;background:var(--blanc);transition:all .2s}
+.faq-q{padding:16px 20px;font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:background .15s}
+.faq-q:hover{background:var(--fond)}
+.faq-q svg{width:18px;height:18px;stroke:var(--gris3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-q svg{transform:rotate(180deg);stroke:var(--bleu)}
+.faq-item.open .faq-q{background:var(--bleu-pale);color:var(--bleu2)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-item.open .faq-a{max-height:500px}
+.faq-a-inner{padding:4px 20px 18px;font-size:13px;color:var(--gris);line-height:1.8;border-top:1px solid var(--gris4)}
+.faq-a-inner strong{color:var(--dark)}
+@media(max-width:700px){.aide-sidebar{display:none}.guide-main-content{padding:20px}}
+</style>
+</%block>
+
+<%block name="content">
+<div class="aide-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="aide-sidebar">
+    <div style="padding:0 16px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gris2)">Centre d'aide</div>
+    <a class="sb-guide active" id="sb-accueil" onclick="showGuide('accueil',this)">
+      <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Accueil
+    </a>
+    <div style="padding:8px 16px 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gris2)">Guide de l'apprenant</div>
+    <a class="sb-guide" id="sb-demarrer" onclick="showGuide('demarrer',this)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Premiers pas
+    </a>
+    <a class="sb-guide" id="sb-naviguer" onclick="showGuide('naviguer',this)">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Naviguer dans un cours
+    </a>
+    <a class="sb-guide" id="sb-contenus" onclick="showGuide('contenus',this)">
+      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Contenus de cours
+    </a>
+    <a class="sb-guide" id="sb-exercices" onclick="showGuide('exercices',this)">
+      <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Exercices et evaluations
+    </a>
+    <a class="sb-guide" id="sb-progression" onclick="showGuide('progression',this)">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Suivre sa progression
+    </a>
+    <a class="sb-guide" id="sb-certificat" onclick="showGuide('certificat',this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>Obtenir son certificat
+    </a>
+    <a class="sb-guide" id="sb-discussions" onclick="showGuide('discussions',this)">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Discussions et entraide
+    </a>
+    <a class="sb-guide" id="sb-faq" onclick="showGuide('faq',this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Questions frequentes
+    </a>
+    <div style="height:1px;background:var(--gris4);margin:12px 20px"></div>
+    <div style="padding:12px 16px">
+      <div style="background:var(--dark);border-radius:12px;padding:16px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-30%;right:-20%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(1,232,174,.15),transparent 65%)"></div>
+        <div style="font-family:var(--heading);font-size:12px;font-weight:700;color:#fff;margin-bottom:6px;position:relative;z-index:1">Besoin d'aide ?</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px;line-height:1.6;position:relative;z-index:1">Notre equipe repond en moins de 24h</div>
+        <a href="/contact/" style="display:flex;align-items:center;gap:6px;font-size:10px;font-family:var(--mono);color:var(--vert);background:rgba(255,255,255,.06);border-radius:7px;padding:7px 10px;text-decoration:none;position:relative;z-index:1">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+          contact@missionformations.com
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="aide-main">
+
+    <!-- ACCUEIL -->
+    <div class="guide-page active" id="guide-accueil">
+      <div style="background:var(--dark);padding:48px 48px 52px;position:relative;overflow:hidden;text-align:center">
+        <div style="position:absolute;top:-30%;right:-10%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(9,101,208,.15),transparent 65%);pointer-events:none"></div>
+        <div style="position:relative;z-index:1;max-width:560px;margin:0 auto">
+          <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:50px;background:rgba(1,232,174,.1);border:1px solid rgba(1,232,174,.15);color:var(--vert);font-family:var(--heading);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Guide de l'Apprenant
+          </div>
+          <h1 style="font-family:var(--heading);font-size:32px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:12px">Bienvenue dans votre <span style="background:linear-gradient(135deg,var(--bleu),var(--vert));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">centre d'aide</span></h1>
+          <p style="font-size:14px;color:rgba(255,255,255,.4);line-height:1.8">Tout ce qu'il faut savoir pour suivre vos formations, valider vos exercices et obtenir vos certificats.</p>
+        </div>
+      </div>
+      <div style="padding:36px 48px;max-width:760px">
+        <div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark);margin-bottom:16px;display:flex;align-items:center;gap:8px">Guides disponibles <span style="flex:1;height:1px;background:var(--gris4);display:block"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+          <div class="landing-card-g" onclick="showGuide('demarrer',document.getElementById('sb-demarrer'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--bleu),var(--bleu2));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Premiers pas</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Creer un compte et se connecter</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('naviguer',document.getElementById('sb-naviguer'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--vert2),var(--vert));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Naviguer</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Structure et navigation d'un cours</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('contenus',document.getElementById('sb-contenus'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--violet),#6c3483);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Contenus de cours</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Videos, PDF, interactif</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('exercices',document.getElementById('sb-exercices'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--orange),#d35400);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Exercices</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">QCM, devoirs, evaluations</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('progression',document.getElementById('sb-progression'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--dark),var(--dark3));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Progression</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Notes et avancement</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('certificat',document.getElementById('sb-certificat'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--jaune),var(--orange));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Certificat</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Telecharger et partager</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('discussions',document.getElementById('sb-discussions'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#2980b9,#3498db);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">Discussions</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Forum et entraide</div></div></div>
+          <div class="landing-card-g" onclick="showGuide('faq',document.getElementById('sb-faq'))"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--rouge),#c0392b);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div style="font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)">FAQ</div><div style="font-size:11px;color:var(--gris2);margin-top:2px">Questions frequentes</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREMIERS PAS -->
+    <div class="guide-page" id="guide-demarrer">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Premiers pas</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--bleu),var(--bleu2));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h1 class="guide-title">Premiers pas</h1></div>
+        <p class="guide-subtitle">Creez votre compte, connectez-vous et decouvrez votre tableau de bord personnel.</p>
+        <div class="g-card">
+          <h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>Creer votre compte</h3>
+          <ol class="g-list"><li>Rendez-vous sur la <strong>page d'accueil</strong> de l'Academie Mission</li><li>Cliquez sur <strong>Creer un compte</strong></li><li>Renseignez votre <strong>nom</strong>, <strong>adresse e-mail</strong> et un <strong>mot de passe</strong></li><li>Validez votre inscription via le <strong>lien de confirmation</strong> recu par e-mail</li></ol>
+          <div class="g-callout info"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--bleu)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div>Si votre formateur vous a deja inscrit(e), vous recevrez un <strong>e-mail d'invitation</strong> avec un lien direct.</div></div>
+        </div>
+        <div class="g-card">
+          <h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--vert2),var(--vert))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>Se connecter</h3>
+          <ol class="g-list"><li>Cliquez sur <strong>Se connecter</strong></li><li>Entrez votre <strong>adresse e-mail</strong> et votre <strong>mot de passe</strong></li><li>Cliquez sur <strong>Connexion</strong></li></ol>
+          <div class="g-callout tip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div><strong>Mot de passe oublie ?</strong> Cliquez sur <strong>Mot de passe oublie</strong> sous le formulaire. Un lien de reinitialisation sera envoye.</div></div>
+        </div>
+        <div class="g-card">
+          <h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--dark),var(--dark3))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Votre tableau de bord</h3>
+          <p class="g-p">Apres connexion, vous arrivez sur votre <strong>tableau de bord</strong> avec vos cours, votre progression et un bouton Reprendre pour continuer la ou vous vous etes arrete(e).</p>
+        </div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('accueil',document.getElementById('sb-accueil'))">&#8592; Accueil</button><button class="guide-nav-btn next" onclick="showGuide('naviguer',document.getElementById('sb-naviguer'))">Naviguer dans un cours &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- NAVIGUER -->
+    <div class="guide-page" id="guide-naviguer">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Naviguer dans un cours</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--vert2),var(--vert));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div><h1 class="guide-title">Naviguer dans un cours</h1></div>
+        <p class="guide-subtitle">Comprenez l'organisation de votre formation et naviguez facilement entre les contenus.</p>
+        <div class="g-card">
+          <h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/></svg></div>Organisation d'un cours</h3>
+          <p class="g-p">Chaque formation est organisee en <strong>4 niveaux</strong> : Sections (chapitres), Sous-sections (themes), Unites (pages) et Composants (videos, exercices).</p>
+        </div>
+        <div class="g-card">
+          <h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--vert2),var(--vert))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>Naviguer entre les pages</h3>
+          <ul class="g-list"><li>Un <strong>menu horizontal</strong> avec les sections du cours</li><li>Des <strong>fleches Precedent / Suivant</strong> pour passer d'une unite a l'autre</li><li>Un <strong>indicateur de position</strong> qui vous montre ou vous en etes</li></ul>
+          <div class="g-callout success"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--vert2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div>Cliquez sur <strong>Reprendre le cours</strong> depuis votre tableau de bord pour revenir automatiquement la ou vous vous etes arrete(e).</div></div>
+        </div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('demarrer',document.getElementById('sb-demarrer'))">&#8592; Premiers pas</button><button class="guide-nav-btn next" onclick="showGuide('contenus',document.getElementById('sb-contenus'))">Contenus de cours &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- CONTENUS -->
+    <div class="guide-page" id="guide-contenus">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Contenus de cours</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--violet),#6c3483);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><h1 class="guide-title">Les contenus de cours</h1></div>
+        <p class="guide-subtitle">Videos, textes, documents — voici les differents types de contenus que vous rencontrerez.</p>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,#e74c3c,#c0392b)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>Videos</h3><p class="g-p">Utilisez les boutons play/pause, passez en plein ecran et reglez la vitesse de lecture. Vous pouvez revoir une video autant de fois que necessaire.</p></div>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>Textes et documents</h3><p class="g-p">Les pages contiennent des textes explicatifs, des PDF integres et des presentations. Les PDF s'ouvrent directement dans la page.</p></div>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--orange),#d35400)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>Contenus interactifs</h3><p class="g-p">Presentations interactives, activites H5P, nuages de mots collaboratifs et sondages en temps reel.</p></div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('naviguer',document.getElementById('sb-naviguer'))">&#8592; Naviguer</button><button class="guide-nav-btn next" onclick="showGuide('exercices',document.getElementById('sb-exercices'))">Exercices &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- EXERCICES -->
+    <div class="guide-page" id="guide-exercices">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Exercices et evaluations</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--orange),#d35400);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h1 class="guide-title">Exercices et evaluations</h1></div>
+        <p class="guide-subtitle">Testez vos connaissances avec differents types d'exercices : QCM, texte libre, devoirs a rendre et clic sur image.</p>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--vert2),var(--vert))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>Comment repondre</h3><ol class="g-list"><li>Lisez attentivement la question</li><li>Selectionnez ou saisissez votre reponse</li><li>Cliquez sur <strong>Verifier</strong></li><li>Un feedback s'affiche : vert = bonne reponse, rouge = a revoir</li></ol><div class="g-callout warning"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Nombre de tentatives :</strong> Certains exercices limitent le nombre d'essais. Reflechissez bien avant de valider !</div></div></div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('contenus',document.getElementById('sb-contenus'))">&#8592; Contenus</button><button class="guide-nav-btn next" onclick="showGuide('progression',document.getElementById('sb-progression'))">Progression &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- PROGRESSION -->
+    <div class="guide-page" id="guide-progression">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Suivre sa progression</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--dark),var(--dark3));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h1 class="guide-title">Suivre sa progression</h1></div>
+        <p class="guide-subtitle">Consultez vos notes, votre avancement et identifiez les points a ameliorer.</p>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--bleu),var(--bleu2))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>Acceder a vos notes</h3><ol class="g-list"><li>Cliquez sur l'onglet <strong>Progression</strong> dans le menu du cours</li><li>Vous verrez un recapitulatif de vos notes par section</li><li>Le score global est affiche en haut de la page</li></ol></div>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--vert2),var(--vert))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>Comprendre les notes</h3><p class="g-p">Votre note combine devoirs, examens et participation. Un seuil de reussite (ex : 60%) doit etre atteint pour valider la formation.</p></div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('exercices',document.getElementById('sb-exercices'))">&#8592; Exercices</button><button class="guide-nav-btn next" onclick="showGuide('certificat',document.getElementById('sb-certificat'))">Certificat &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- CERTIFICAT -->
+    <div class="guide-page" id="guide-certificat">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Obtenir son certificat</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--jaune),var(--orange));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div><h1 class="guide-title">Obtenir son certificat</h1></div>
+        <p class="guide-subtitle">Terminez votre formation avec succes pour obtenir votre attestation de reussite.</p>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--jaune),var(--orange))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div>Comment obtenir votre certificat</h3><ol class="g-list"><li>Completez tous les exercices et evaluations</li><li>Atteignez le seuil de reussite minimum</li><li>Le certificat est genere automatiquement</li><li>Un lien apparait dans votre tableau de bord</li></ol></div>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--vert2),var(--vert))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>Partager et telecharger</h3><ul class="g-list"><li>Telechargez-le en PDF</li><li>Partagez-le sur LinkedIn ou Facebook</li><li>Chaque certificat a un lien unique verifiable</li></ul><div class="g-callout success"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--vert2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div>Votre certificat est signe electroniquement et peut etre verifie en ligne par tout employeur.</div></div></div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('progression',document.getElementById('sb-progression'))">&#8592; Progression</button><button class="guide-nav-btn next" onclick="showGuide('discussions',document.getElementById('sb-discussions'))">Discussions &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- DISCUSSIONS -->
+    <div class="guide-page" id="guide-discussions">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Discussions et entraide</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2980b9,#3498db);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h1 class="guide-title">Discussions et entraide</h1></div>
+        <p class="guide-subtitle">Echangez avec les autres apprenants et votre formateur via le forum de discussion.</p>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,#2980b9,#3498db)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>Participer aux discussions</h3><ol class="g-list"><li>Cliquez sur l'onglet <strong>Discussion</strong> dans le menu du cours</li><li>Parcourez les sujets existants ou creez un nouveau sujet</li><li>Posez vos questions et partagez vos reflexions</li><li>Repondez aux messages des autres apprenants</li></ol></div>
+        <div class="g-card"><h3 class="g-card-title"><div class="g-ico" style="background:linear-gradient(135deg,var(--vert2),var(--vert))"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>Bonnes pratiques</h3><ul class="g-list"><li>Cherchez d'abord si votre question a deja ete posee</li><li>Donnez un titre clair a vos sujets</li><li>Restez courtois et constructif</li><li>Si un message vous aide, marquez-le comme utile</li></ul></div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('certificat',document.getElementById('sb-certificat'))">&#8592; Certificat</button><button class="guide-nav-btn next" onclick="showGuide('faq',document.getElementById('sb-faq'))">FAQ &#8594;</button></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="guide-page" id="guide-faq">
+      <div class="guide-main-content">
+        <div class="doc-bread-g"><span onclick="showGuide('accueil',document.getElementById('sb-accueil'))" style="cursor:pointer;color:var(--bleu)">Aide</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gris3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> <strong>Questions frequentes</strong></div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--rouge),#c0392b);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h1 class="guide-title">Questions frequentes</h1></div>
+        <p class="guide-subtitle">Retrouvez les reponses aux questions les plus courantes.</p>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">J'ai oublie mon mot de passe, comment le recuperer ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Sur la page de connexion, cliquez sur <strong>Mot de passe oublie</strong>. Entrez votre adresse e-mail et vous recevrez un lien. Verifiez votre dossier spam si necessaire.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Je ne vois pas mon cours dans le tableau de bord<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Verifiez que vous etes connecte(e) avec le <strong>meme compte</strong> utilise lors de l'inscription. Si votre formateur vous a inscrit(e), le cours apparait automatiquement.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Puis-je acceder a la formation sur mon telephone ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner"><strong>Oui !</strong> L'Academie Mission fonctionne sur tous les navigateurs web. Un ecran d'au moins 10 pouces est recommande pour les exercices.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">J'ai epuise mes tentatives sur un exercice<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner"><strong>Contactez votre formateur</strong>. Il a la possibilite de reinitialiser vos tentatives depuis son interface d'administration.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Les videos ne se chargent pas<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Verifiez votre connexion internet. Essayez Ctrl+F5 pour rafraichir ou un autre navigateur. <strong>Chrome</strong> est recommande.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Mon certificat n'apparait pas malgre un score suffisant<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">La generation peut prendre quelques minutes. Rafraichissez votre tableau de bord. Si apres 24h il n'apparait pas, contactez votre formateur.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Puis-je revoir un cours termine ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner"><strong>Oui !</strong> Tant que le cours reste ouvert, vous y avez acces. Tous les contenus restent disponibles.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Comment changer mon adresse e-mail ou mot de passe ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Rendez-vous dans <strong>Parametres du compte</strong> (menu en haut a droite). Vous pouvez modifier votre e-mail, mot de passe et preferences de notification.</div></div></div>
+        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Comment telecharger les supports de cours ?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Les fichiers telechargeables sont indiques par une icone de telechargement a cote du contenu. Cliquez dessus pour les enregistrer.</div></div></div>
+        <div class="guide-nav-bar"><button class="guide-nav-btn" onclick="showGuide('discussions',document.getElementById('sb-discussions'))">&#8592; Discussions</button></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function showGuide(name, sbEl) {
+  document.querySelectorAll('.guide-page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sb-guide').forEach(function(l){ l.classList.remove('active'); });
+  var gp = document.getElementById('guide-' + name);
+  if (gp) { gp.classList.add('active'); gp.scrollIntoView({behavior:'smooth',block:'start'}); }
+  if (sbEl) sbEl.classList.add('active');
+}
+</script>
+</%block>

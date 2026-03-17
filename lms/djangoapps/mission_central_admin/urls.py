@@ -15,6 +15,8 @@ urlpatterns = [
     path("admin/mission-dashboard/formateur/", views.formateur_detail, name="mission-formateur-detail"),
     path("admin/mission-dashboard/tests/", views.test_dashboard, name="mission-test-dashboard"),
     path("admin/mission-dashboard/users/delete/", views.delete_user, name="mission-delete-user"),
+    # Aide
+    path("aide/", views.aide_view, name="mission-aide"),
     # Academy Manager
     path("academy-manager/", views.academy_list, name="academy-manager"),
     path("academy-manager/create/", views.academy_create, name="academy-create"),

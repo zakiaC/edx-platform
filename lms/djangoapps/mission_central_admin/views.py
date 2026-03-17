@@ -1119,6 +1119,13 @@ def test_dashboard(request):
     return render_to_response("admin_test_dashboard.html", context)
 
 
+# ── AIDE ────────────────────────────────────────────────────────────────────
+
+def aide_view(request):
+    """Centre d'aide — page statique avec 8 guides interactifs."""
+    return render_to_response("aide/index.html", {"dashboard_url": "/dashboard"})
+
+
 # ── ACADEMY MANAGER ─────────────────────────────────────────────────────────
 
 @login_required
