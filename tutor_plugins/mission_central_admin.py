@@ -31,6 +31,11 @@ import importlib.util
 if importlib.util.find_spec('lms.djangoapps.mission_central_admin'):
     if 'lms.djangoapps.mission_central_admin' not in INSTALLED_APPS:
         INSTALLED_APPS.append('lms.djangoapps.mission_central_admin')
+
+# Middleware: deconnecter les utilisateurs inactifs (email non confirme)
+_mf_middleware = 'lms.djangoapps.mission_central_admin.middleware.InactiveUserLogoutMiddleware'
+if _mf_middleware not in MIDDLEWARE:
+    MIDDLEWARE.append(_mf_middleware)
 """.strip()
 
 hooks.Filters.CONFIG_DEFAULTS.add_items(

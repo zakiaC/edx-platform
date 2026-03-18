@@ -24,6 +24,7 @@ class MissionCentralAdminConfig(AppConfig):
                 lms_urls.urlpatterns.insert(0, pattern)
 
         self._patch_admin_user_creation_form()
+        self._patch_activation_email()
 
     def _patch_admin_user_creation_form(self):
         """
@@ -60,3 +61,11 @@ class MissionCentralAdminConfig(AppConfig):
         opts["fields"] = tuple(fields)
         add_fieldsets[0] = (section_name, opts)
         model_admin.add_fieldsets = tuple(add_fieldsets)
+
+    def _patch_activation_email(self):
+        """
+        Inject site_id into activation email task calls.
+        Replaces the direct modification of management.py.
+        """
+        from .signals import patch_activation_email_with_site_id  # pylint: disable=import-outside-toplevel
+        patch_activation_email_with_site_id()

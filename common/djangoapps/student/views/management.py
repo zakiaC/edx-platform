@@ -70,7 +70,6 @@ from common.djangoapps.student.message_types import AccountActivation, EmailChan
 from common.djangoapps.student.models import (  # lint-amnesty, pylint: disable=unused-import
     AccountRecovery,
     CourseEnrollment,
-    EnrollmentNotAllowed,
     PendingEmailChange,  # unimport:skip
     PendingSecondaryEmailChange,
     Registration,
@@ -275,11 +274,7 @@ def compose_and_send_activation_email(
     )
 
     try:
-        # Pass the current site explicitly so Celery renders ACE templates
-        # with the right site theme instead of falling back to SITE_ID.
-        current_site = theming_helpers.get_current_site()
-        site_id = current_site.id if current_site else None
-        send_activation_email.delay(str(msg), from_address, site_id=site_id)
+        send_activation_email.delay(str(msg), from_address)
     except Exception:  # pylint: disable=broad-except
         log.exception(f'Activation email task failed for user {user.id}.')
 
@@ -427,8 +422,6 @@ def change_enrollment(request, check_access=True):
                 enroll_mode = CourseMode.auto_enroll_mode(course_id, available_modes)
                 if enroll_mode:
                     CourseEnrollment.enroll(user, course_id, check_access=check_access, mode=enroll_mode)
-            except EnrollmentNotAllowed as exc:
-                return HttpResponseBadRequest(str(exc))
             except Exception:  # pylint: disable=broad-except
                 return HttpResponseBadRequest(_("Could not enroll"))
 
