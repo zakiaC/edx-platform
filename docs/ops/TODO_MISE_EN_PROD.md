@@ -271,6 +271,72 @@
 
 ---
 
+## 16. CONTENU DES 10 FORMATIONS
+
+| # | Formation | Org | Contenu dans Studio | Statut |
+|---|-----------|-----|---------------------|--------|
+| 16.1 | Certificat de Formation Professionnelle VTC | MF-VTC | Cours OLX complet (8 chapters, 27 HTML, 17 quiz) | Fait |
+| 16.2 | Maitriser l'IA en entreprise | MF-IA | Cours vide (cree dans Studio) | A creer |
+| 16.3 | Leadership et Management d'equipe | MF-MGMT | Cours vide | A creer |
+| 16.4 | Gestion des RH et Droit du travail | MF-RH | Cours vide | A creer |
+| 16.5 | Excel et Outils bureautiques | MF-DIGITAL | Cours vide | A creer |
+| 16.6 | Techniques de vente et Negociation | MF-VENTE | Cours vide | A creer |
+| 16.7 | Anglais professionnel VTC | MF-VTC | Cours vide | A creer |
+| 16.8 | Comptabilite et Gestion financiere | MF-FINANCE | Cours vide | A creer |
+| 16.9 | Automatisation et Workflows IA | MF-IA | Cours vide | A creer |
+| 16.10 | Cours existant MF-VTC-2025 | MissionFormations | Cours OLX complet | Fait |
+
+Pour chaque formation a creer :
+- [ ] Structure OLX (chapters, sequentials, verticals)
+- [ ] Contenu HTML par module (textes, objectifs, exemples)
+- [ ] Quiz par chapitre (QCM, 3-5 questions)
+- [ ] Description du cours (short_description + overview dans Studio)
+- [ ] Image du cours
+- [ ] Dates de debut/fin
+- [ ] Rattachement a l'academie (AcademyCourse)
+
+---
+
+## 17. GUIDES UTILISATEURS A CREER
+
+| # | Guide | Pour qui | Contenu | Effort | Statut |
+|---|-------|----------|---------|--------|--------|
+| 17.1 | Guide apprenant complet | Apprenants | Inscription, connexion, naviguer un cours, exercices, progression, certificat, FAQ | 4h | A faire |
+| 17.2 | Guide formateur complet | Formateurs | Acces Studio, creer un cours, gerer les apprenants, notes, export, rapports, messagerie | 4h | A faire |
+| 17.3 | Guide admin complet | Super admins | Dashboard admin, Academy Manager, gestion utilisateurs, Tests QA, Console Django | 3h | A faire |
+| 17.4 | Guide B2B (responsable RH) | Clients B2B | Portail entreprise, suivi collaborateurs, attestations, siege, facturation | 2h | A faire (depend Sprint 4.3) |
+
+Formats :
+- Version en ligne (page /aide/ — enrichir les guides existants)
+- Version PDF telechargeable
+- Version video (optionnel, phase 2)
+
+---
+
+## 18. MODULE QUALIOPI — INTEGRATION AU DASHBOARD
+
+| # | Tache | Dependance | Effort | Statut |
+|---|-------|------------|--------|--------|
+| 18.1 | Modeles Django (FormationProgram, Convention, SatisfactionSurvey, EmargementLog) | Aucune | 3h | A faire |
+| 18.2 | Migration 0003_qualiopi_models | 18.1 | 30min | A faire |
+| 18.3 | Onglet "Qualiopi" dans le dashboard admin | 18.1 | 4h | A faire |
+| 18.4 | Attestation de formation PDF (enrichir l'existant) | 18.1 | 2h | A faire |
+| 18.5 | Programme de formation PDF (depuis structure OLX) | 18.1 | 4h | A faire |
+| 18.6 | Feuille d'emargement e-learning (logs connexion) | 18.1 | 4h | A faire |
+| 18.7 | Rapport de suivi enrichi (progression par module) | 18.1 | 2h | A faire |
+| 18.8 | Enquete de satisfaction (formulaire + synthese PDF) | 18.1 | 5h | A faire |
+| 18.9 | Bilan de formation (ZIP complet pour auditeur) | 18.4-18.8 | 4h | A faire |
+| 18.10 | Convention de formation B2B | 18.1 | 3h | A faire |
+| 18.11 | Convocation stagiaire | 18.1 | 2h | A faire |
+| 18.12 | Evaluation pre/post formation | 18.1 | 3h | A faire |
+| 18.13 | Boutons PDF dans le dashboard formateur | 18.4, 18.6 | 2h | A faire |
+| 18.14 | Tests unitaires Qualiopi (modeles, PDF, routes) | 18.1-18.12 | 3h | A faire |
+| 18.15 | Documentation auditeur Qualiopi | 18.9 | 3h | A faire |
+| 18.16 | Documentation admin Qualiopi | 18.3 | 2h | A faire |
+| 18.17 | Documentation formateur Qualiopi | 18.13 | 2h | A faire |
+
+---
+
 ## RESUME QUANTITATIF (mis a jour)
 
 | Categorie | A faire | Fait | Total |
@@ -286,11 +352,14 @@
 | Customisation Studio | 6 | 2 | 8 |
 | Pages publiques | 2 | 9 | 11 |
 | Securite | 4 | 1 | 5 |
+| Contenu formations | 8 | 2 | 10 |
+| Guides utilisateurs | 4 | 0 | 4 |
+| Module Qualiopi | 17 | 0 | 17 |
 | Tests | 7 | 178 | 185 |
 | Documentation | 5 | 10+ | 15+ |
-| **TOTAL** | **~82 taches** | **~236 faits** | **~318** |
+| **TOTAL** | **~111 taches** | **~238 faits** | **~349** |
 
-**Estimation effort restant : ~120-150h de travail**
+**Estimation effort restant : ~180-220h de travail**
 
 | Categorie | A faire | Fait | Total |
 |-----------|---------|------|-------|
