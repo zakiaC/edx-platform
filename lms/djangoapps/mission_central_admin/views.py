@@ -1126,6 +1126,199 @@ def aide_view(request):
     return render_to_response("aide/index.html", {"dashboard_url": "/dashboard"})
 
 
+# ── RAPPORTS PDF ────────────────────────────────────────────────────────────
+
+@login_required
+@require_http_methods(["GET"])
+def pdf_attestation(request):
+    """Genere une attestation de formation PDF pour un apprenant + cours."""
+    if not _staff_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .pdf_reports import generate_attestation_pdf
+    from lms.djangoapps.certificates.models import GeneratedCertificate
+    from lms.djangoapps.certificates.data import CertificateStatuses
+    from opaque_keys.edx.keys import CourseKey
+
+    user_id = request.GET.get("user_id")
+    course_id_str = request.GET.get("course_id")
+
+    if not user_id or not course_id_str:
+        return HttpResponse("Parametres manquants: user_id et course_id requis", status=400)
+
+    User = get_user_model()
+    try:
+        learner = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return HttpResponse("Utilisateur introuvable", status=404)
+
+    try:
+        course_key = CourseKey.from_string(course_id_str)
+    except Exception:
+        return HttpResponse("Course ID invalide", status=400)
+
+    # Infos cours
+    try:
+        overview = CourseOverview.get_from_id(course_key)
+        course_name = getattr(overview, "display_name_with_default", "") or str(course_key)
+        start_date = overview.start.strftime("%d/%m/%Y") if overview.start else ""
+        end_date = overview.end.strftime("%d/%m/%Y") if overview.end else ""
+    except Exception:
+        course_name = str(course_key)
+        start_date = ""
+        end_date = ""
+
+    # Infos inscription
+    enrollment = CourseEnrollment.objects.filter(
+        user=learner, course_id=course_key, is_active=True,
+    ).first()
+
+    # Infos certificat
+    cert = GeneratedCertificate.objects.filter(
+        user=learner, course_id=course_key,
+    ).first()
+
+    is_passing = cert and cert.status == CertificateStatuses.downloadable
+    grade = cert.grade if cert else ""
+    certificate_id = cert.verify_uuid if cert else ""
+
+    # Nom apprenant
+    profile = getattr(learner, "profile", None)
+    learner_name = (
+        getattr(profile, "name", "") or
+        learner.get_full_name().strip() or
+        learner.username
+    )
+
+    pdf_bytes = generate_attestation_pdf(
+        learner_name=learner_name,
+        learner_email=learner.email or "",
+        course_name=course_name,
+        course_id=str(course_key),
+        start_date=start_date,
+        end_date=end_date,
+        grade=grade,
+        is_passing=is_passing,
+        certificate_id=certificate_id,
+    )
+
+    response = HttpResponse(pdf_bytes, content_type="application/pdf")
+    safe_name = course_name.replace(" ", "_")[:30]
+    response["Content-Disposition"] = f'attachment; filename="attestation_{safe_name}_{learner.username}.pdf"'
+    return response
+
+
+@login_required
+@require_http_methods(["GET"])
+def pdf_rapport_suivi(request):
+    """Genere un rapport de suivi de formation PDF pour un cours."""
+    if not _staff_allowed(request.user):
+        return HttpResponseForbidden("403 Forbidden")
+
+    from .pdf_reports import generate_rapport_suivi_pdf
+    from lms.djangoapps.certificates.models import GeneratedCertificate
+    from lms.djangoapps.certificates.data import CertificateStatuses
+    from opaque_keys.edx.keys import CourseKey
+
+    course_id_str = request.GET.get("course_id")
+    if not course_id_str:
+        return HttpResponse("Parametre manquant: course_id requis", status=400)
+
+    try:
+        course_key = CourseKey.from_string(course_id_str)
+    except Exception:
+        return HttpResponse("Course ID invalide", status=400)
+
+    # Infos cours
+    try:
+        overview = CourseOverview.get_from_id(course_key)
+        course_name = getattr(overview, "display_name_with_default", "") or str(course_key)
+        start_date = overview.start.strftime("%d/%m/%Y") if overview.start else ""
+        end_date = overview.end.strftime("%d/%m/%Y") if overview.end else ""
+    except Exception:
+        course_name = str(course_key)
+        start_date = ""
+        end_date = ""
+
+    # Tous les inscrits
+    enrollments = CourseEnrollment.objects.filter(
+        course_id=course_key, is_active=True,
+        user__is_staff=False, user__is_superuser=False,
+    ).select_related("user")
+
+    # Certificats
+    certs = {
+        str(c.user_id): c
+        for c in GeneratedCertificate.objects.filter(course_id=course_key)
+    }
+
+    learners = []
+    total_completed = 0
+    total_passing = 0
+    grades_sum = 0.0
+    grades_count = 0
+
+    for enr in enrollments:
+        user = enr.user
+        profile = getattr(user, "profile", None)
+        name = (
+            getattr(profile, "name", "") or
+            user.get_full_name().strip() or
+            user.username
+        )
+        cert = certs.get(str(user.id))
+        is_passing = cert and cert.status == CertificateStatuses.downloadable
+        grade = cert.grade if cert else ""
+
+        if is_passing:
+            total_completed += 1
+            total_passing += 1
+        if grade:
+            try:
+                grades_sum += float(grade)
+                grades_count += 1
+            except (ValueError, TypeError):
+                pass
+
+        status = "Certifie" if is_passing else "En cours"
+
+        learners.append({
+            "name": name,
+            "email": user.email or "",
+            "enrolled_date": enr.created.strftime("%d/%m/%Y") if enr.created else "--",
+            "completion_pct": 100 if is_passing else 0,
+            "grade": grade or "--",
+            "status": status,
+        })
+
+    total_enrolled = len(learners)
+    completion_rate = int(round(100.0 * total_completed / total_enrolled)) if total_enrolled else 0
+    pass_rate = int(round(100.0 * total_passing / total_enrolled)) if total_enrolled else 0
+    avg_grade = f"{grades_sum / grades_count:.1f}" if grades_count else "--"
+
+    stats = {
+        "total_enrolled": total_enrolled,
+        "total_completed": total_completed,
+        "completion_rate": completion_rate,
+        "avg_grade": avg_grade,
+        "pass_rate": pass_rate,
+    }
+
+    pdf_bytes = generate_rapport_suivi_pdf(
+        course_name=course_name,
+        course_id=str(course_key),
+        start_date=start_date,
+        end_date=end_date,
+        learners=learners,
+        stats=stats,
+    )
+
+    response = HttpResponse(pdf_bytes, content_type="application/pdf")
+    safe_name = course_name.replace(" ", "_")[:30]
+    response["Content-Disposition"] = f'attachment; filename="rapport_suivi_{safe_name}.pdf"'
+    return response
+
+
 # ── ACADEMY MANAGER ─────────────────────────────────────────────────────────
 
 @login_required

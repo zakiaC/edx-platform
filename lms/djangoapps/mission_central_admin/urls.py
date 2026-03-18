@@ -15,6 +15,9 @@ urlpatterns = [
     path("admin/mission-dashboard/formateur/", views.formateur_detail, name="mission-formateur-detail"),
     path("admin/mission-dashboard/tests/", views.test_dashboard, name="mission-test-dashboard"),
     path("admin/mission-dashboard/users/delete/", views.delete_user, name="mission-delete-user"),
+    # Rapports PDF
+    path("api/admin/pdf/attestation/", views.pdf_attestation, name="mission-pdf-attestation"),
+    path("api/admin/pdf/rapport-suivi/", views.pdf_rapport_suivi, name="mission-pdf-rapport-suivi"),
     # Aide
     path("aide/", views.aide_view, name="mission-aide"),
     # Academy Manager
