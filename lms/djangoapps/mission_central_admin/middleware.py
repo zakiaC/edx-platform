@@ -45,25 +45,32 @@ class InactiveUserLogoutMiddleware(MiddlewareMixin):
     )
 
     def process_request(self, request):
-        if not hasattr(request, "user"):
-            return None
-        if not request.user.is_authenticated:
-            return None
-        if request.user.is_active:
-            return None
-        if request.user.is_staff or request.user.is_superuser:
-            return None
-
-        # Verifier les chemins exempts
+        # Chemins exempts — verifier en premier (avant d'acceder a request.user)
         path = request.path
         for exempt in self.EXEMPT_PATHS:
             if path.startswith(exempt):
                 return None
 
+        # Heartbeat et health checks n'ont pas de session
+        if path in ("/heartbeat", "/health"):
+            return None
+
+        try:
+            user = request.user
+        except AttributeError:
+            return None
+
+        if not user.is_authenticated:
+            return None
+        if user.is_active:
+            return None
+        if user.is_staff or user.is_superuser:
+            return None
+
         # Utilisateur inactif sur une page non exemptee → deconnexion
         logger.info(
             "[MF-AUTH] Logging out inactive user %s (email not confirmed)",
-            request.user.username,
+            user.username,
         )
         logout(request)
         return None
