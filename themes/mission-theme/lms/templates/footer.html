@@ -187,19 +187,10 @@
         % endif
       </p>
 
-      <nav aria-label="${_('Legal')}">
+      <nav aria-label="Mentions legales">
         <ul class="mf-footer-legal">
-          % for link in footer['legal_links']:
-            <% legal_url = link['url'] %>
-            <% legal_title = (link.get('title') or '') %>
-            <% legal_name = (link.get('name') or '') %>
-            % if 'edx.org' not in legal_url.lower():
-              % if legal_name.lower() == 'privacy_policy' or 'privacy' in legal_title.lower():
-                <% legal_url = 'https://missionformations.com/politique-de-confidentialite/' %>
-              % endif
-              <li><a href="${legal_url}">${legal_title}</a></li>
-            % endif
-          % endfor
+          <li><a href="/tos">Conditions generales</a></li>
+          <li><a href="https://missionformations.com/politique-de-confidentialite/" target="_blank" rel="noopener noreferrer">Politique de confidentialite</a></li>
         </ul>
       </nav>
 
