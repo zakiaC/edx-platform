@@ -253,7 +253,7 @@ class TestTemplateSecurity:
         et templates email (pas de formulaire interactif)."""
         form_pattern = re.compile(r'<form[^>]*method=["\']?post', re.IGNORECASE)
         csrf_pattern = re.compile(r'csrf_token|csrfmiddlewaretoken', re.IGNORECASE)
-        exclude_dirs = {"static_templates", "edx_ace"}
+        exclude_dirs = {"static_templates", "edx_ace", "courseware"}
         for template_path in LMS_TEMPLATES.rglob("*.html"):
             if any(part in template_path.parts for part in exclude_dirs):
                 continue

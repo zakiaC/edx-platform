@@ -1,0 +1,242 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%!
+from django.utils.translation import gettext as _
+from django.urls import reverse
+from lms.djangoapps.courseware.courses import get_course_about_section
+from openedx.core.lib.courses import course_image_url
+%>
+<%inherit file="../main.html" />
+
+<%block name="pagetitle">${course.display_name_with_default} — Academie Mission Formations</%block>
+
+<%block name="headextra">
+<meta property="og:title" content="${course.display_name_with_default}" />
+<meta property="og:description" content="${get_course_about_section(request, course, 'short_description')}" />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--mf-blue:#0965D0;--mf-green:#01E8AE;--mf-dark:#3B3B3B;--mf-light:#F5F7FA}
+
+.mf-course-header{background:linear-gradient(135deg,rgba(9,101,208,.95) 0%,rgba(1,232,174,.95) 100%);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden}
+.mf-course-header::before{content:'';position:absolute;top:-40%;right:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 65%);pointer-events:none}
+.mf-course-title{font-family:'Ubuntu',sans-serif;font-size:2.5rem;font-weight:700;color:#fff;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,.2);position:relative;z-index:1}
+.mf-course-org{font-family:'Raleway',sans-serif;font-size:1.15rem;color:rgba(255,255,255,.9);margin-bottom:1.5rem;position:relative;z-index:1}
+.mf-course-tags{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.mf-course-tag{background:rgba(255,255,255,.18);backdrop-filter:blur(10px);color:#fff;padding:.5rem 1rem;border-radius:20px;font-size:.85rem;font-weight:600;border:1px solid rgba(255,255,255,.25)}
+
+.mf-course-main{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 5rem;display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start}
+
+.mf-section{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:2rem 2.5rem;margin-bottom:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.04)}
+.mf-section-title{font-family:'Ubuntu',sans-serif;font-size:1.5rem;font-weight:700;color:var(--mf-dark);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:3px solid var(--mf-green)}
+.mf-desc{font-size:1rem;color:#4b5563;line-height:1.8;margin-bottom:.75rem}
+
+.mf-learning{background:linear-gradient(135deg,rgba(9,101,208,.03) 0%,rgba(1,232,174,.03) 100%);border:2px solid var(--mf-blue);border-left:5px solid var(--mf-blue);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.mf-learning h3{font-family:'Ubuntu',sans-serif;font-size:1.35rem;font-weight:700;color:var(--mf-blue);margin-bottom:1.25rem}
+.mf-learning ul{list-style:none;padding:0;margin:0}
+.mf-learning li{padding:.65rem 0 .65rem 2rem;position:relative;border-bottom:1px solid rgba(9,101,208,.08);line-height:1.6;color:var(--mf-dark);font-size:.95rem}
+.mf-learning li:last-child{border-bottom:none}
+.mf-learning li::before{content:'✓';position:absolute;left:0;font-size:1.2rem;font-weight:700;color:var(--mf-green)}
+
+.mf-instructor{display:flex;gap:1.25rem;padding:1.25rem;background:var(--mf-light);border-radius:12px;transition:all .3s}
+.mf-instructor:hover{background:rgba(9,101,208,.04);transform:translateX(4px)}
+.mf-instructor-av{width:70px;height:70px;border-radius:50%;border:3px solid var(--mf-green);background:linear-gradient(135deg,var(--mf-blue),var(--mf-green));display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;font-weight:700;flex-shrink:0;font-family:'Ubuntu',sans-serif}
+.mf-instructor h4{font-family:'Ubuntu',sans-serif;font-size:1.1rem;font-weight:700;color:var(--mf-dark);margin-bottom:.2rem}
+.mf-instructor-role{font-size:.9rem;color:var(--mf-blue);margin-bottom:.4rem}
+.mf-instructor-bio{font-size:.9rem;color:#6b7280;line-height:1.6}
+
+.mf-enroll-sidebar{position:sticky;top:2rem;height:fit-content}
+.mf-enroll-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.mf-enroll-img{width:100%;height:220px;background:linear-gradient(135deg,var(--mf-blue) 0%,var(--mf-green) 100%);display:flex;align-items:center;justify-content:center;border-bottom:3px solid var(--mf-green)}
+.mf-enroll-img img{width:100%;height:100%;object-fit:cover}
+.mf-enroll-img svg{width:64px;height:64px;stroke:rgba(255,255,255,.5);fill:none;stroke-width:1.5}
+.mf-enroll-body{padding:2rem}
+
+.mf-price{font-family:'Ubuntu',sans-serif;font-size:2.2rem;font-weight:700;color:var(--mf-blue);margin-bottom:1rem}
+.mf-price.free{color:var(--mf-green)}
+.mf-price-original{font-size:1.1rem;color:#9ca3af;text-decoration:line-through;margin-left:.5rem;font-weight:400}
+
+.mf-enroll-btn{background:linear-gradient(135deg,var(--mf-blue) 0%,var(--mf-green) 100%);color:#fff;border:none;border-radius:12px;padding:1.1rem 2rem;font-family:'Ubuntu',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transition:all .3s;box-shadow:0 8px 20px rgba(9,101,208,.25);width:100%;margin-bottom:1.25rem;text-align:center;display:block;text-decoration:none}
+.mf-enroll-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(9,101,208,.35);color:#fff;text-decoration:none}
+.mf-enroll-btn.enrolled{background:var(--mf-green);box-shadow:0 8px 20px rgba(1,232,174,.25)}
+
+.mf-info-list{list-style:none;padding:0;margin:1.5rem 0 0}
+.mf-info-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 0;border-bottom:1px solid #e5e7eb}
+.mf-info-item:last-child{border-bottom:none}
+.mf-info-icon{font-size:1.3rem;width:28px;text-align:center}
+.mf-info-label{font-size:.8rem;color:#6b7280;font-weight:500}
+.mf-info-value{font-size:.95rem;color:var(--mf-dark);font-weight:600;margin-left:auto}
+
+.mf-includes{background:linear-gradient(135deg,rgba(9,101,208,.04) 0%,rgba(1,232,174,.04) 100%);border-radius:12px;padding:1.25rem;margin-top:1.25rem}
+.mf-includes h4{font-family:'Ubuntu',sans-serif;font-size:1rem;font-weight:700;color:var(--mf-dark);margin-bottom:.75rem}
+.mf-includes ul{list-style:none;padding:0;margin:0}
+.mf-includes li{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;font-size:.9rem;color:var(--mf-dark)}
+.mf-includes li::before{content:'✓';color:var(--mf-green);font-weight:700;font-size:1.1rem}
+
+.mf-share-btn{background:#fff;color:var(--mf-blue);border:2px solid var(--mf-blue);border-radius:10px;padding:.75rem 1.25rem;font-family:'Ubuntu',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .3s;width:100%;margin-top:.75rem;text-align:center;display:block;text-decoration:none}
+.mf-share-btn:hover{background:var(--mf-blue);color:#fff;text-decoration:none}
+
+@media(max-width:1024px){.mf-course-main{grid-template-columns:1fr}.mf-enroll-sidebar{position:static;margin-top:1.5rem}}
+@media(max-width:768px){.mf-course-title{font-size:1.75rem}.mf-course-main{padding:1.5rem 1rem}.mf-instructor{flex-direction:column;text-align:center}}
+</style>
+</%block>
+
+<%block name="js_extra">
+<script type="text/javascript">
+(function() {
+  $(".register").click(function(event) {
+    $("#class_enroll_form").submit();
+    event.preventDefault();
+  });
+
+  if (typeof analytics !== 'undefined') {
+    analytics.track('edx.bi.course_about.viewed', {
+      course_id: '${course.id | h}'
+    });
+  }
+})();
+</script>
+</%block>
+
+<%block name="content">
+<%
+  _short_desc = get_course_about_section(request, course, 'short_description') or ''
+  _overview = get_course_about_section(request, course, 'overview') or ''
+  _effort = get_course_about_section(request, course, 'effort') or ''
+  _img_url = course_image_url(course)
+  _org = course.display_org_with_default or ''
+  _course_name = course.display_name_with_default or ''
+  _start = course_start_date or ''
+  _end = course_end_date or ''
+  _price = course_price or ''
+
+  # Initials du nom de l'org pour l'avatar
+  _initials = ''.join([p[0] for p in _org.split()[:2]]).upper() if _org else 'MF'
+%>
+
+<!-- HEADER BANNER -->
+<div class="mf-course-header">
+  <h1 class="mf-course-title">${_course_name}</h1>
+  <p class="mf-course-org">Par ${_org or 'Mission Formations'}</p>
+  <div class="mf-course-tags">
+    % if _effort:
+    <span class="mf-course-tag">${_effort}</span>
+    % endif
+    <span class="mf-course-tag">100% en ligne</span>
+    <span class="mf-course-tag">Certificat inclus</span>
+    % if _start:
+    <span class="mf-course-tag">Debut : ${_start}</span>
+    % endif
+  </div>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="mf-course-main">
+
+  <!-- COLONNE GAUCHE -->
+  <div>
+    <!-- A propos -->
+    % if _short_desc or _overview:
+    <div class="mf-section">
+      <h2 class="mf-section-title">A propos de cette formation</h2>
+      % if _short_desc:
+      <p class="mf-desc">${_short_desc | n}</p>
+      % endif
+      % if _overview:
+      <div class="mf-desc">${_overview | n}</div>
+      % endif
+    </div>
+    % endif
+
+    <!-- Ce que vous allez apprendre -->
+    <div class="mf-learning">
+      <h3>Ce que vous allez apprendre</h3>
+      <ul>
+        <li>Maitriser les competences cles de cette formation</li>
+        <li>Appliquer les connaissances dans un contexte professionnel</li>
+        <li>Valider vos acquis par des exercices pratiques</li>
+        <li>Obtenir votre certificat de reussite</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SIDEBAR INSCRIPTION -->
+  <div class="mf-enroll-sidebar">
+    <div class="mf-enroll-card">
+      <div class="mf-enroll-img">
+        % if _img_url:
+        <img src="${_img_url}" alt="${_course_name}">
+        % else:
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        % endif
+      </div>
+      <div class="mf-enroll-body">
+        % if _price:
+        <div class="mf-price">${_price}</div>
+        % else:
+        <div class="mf-price free">Gratuit</div>
+        % endif
+
+        % if registered:
+          <a class="mf-enroll-btn enrolled" href="${course_target}">Acceder a la formation</a>
+        % elif invitation_only:
+          <div class="mf-enroll-btn" style="opacity:.5;cursor:not-allowed">Sur invitation uniquement</div>
+        % else:
+          <form id="class_enroll_form" method="post" data-remote="true" action="${reverse('change_enrollment')}">
+            <input type="hidden" name="course_id" value="${course.id | h}" />
+            <input type="hidden" name="enrollment_action" value="enroll" />
+            <button type="submit" class="mf-enroll-btn register">S'inscrire maintenant</button>
+          </form>
+        % endif
+
+        <ul class="mf-info-list">
+          % if _start:
+          <li class="mf-info-item">
+            <span class="mf-info-icon">📅</span>
+            <div>
+              <div class="mf-info-label">Debut</div>
+              <div class="mf-info-value">${_start}</div>
+            </div>
+          </li>
+          % endif
+          % if _end:
+          <li class="mf-info-item">
+            <span class="mf-info-icon">🏁</span>
+            <div>
+              <div class="mf-info-label">Fin</div>
+              <div class="mf-info-value">${_end}</div>
+            </div>
+          </li>
+          % endif
+          % if _effort:
+          <li class="mf-info-item">
+            <span class="mf-info-icon">⏱️</span>
+            <div>
+              <div class="mf-info-label">Effort</div>
+              <div class="mf-info-value">${_effort}</div>
+            </div>
+          </li>
+          % endif
+          <li class="mf-info-item">
+            <span class="mf-info-icon">🌍</span>
+            <div>
+              <div class="mf-info-label">Langue</div>
+              <div class="mf-info-value">Francais</div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="mf-includes">
+          <h4>Inclus dans cette formation</h4>
+          <ul>
+            <li>Acces illimite aux contenus</li>
+            <li>Exercices pratiques</li>
+            <li>Certificat de reussite</li>
+            <li>Support communaute</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</%block>
