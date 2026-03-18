@@ -1,0 +1,183 @@
+<%page expression_filter="h" args="courses=[], total_courses=0, domain_counts={}, total_domains=0"/>
+<%inherit file="../main.html" />
+<%block name="pagetitle">Catalogue des formations — Academie Mission Formations</%block>
+<%block name="bodyclass">view-catalogue</%block>
+
+<%block name="head_extra">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;--vert:#01E8AE;--vert2:#00c494;--vert-pale:#e6faf4;--dark:#0a1628;--dark2:#0f1f3a;--dark3:#162d50;--noir:#3B3B3B;--gris:#6b6b6b;--gris2:#999;--gris3:#ccc;--gris4:#e8e8e8;--fond:#f5f7fa;--blanc:#ffffff;--rouge:#e74c3c;--orange:#e67e22;--jaune:#f1c40f;--violet:#8e44ad;--heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--radius:14px;--shadow-md:0 8px 24px rgba(9,101,208,.07)}
+
+.cat-hero{background:var(--dark);padding:44px 32px 48px;position:relative;overflow:hidden;text-align:center}
+.cat-hero::before{content:'';position:absolute;top:-40%;right:-8%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(9,101,208,.15),transparent 65%);pointer-events:none}
+.cat-hero::after{content:'';position:absolute;bottom:-50%;left:-5%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(1,232,174,.08),transparent 65%);pointer-events:none}
+.cat-hero-inner{position:relative;z-index:1;max-width:580px;margin:0 auto}
+.cat-hero h1{font-family:var(--heading);font-size:30px;font-weight:900;color:#fff;margin-bottom:10px;line-height:1.2}
+.cat-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--bleu),var(--vert));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cat-hero p{font-size:14px;color:rgba(255,255,255,.4);margin-bottom:26px;line-height:1.7}
+.cat-hero-stats{display:flex;justify-content:center;gap:32px;margin-bottom:28px}
+.cat-hero-stat-num{font-family:var(--heading);font-size:22px;font-weight:900;color:var(--vert);line-height:1}
+.cat-hero-stat-label{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-top:3px}
+.cat-search{max-width:480px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.cat-search:focus-within{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+.cat-search svg{width:18px;height:18px;stroke:rgba(255,255,255,.35);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.cat-search input{flex:1;background:none;border:none;outline:none;font-family:var(--body);font-size:14px;color:#fff}
+.cat-search input::placeholder{color:rgba(255,255,255,.3)}
+
+.cat-filters{background:var(--blanc);border-bottom:1px solid var(--gris4);position:sticky;top:0;z-index:50}
+.cat-filters-inner{max-width:1140px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fil{padding:7px 18px;border-radius:9px;font-family:var(--heading);font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--gris4);color:var(--gris2);background:var(--blanc);transition:all .15s;white-space:nowrap}
+.fil:hover{color:var(--bleu);border-color:rgba(9,101,208,.2);background:var(--bleu-pale)}
+.fil.on{color:var(--bleu);background:var(--bleu-pale);border-color:rgba(9,101,208,.2)}
+.fil-count{display:inline-flex;align-items:center;justify-content:center;background:var(--fond);border-radius:5px;font-size:9px;padding:1px 6px;margin-left:5px;color:var(--gris2);font-weight:700}
+.fil.on .fil-count{background:rgba(9,101,208,.12);color:var(--bleu)}
+
+.cat-main{max-width:1140px;margin:0 auto;padding:28px 32px 80px}
+.cat-results{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.cat-results-count{font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark)}
+.cat-results-count span{color:var(--gris2);font-weight:400}
+
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+
+.cat-card{background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .22s;text-decoration:none;display:block;color:inherit}
+.cat-card:hover{border-color:rgba(9,101,208,.14);box-shadow:var(--shadow-md);transform:translateY(-3px);text-decoration:none;color:inherit}
+.cat-card-img{height:152px;position:relative;overflow:hidden;background:var(--dark)}
+.cat-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.cat-card:hover .cat-card-img img{transform:scale(1.06)}
+.cat-card-badge{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:6px;font-family:var(--heading);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#fff;backdrop-filter:blur(8px)}
+.cat-card-badge.vtc{background:rgba(9,101,208,.85)}
+.cat-card-badge.ia{background:rgba(107,39,200,.85)}
+.cat-card-badge.mgmt{background:rgba(230,126,34,.85)}
+.cat-card-badge.rh{background:rgba(1,184,120,.85)}
+.cat-card-badge.digital{background:rgba(142,68,173,.85)}
+.cat-card-badge.vente{background:rgba(231,76,60,.85)}
+.cat-card-badge.finance{background:rgba(22,160,133,.85)}
+.cat-card-badge.comm{background:rgba(41,128,185,.85)}
+.cat-card-badge.devperso{background:rgba(155,89,182,.85)}
+.cat-card-badge.git{background:rgba(44,62,80,.85)}
+
+.cat-card-body{padding:18px 20px}
+.cat-card-org{font-family:var(--heading);font-size:9px;font-weight:700;color:var(--bleu);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}
+.cat-card-title{font-family:var(--heading);font-size:14px;font-weight:700;color:var(--dark);line-height:1.35;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cat-card-meta{display:flex;align-items:center;gap:14px;font-size:11px;color:var(--gris2);margin-bottom:14px}
+.cat-card-meta svg{width:12px;height:12px;stroke:var(--gris3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.cat-card-meta-item{display:flex;align-items:center;gap:4px}
+.cat-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cat-card-btn{padding:7px 16px;border-radius:8px;font-family:var(--heading);font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--bleu),var(--vert));border:none;cursor:pointer;transition:all .15s;white-space:nowrap;text-decoration:none}
+.cat-card-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(9,101,208,.2);color:#fff;text-decoration:none}
+.cat-card-btn.enrolled{background:var(--vert-pale);color:var(--vert2);border:1px solid rgba(0,196,148,.2)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.cat-card{animation:fadeUp .4s ease both}
+.cat-card:nth-child(1){animation-delay:.05s}.cat-card:nth-child(2){animation-delay:.08s}.cat-card:nth-child(3){animation-delay:.11s}
+.cat-card:nth-child(4){animation-delay:.14s}.cat-card:nth-child(5){animation-delay:.17s}.cat-card:nth-child(6){animation-delay:.2s}
+
+@media(max-width:700px){.cat-hero{padding:32px 16px 36px}.cat-hero h1{font-size:22px}.cat-filters-inner{padding:12px 16px}.cat-main{padding:16px}.cat-grid{grid-template-columns:1fr}}
+</style>
+</%block>
+
+<%block name="content">
+<%
+  _courses = courses
+  _total = total_courses
+  _domains = domain_counts
+  _total_domains = total_domains
+%>
+
+<!-- HERO -->
+<div class="cat-hero">
+  <div class="cat-hero-inner">
+    <h1>Catalogue des <em>formations</em></h1>
+    <p>Programmes certifiants, financables CPF et OPCO — partout en France</p>
+    <div class="cat-hero-stats">
+      <div style="text-align:center"><div class="cat-hero-stat-num">${_total}</div><div class="cat-hero-stat-label">Formations</div></div>
+      <div style="text-align:center"><div class="cat-hero-stat-num">${_total_domains}</div><div class="cat-hero-stat-label">Domaines</div></div>
+      <div style="text-align:center"><div class="cat-hero-stat-num">CPF</div><div class="cat-hero-stat-label">Eligible</div></div>
+    </div>
+    <div class="cat-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="cat-search" placeholder="Rechercher une formation, un domaine..." oninput="filterCatalogue()">
+    </div>
+  </div>
+</div>
+
+<!-- FILTRES -->
+<div class="cat-filters">
+  <div class="cat-filters-inner">
+    <div class="fil on" data-cat="all" onclick="filterByCat(this)">Toutes <span class="fil-count">${_total}</span></div>
+    % for dk, dc in sorted(_domains.items(), key=lambda x: -x[1]):
+    <div class="fil" data-cat="${dk}" onclick="filterByCat(this)">${dk.upper()} <span class="fil-count">${dc}</span></div>
+    % endfor
+  </div>
+</div>
+
+<!-- CONTENU -->
+<div class="cat-main">
+  <div class="cat-results">
+    <div class="cat-results-count" id="cat-results-count">${_total} formation${'s' if _total > 1 else ''} <span>disponible${'s' if _total > 1 else ''}</span></div>
+  </div>
+
+  <div class="cat-grid" id="cat-grid">
+    % for c in _courses:
+    <a class="cat-card" data-cat="${c['domain_key']}" data-search="${c['name'].lower()} ${c['org'].lower()} ${c['domain_label'].lower()}" href="${c['about_url']}">
+      <div class="cat-card-img">
+        <img src="${c['image_url']}" alt="${c['name']}" loading="lazy">
+        <div class="cat-card-badge ${c['domain_key']}">${c['domain_label']}</div>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-org">${c['org']} · ${c['course_key'][:30]}</div>
+        <div class="cat-card-title">${c['name']}</div>
+        <div class="cat-card-meta">
+          <div class="cat-card-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${c['enrolled_count']} inscrits</div>
+          % if c['start_date']:
+          <div class="cat-card-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${c['start_date']}</div>
+          % endif
+        </div>
+        <div class="cat-card-footer">
+          <div style="font-size:11px;color:var(--gris2)">${c['domain_label']}</div>
+          % if c['is_enrolled']:
+          <span class="cat-card-btn enrolled">Inscrit</span>
+          % else:
+          <span class="cat-card-btn">S'inscrire</span>
+          % endif
+        </div>
+      </div>
+    </a>
+    % endfor
+
+    % if not _courses:
+    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--gris2)">
+      <div style="font-family:var(--heading);font-size:18px;font-weight:700;color:var(--dark);margin-bottom:8px">Aucune formation disponible</div>
+      <p>Les formations seront bientot publiees. Revenez prochainement.</p>
+    </div>
+    % endif
+  </div>
+</div>
+
+<script>
+function filterByCat(btn){
+  document.querySelectorAll('.fil').forEach(function(f){f.classList.remove('on');});
+  btn.classList.add('on');
+  var cat=btn.getAttribute('data-cat');
+  var cards=document.querySelectorAll('.cat-card');
+  var count=0;
+  cards.forEach(function(card){
+    if(cat==='all'||card.getAttribute('data-cat')===cat){card.style.display='';count++;}
+    else{card.style.display='none';}
+  });
+  document.getElementById('cat-results-count').innerHTML=count+' formation'+(count>1?'s':'')+' <span>disponible'+(count>1?'s':'')+'</span>';
+}
+function filterCatalogue(){
+  var q=document.getElementById('cat-search').value.toLowerCase();
+  var cards=document.querySelectorAll('.cat-card');
+  var count=0;
+  cards.forEach(function(card){
+    if(!q||card.dataset.search.indexOf(q)!==-1){card.style.display='';count++;}
+    else{card.style.display='none';}
+  });
+  document.getElementById('cat-results-count').innerHTML=count+' formation'+(count>1?'s':'')+' <span>disponible'+(count>1?'s':'')+'</span>';
+  document.querySelectorAll('.fil').forEach(function(f){f.classList.remove('on');});
+  document.querySelector('.fil[data-cat="all"]').classList.add('on');
+}
+</script>
+</%block>

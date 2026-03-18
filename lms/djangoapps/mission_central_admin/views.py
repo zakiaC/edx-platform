@@ -1126,6 +1126,100 @@ def aide_view(request):
     return render_to_response("aide/index.html", {"dashboard_url": "/dashboard"})
 
 
+def catalogue_view(request):
+    """Catalogue des formations — page publique avec filtres et cartes cours."""
+    courses_qs = CourseOverview.objects.filter(
+        catalog_visibility="both",
+    ).order_by("-start")[:50]
+
+    # Images par defaut par domaine
+    domain_images = {
+        "vtc": "https://images.unsplash.com/photo-1449965408869-ebd13bc9e5c8?w=400&h=280&fit=crop",
+        "ia": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=280&fit=crop",
+        "mgmt": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=280&fit=crop",
+        "rh": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=280&fit=crop",
+        "digital": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=280&fit=crop",
+        "vente": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=280&fit=crop",
+        "finance": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=280&fit=crop",
+        "comm": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=280&fit=crop",
+        "devperso": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=280&fit=crop",
+        "git": "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=280&fit=crop",
+    }
+
+    def _detect_domain(name):
+        n = (name or "").lower()
+        if "vtc" in n or "chauffeur" in n or "transport" in n:
+            return "vtc", "VTC"
+        if "ia" in n or "intelligence" in n or "chatgpt" in n or "claude" in n:
+            return "ia", "IA"
+        if "management" in n or "leadership" in n or "manager" in n:
+            return "mgmt", "Management"
+        if "rh" in n or "ressource" in n or "humain" in n:
+            return "rh", "RH"
+        if "bureautique" in n or "excel" in n or "digital" in n or "word" in n:
+            return "digital", "Bureautique"
+        if "vente" in n or "commercial" in n or "negociation" in n:
+            return "vente", "Vente"
+        if "finance" in n or "compta" in n or "gestion" in n:
+            return "finance", "Finance"
+        if "communication" in n:
+            return "comm", "Communication"
+        if "dev" in n and "perso" in n:
+            return "devperso", "Dev. perso"
+        if "git" in n or "devops" in n:
+            return "git", "DevOps"
+        return "vtc", "Formation"
+
+    courses = []
+    domain_counts = {}
+    for co in courses_qs:
+        name = getattr(co, "display_name_with_default", "") or str(co.id)
+        org = getattr(co, "org", "") or ""
+        course_key = str(co.id)
+        domain_key, domain_label = _detect_domain(name)
+
+        domain_counts[domain_key] = domain_counts.get(domain_key, 0) + 1
+
+        enrolled = CourseEnrollment.objects.filter(
+            course_id=co.id, is_active=True,
+            user__is_staff=False, user__is_superuser=False,
+        ).count()
+
+        # Verifier si l'utilisateur est inscrit
+        is_enrolled = False
+        if hasattr(request, "user") and request.user.is_authenticated:
+            is_enrolled = CourseEnrollment.objects.filter(
+                course_id=co.id, user=request.user, is_active=True,
+            ).exists()
+
+        start_date = co.start.strftime("%d %b %Y") if co.start else ""
+        image_url = domain_images.get(domain_key, domain_images["vtc"])
+        # Utiliser l'image du cours si disponible
+        if co.course_image_url and "asset" in str(co.course_image_url):
+            image_url = co.course_image_url
+
+        courses.append({
+            "course_key": course_key,
+            "name": name,
+            "org": org,
+            "domain_key": domain_key,
+            "domain_label": domain_label,
+            "enrolled_count": enrolled,
+            "is_enrolled": is_enrolled,
+            "start_date": start_date,
+            "image_url": image_url,
+            "about_url": f"/courses/{course_key}/about",
+        })
+
+    context = {
+        "courses": courses,
+        "total_courses": len(courses),
+        "domain_counts": domain_counts,
+        "total_domains": len(domain_counts),
+    }
+    return render_to_response("catalogue/index.html", context)
+
+
 # ── RAPPORTS PDF ────────────────────────────────────────────────────────────
 
 @login_required
