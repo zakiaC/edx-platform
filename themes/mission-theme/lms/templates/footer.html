@@ -165,15 +165,13 @@
         <span class="mf-footer-brand-text">Académie Mission<span>Formations</span></span>
       </a>
 
-      <nav aria-label="${_('About')}">
+      <nav aria-label="Navigation">
         <ul class="mf-footer-nav">
-          % for link in footer['navigation_links']:
-            <% link_url = link['url'] %>
-            % if (link.get('name') or '').lower() == 'contact' or 'contact' in (link.get('title') or '').lower():
-              <% link_url = 'mailto:contact@missionformations.com' %>
-            % endif
-            <li><a id="${link['name']}" href="${link_url}">${link['title']}</a></li>
-          % endfor
+          <li><a href="/about">Qui sommes-nous</a></li>
+          <li><a href="/tos">Conditions generales</a></li>
+          <li><a href="/privacy">Confidentialite</a></li>
+          <li><a href="/aide/">Centre d'aide</a></li>
+          <li><a href="/contact/">Contact</a></li>
         </ul>
       </nav>
     </div>
