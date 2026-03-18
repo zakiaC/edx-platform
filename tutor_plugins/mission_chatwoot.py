@@ -24,7 +24,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 hooks.Filters.CONFIG_DEFAULTS.add_items(
     [
         ("CHATWOOT_HOST", "chat.staging.missionformations.com"),
-        ("CHATWOOT_DOCKER_HOST", "172.17.0.1"),
+        ("CHATWOOT_DOCKER_HOST", "chatwoot-rails"),
         ("CHATWOOT_WEBSITE_TOKEN", "o1xopqgYNv1n8VHEbEHcNGdR"),
         ("CHATWOOT_BASE_URL", "https://chat.staging.missionformations.com"),
     ]
