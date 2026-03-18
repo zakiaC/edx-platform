@@ -234,6 +234,17 @@
 <style>
   /* WeWill bubble position — bas droite, au-dessus du footer */
   .woot-widget-bubble { z-index: 1100 !important; }
+  /* Masquer le branding Chatwoot et afficher WeWill */
+  .branding--link, a[href*="chatwoot.com"] { visibility: hidden !important; position: relative !important; }
+  .branding--link::after, a[href*="chatwoot.com"]::after {
+    content: "Propulse par WeWill";
+    visibility: visible;
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: inherit; color: inherit; text-decoration: none;
+    pointer-events: none;
+  }
 </style>
 % if footer_css_urls:
   % for url in footer_css_urls:
