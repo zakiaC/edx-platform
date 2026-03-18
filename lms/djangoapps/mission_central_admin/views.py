@@ -1126,6 +1126,11 @@ def aide_view(request):
     return render_to_response("aide/index.html", {"dashboard_url": "/dashboard"})
 
 
+def courses_redirect(request):
+    """Redirige /courses vers /catalogue/ (page custom Mission Formations)."""
+    return redirect("/catalogue/")
+
+
 def catalogue_view(request):
     """Catalogue des formations — page publique avec filtres et cartes cours."""
     courses_qs = CourseOverview.objects.filter(

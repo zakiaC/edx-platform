@@ -17,6 +17,7 @@ urlpatterns = [
     path("admin/mission-dashboard/users/delete/", views.delete_user, name="mission-delete-user"),
     # Catalogue
     path("catalogue/", views.catalogue_view, name="mission-catalogue"),
+    path("courses", views.courses_redirect, name="mission-courses-redirect"),
     # Rapports PDF
     path("api/admin/pdf/attestation/", views.pdf_attestation, name="mission-pdf-attestation"),
     path("api/admin/pdf/rapport-suivi/", views.pdf_rapport_suivi, name="mission-pdf-rapport-suivi"),
