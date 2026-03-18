@@ -215,28 +215,6 @@
   <%include file="widgets/segment-io.html" />
   <%include file="widgets/segment-io-footer.html" />
 % endif
-
-## Chatwoot — widget de chat sur toutes les pages
-<script>
-  (function(d,t) {
-    var BASE_URL="https://chat.staging.missionformations.com";
-    var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.src=BASE_URL+"/packs/js/sdk.js";
-    g.defer = true;
-    g.async = true;
-    s.parentNode.insertBefore(g,s);
-    g.onload=function(){
-      window.chatwootSDK.run({
-        websiteToken: 'o1xopqgYNv1n8VHEbEHcNGdR',
-        baseUrl: BASE_URL
-      })
-    }
-  })(document,"script");
-</script>
-<style>
-  /* Chatwoot bubble position — bas droite, au-dessus du footer */
-  .woot-widget-bubble { z-index: 1100 !important; }
-</style>
 % if footer_css_urls:
   % for url in footer_css_urls:
     <link rel="stylesheet" type="text/css" href="${url}"></link>
