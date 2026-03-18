@@ -192,7 +192,105 @@
 
 ---
 
-## RESUME QUANTITATIF
+## 13. DASHBOARDS A REPRENDRE
+
+### Dashboard admin (`/admin/mission-dashboard/`)
+
+| # | Element | Etat actuel | A faire |
+|---|---------|-------------|---------|
+| 13.1 | Overview — KPIs hero | Apprenants + formateurs reels, CA hardcode | Connecter le CA a Odoo ou ecommerce |
+| 13.2 | Overview — Graphique revenus mensuels | Hardcode (6 barres statiques) | Connecter ou supprimer |
+| 13.3 | Overview — Donut repartition academies | Donnees reelles | OK |
+| 13.4 | Overview — Inscriptions recentes | Donnees reelles | OK |
+| 13.5 | Overview — Activite recente | Donnees reelles | OK |
+| 13.6 | Analytics — 4 KPIs | Hardcode (156, 78%, 4.2h, 4.5/5) | Connecter aux vrais donnees |
+| 13.7 | Analytics — Graphique inscriptions | Hardcode | Connecter |
+| 13.8 | Analytics — Taux completion par formation | Hardcode | Connecter |
+| 13.9 | Planning — Calendrier | Hardcode (fevrier 2026 statique) | Connecter aux dates des cours |
+| 13.10 | Revenus — KPIs + transactions | Tout hardcode | Connecter a Odoo/ecommerce |
+| 13.11 | Frais formateurs — Tableau | Tout hardcode | Creer le modele + interface |
+| 13.12 | Factures — Tableau | Tout hardcode | Creer le modele + interface |
+| 13.13 | Parametres — Formulaire | Tout hardcode | Implementer les vrais settings |
+| 13.14 | Design global admin | Fonctionnel mais a affiner | Revoir selon wireframe final |
+
+### Dashboard apprenant (`/dashboard`)
+
+| # | Element | Etat actuel | A faire |
+|---|---------|-------------|---------|
+| 13.15 | Hero progress rings | Fonctionnel (VTC + IT) | Dynamiser pour toutes les academies |
+| 13.16 | Recommandations | 3 cartes hardcodees | Algorithme de recommandation (basé sur academie/progression) |
+| 13.17 | Stats (5 KPIs) | Partiellement connecte | Connecter Modules OK, Taux reussite |
+| 13.18 | Evenements a venir | 3 events hardcodes | Connecter aux dates des cours |
+| 13.19 | Activite hebdomadaire | Barres placeholder | Connecter aux logs de connexion |
+| 13.20 | Badges | 6 badges hardcodes | Connecter au systeme de badges OpenEdX |
+| 13.21 | Section "Mes Academies" | N'existe pas | Creer (Sprint 4.2) |
+| 13.22 | Design dashboard apprenant wireframe | Design MF actuel (different du wireframe v3) | Aligner sur le wireframe si requis |
+
+### Dashboard formateur (`/dashboard` quand is_staff)
+
+| # | Element | Etat actuel | A faire |
+|---|---------|-------------|---------|
+| 13.23 | Sidebar formateur | Fonctionnel | Revoir les liens et onglets |
+| 13.24 | Stats formateur (4 KPIs) | Donnees partielles | Connecter apprenants actifs, taux completion |
+| 13.25 | Actions rapides | 4 boutons | Verifier que les liens fonctionnent |
+| 13.26 | Formations vendues | Tableau reel | OK |
+| 13.27 | Apprenants recents | Tableau reel | OK |
+| 13.28 | Calendrier formateur | Hardcode | Connecter aux dates des cours |
+| 13.29 | Activite recente formateur | Donnees reelles | OK |
+| 13.30 | Acces aux rapports PDF Qualiopi | N'existe pas | Ajouter boutons attestation + suivi |
+
+---
+
+## 14. CUSTOMISATION STUDIO
+
+| # | Element | Etat actuel | A faire |
+|---|---------|-------------|---------|
+| 14.1 | Footer Studio | Customise (liens MF) | OK |
+| 14.2 | Header Studio | Natif OpenEdX | Customiser avec branding MF |
+| 14.3 | Page d'accueil Studio | Natif | Customiser (logo, couleurs, textes FR) |
+| 14.4 | Sidebar Studio | Natif | Evaluer si customisation necessaire |
+| 14.5 | Page creation de cours | Natif | Ajouter les organisations MF dans le dropdown |
+| 14.6 | Templates d'email Studio | Natif | Brander avec design Mission |
+| 14.7 | Page parametres cours (Schedule & Details) | Natif | Verifier traduction FR |
+| 14.8 | Widgets user_dropdown Studio | Customise (liens) | Verifier |
+
+---
+
+## 15. ESPACE FORMATEUR (vue dedicee)
+
+| # | Element | A faire |
+|---|---------|---------|
+| 15.1 | Dashboard formateur dedie (pas le meme que admin) | Affiner le template _mf_dashboard_formateur.html |
+| 15.2 | Vue "Mes formations" pour le formateur | Liste des cours ou il est instructor |
+| 15.3 | Vue "Mes apprenants" pour le formateur | Liste des inscrits dans ses cours |
+| 15.4 | Acces Qualiopi formateur | Boutons attestation, emargement, eval pre/post |
+| 15.5 | Acces Studio depuis le dashboard formateur | Lien direct vers ses cours dans Studio |
+| 15.6 | Messagerie interne formateur | Deja fait (/messagerie/interne/) — verifier acces |
+| 15.7 | Notifications formateur | Deja fait (/notifications/interne/) — verifier acces |
+| 15.8 | Export resultats formateur | Bouton CSV des notes de ses apprenants |
+
+---
+
+## RESUME QUANTITATIF (mis a jour)
+
+| Categorie | A faire | Fait | Total |
+|-----------|---------|------|-------|
+| Certificats | 6 | 0 | 6 |
+| Pages theme | 3 | 16 | 19 |
+| Cahier des charges | 10 | 8 | 18 |
+| Infra/Ops | 7 | 3 | 10 |
+| Corrections | 7 | 0 | 7 |
+| Dashboard admin | 10 | 4 | 14 |
+| Dashboard apprenant | 7 | 3 | 10 |
+| Dashboard formateur | 8 | 2 | 10 |
+| Customisation Studio | 6 | 2 | 8 |
+| Pages publiques | 2 | 9 | 11 |
+| Securite | 4 | 1 | 5 |
+| Tests | 7 | 178 | 185 |
+| Documentation | 5 | 10+ | 15+ |
+| **TOTAL** | **~82 taches** | **~236 faits** | **~318** |
+
+**Estimation effort restant : ~120-150h de travail**
 
 | Categorie | A faire | Fait | Total |
 |-----------|---------|------|-------|
