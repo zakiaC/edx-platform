@@ -24,8 +24,8 @@ hooks.Filters.ENV_PATCHES.add_item(
 hooks.Filters.CONFIG_DEFAULTS.add_items(
     [
         ("WEWILL_HOST", "chat.staging.missionformations.com"),
-        ("WEWILL_DOCKER_HOST", "wewill-rails"),
-        ("WEWILL_WEBSITE_TOKEN", "o1xopqgYNv1n8VHEbEHcNGdR"),
+        ("WEWILL_DOCKER_HOST", "chatwoot-rails"),
+        ("WEWILL_WEBSITE_TOKEN", "1Gbhd1RGnJ9kTaWHcPUeDmDf"),
         ("WEWILL_BASE_URL", "https://chat.staging.missionformations.com"),
     ]
 )
