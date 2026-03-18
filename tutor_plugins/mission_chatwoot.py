@@ -11,7 +11,7 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "caddyfile",
         """
-chat.{{ LMS_HOST }} {
+{{ CHATWOOT_HOST }} {
     reverse_proxy {{ CHATWOOT_DOCKER_HOST }}:3000 {
         header_up Host {host}
     }
@@ -23,8 +23,9 @@ chat.{{ LMS_HOST }} {
 # Variables de configuration
 hooks.Filters.CONFIG_DEFAULTS.add_items(
     [
+        ("CHATWOOT_HOST", "chat.staging.missionformations.com"),
         ("CHATWOOT_DOCKER_HOST", "172.17.0.1"),
         ("CHATWOOT_WEBSITE_TOKEN", "o1xopqgYNv1n8VHEbEHcNGdR"),
-        ("CHATWOOT_BASE_URL", "https://chat.{{ LMS_HOST }}"),
+        ("CHATWOOT_BASE_URL", "https://chat.staging.missionformations.com"),
     ]
 )
