@@ -460,6 +460,6 @@ MFE_CONFIG["PARAGON_THEME_URLS"] = {"variants": {"light": {"urls": {"default": "
 
 
 MFE_CONFIG['INDIGO_ENABLE_DARK_TOGGLE'] = True
-MFE_CONFIG['INDIGO_FOOTER_NAV_LINKS'] = [{'title': 'Qui sommes-nous', 'url': '/about'}, {'title': 'Conditions generales', 'url': '/tos'}, {'title': 'Confidentialite', 'url': '/privacy'}, {'title': "Centre d'aide", 'url': '/aide/'}, {'title': 'Contact', 'url': '/contact/'}]
+MFE_CONFIG['INDIGO_FOOTER_NAV_LINKS'] = [{'title': 'Qui sommes-nous', 'url': 'https://missionformations.com/a-propos/qui-sommes-nous/'}, {'title': 'Catalogue', 'url': '/catalogue/'}, {'title': "Centre d'aide", 'url': '/aide/'}, {'title': 'Contact', 'url': '/contact/'}, {'title': 'CGU / CGV', 'url': 'https://missionformations.com/mission-formation-cgu-cgv/'}, {'title': 'Mentions legales', 'url': 'https://missionformations.com/mentions-legales/'}]
 
 PIPELINE['JS_COMPRESSOR'] = None
