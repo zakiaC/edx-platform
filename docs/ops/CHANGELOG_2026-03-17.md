@@ -61,8 +61,8 @@
 
 | Commit | Description |
 |--------|-------------|
-| `17c1ed59` | feat(chat): Chatwoot self-hosted configure — token + baseUrl |
-| `489d404a` | feat(chat): integrer Chatwoot sur toutes les pages du LMS |
+| `17c1ed59` | feat(chat): WeWill self-hosted configure — token + baseUrl |
+| `489d404a` | feat(chat): integrer WeWill sur toutes les pages du LMS |
 | `8873436c` | fix(aide): remplacer fleches HTML par SVG anti-pixelisation |
 | `439b1d02` | feat(tests): +30 tests — Aide, Academy Manager, delete user |
 | `d596dc33` | feat(aide): Centre d'aide complet — 8 guides + FAQ 9 questions |
@@ -81,10 +81,10 @@
 | 12 academies en BDD (11 MF + 1 B2B test) | Creees |
 | Plugin discovery | Active |
 | Plugin credentials | Active |
-| Chatwoot self-hosted | 4 containers Docker (rails, sidekiq, postgres, redis) |
-| Chatwoot token | o1xopqgYNv1n8VHEbEHcNGdR |
-| Chatwoot admin | chat.staging.missionformations.com |
-| Chatwoot DNS | A ajouter: chat.staging A 89.167.50.194 |
+| WeWill self-hosted | 4 containers Docker (rails, sidekiq, postgres, redis) |
+| WeWill token | o1xopqgYNv1n8VHEbEHcNGdR |
+| WeWill admin | chat.staging.missionformations.com |
+| WeWill DNS | A ajouter: chat.staging A 89.167.50.194 |
 | Centre d'aide | /aide/ — 8 guides + FAQ 9 questions |
 | Tests | 164 tests (+ 30 nouveaux) |
 

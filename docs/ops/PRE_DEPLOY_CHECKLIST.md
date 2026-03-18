@@ -129,9 +129,9 @@
 - [ ] **Rotation des secrets** (JWT, Meilisearch) car exposés dans l'historique git
 - [ ] **Tester le login/register** sur le thème Mission
 - [ ] **Vérifier les MFE** (account, discussions, learning, authoring)
-- [ ] **Verifier Chatwoot** :
+- [ ] **Verifier WeWill** :
   ```bash
-  docker ps --filter name=chatwoot --format '{{.Names}} {{.Status}}'
+  docker ps --filter name=wewill --format '{{.Names}} {{.Status}}'
   ```
 - [ ] **Monitorer les logs** pendant 30 min :
   ```bash
@@ -154,16 +154,16 @@
 Fichiers a modifier :
 - [ ] `tutor-patches/lms-production.py`
 - [ ] `tutor-patches/cms-production.py`
-- [ ] `themes/mission-theme/lms/templates/footer.html` (Chatwoot baseUrl)
-- [ ] `/root/chatwoot/.env` (FRONTEND_URL)
+- [ ] `themes/mission-theme/lms/templates/footer.html` (WeWill baseUrl)
+- [ ] `/root/wewill/.env` (FRONTEND_URL)
 - [ ] Caddyfile (domaines)
 - [ ] DNS OVH (A records)
 - [ ] Certificat SSL (Let's Encrypt pour les nouveaux domaines)
 
-Chatwoot :
+WeWill :
 - [ ] Le token widget reste le meme
-- [ ] Copier les volumes Docker (chatwoot-pg-data) si changement de serveur
-- [ ] Documentation complete : `docs/ops/CHATWOOT.md`
+- [ ] Copier les volumes Docker (wewill-pg-data) si changement de serveur
+- [ ] Documentation complete : `docs/ops/WEWILL.md`
 
 ---
 
@@ -177,4 +177,4 @@ Chatwoot :
 | `git pull` bloque | Fichiers modifies localement | `git stash && git pull && git stash pop` |
 | MySQL down | OOM ou disque plein | `docker restart tutor_local-mysql-1` puis verifier RAM/disque |
 | Widget chat absent | DNS pas propage ou Caddy pas reload | Verifier DNS + reload Caddy |
-| Chatwoot admin inaccessible | Container rails down | `cd /root/chatwoot && docker compose up -d` |
+| WeWill admin inaccessible | Container rails down | `cd /root/wewill && docker compose up -d` |

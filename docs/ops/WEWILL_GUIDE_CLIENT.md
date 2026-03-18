@@ -1,4 +1,4 @@
-# Guide Chatwoot — Clients et Apprenants
+# Guide WeWill — Clients et Apprenants
 
 > Documentation pour les clients B2B et les apprenants de l'Academie Mission Formations.
 > Le widget de chat est accessible sur toutes les pages de la plateforme.

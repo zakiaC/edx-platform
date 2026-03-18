@@ -1,4 +1,4 @@
-# Guide Chatwoot — Equipe Mission Formations
+# Guide WeWill — Equipe Mission Formations
 
 > Documentation pour l'equipe interne : gestion des conversations,
 > parametrage, agents, automatisations et reporting.
@@ -122,7 +122,7 @@ Creer des equipes pour organiser les agents par competence :
 1. **Parametres** → **Inboxes** → **Ajouter**
 2. Type : **Email**
 3. Configurer le SMTP/IMAP avec votre serveur mail
-4. Les emails entrants deviennent des conversations Chatwoot
+4. Les emails entrants deviennent des conversations WeWill
 
 ### Ajouter un canal WhatsApp (optionnel)
 
@@ -268,7 +268,7 @@ Dans une conversation, taper `@prenom` pour mentionner un collegue. Il recevra u
 |-------------|-------|---------------|
 | **Slack** | Recevoir les conversations dans un channel Slack | Parametres → Integrations → Slack |
 | **Webhooks** | Envoyer les evenements a une URL | Parametres → Integrations → Webhooks |
-| **API REST** | Automatiser la creation de contacts/conversations | Documentation API Chatwoot |
+| **API REST** | Automatiser la creation de contacts/conversations | Documentation API WeWill |
 | **Odoo** (futur) | Creer un lead Odoo a chaque nouvelle conversation | Via webhook → API Odoo |
 
 ---

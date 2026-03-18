@@ -216,7 +216,7 @@
   <%include file="widgets/segment-io-footer.html" />
 % endif
 
-## Chatwoot — widget de chat sur toutes les pages
+## WeWill — widget de chat sur toutes les pages
 <script>
   (function(d,t) {
     var BASE_URL="https://chat.staging.missionformations.com";
@@ -226,7 +226,7 @@
     g.async = true;
     s.parentNode.insertBefore(g,s);
     g.onload=function(){
-      window.chatwootSDK.run({
+      window.wewillSDK.run({
         websiteToken: 'o1xopqgYNv1n8VHEbEHcNGdR',
         baseUrl: BASE_URL
       })
@@ -234,7 +234,7 @@
   })(document,"script");
 </script>
 <style>
-  /* Chatwoot bubble position — bas droite, au-dessus du footer */
+  /* WeWill bubble position — bas droite, au-dessus du footer */
   .woot-widget-bubble { z-index: 1100 !important; }
 </style>
 % if footer_css_urls:
