@@ -57,6 +57,18 @@
 | **Sprint 4** — Pages publiques + B2B | A faire | Page /academie/{slug}/, portail RH, middleware sous-domaine |
 | **Sprint 5** — Contenu + Go Live | A faire | Import cours, tests utilisateurs, deploiement prod |
 
+## Session 18 mars 2026
+
+| Commit | Description |
+|--------|-------------|
+| `17c1ed59` | feat(chat): Chatwoot self-hosted configure — token + baseUrl |
+| `489d404a` | feat(chat): integrer Chatwoot sur toutes les pages du LMS |
+| `8873436c` | fix(aide): remplacer fleches HTML par SVG anti-pixelisation |
+| `439b1d02` | feat(tests): +30 tests — Aide, Academy Manager, delete user |
+| `d596dc33` | feat(aide): Centre d'aide complet — 8 guides + FAQ 9 questions |
+| `63917bb6` | docs: changelog 17 mars, CLAUDE.md bilan sprints 1-3 |
+| `7522f003` | fix(mako): <%page args> stable prod pour tous les templates |
+
 ## Infrastructure
 
 | Element | Statut |
@@ -69,6 +81,12 @@
 | 12 academies en BDD (11 MF + 1 B2B test) | Creees |
 | Plugin discovery | Active |
 | Plugin credentials | Active |
+| Chatwoot self-hosted | 4 containers Docker (rails, sidekiq, postgres, redis) |
+| Chatwoot token | o1xopqgYNv1n8VHEbEHcNGdR |
+| Chatwoot admin | chat.staging.missionformations.com |
+| Chatwoot DNS | A ajouter: chat.staging A 89.167.50.194 |
+| Centre d'aide | /aide/ — 8 guides + FAQ 9 questions |
+| Tests | 164 tests (+ 30 nouveaux) |
 
 ## Bugs corriges en production (session 16-17 mars)
 

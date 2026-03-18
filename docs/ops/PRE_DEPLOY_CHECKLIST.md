@@ -129,10 +129,41 @@
 - [ ] **Rotation des secrets** (JWT, Meilisearch) car exposés dans l'historique git
 - [ ] **Tester le login/register** sur le thème Mission
 - [ ] **Vérifier les MFE** (account, discussions, learning, authoring)
+- [ ] **Verifier Chatwoot** :
+  ```bash
+  docker ps --filter name=chatwoot --format '{{.Names}} {{.Status}}'
+  ```
 - [ ] **Monitorer les logs** pendant 30 min :
   ```bash
   ssh staging-openedx "docker logs tutor_local-lms-1 --follow --tail 20"
   ```
+
+---
+
+## 9. Migration staging → production
+
+> Rechercher/remplacer global dans 3 fichiers :
+
+| Staging | Production |
+|---------|-----------|
+| `academie.staging.missionformations.com` | `academie.missionformations.com` |
+| `studio.staging.missionformations.com` | `studio.missionformations.com` |
+| `chat.staging.missionformations.com` | `chat.missionformations.com` |
+| `apps.academie.staging.missionformations.com` | `apps.academie.missionformations.com` |
+
+Fichiers a modifier :
+- [ ] `tutor-patches/lms-production.py`
+- [ ] `tutor-patches/cms-production.py`
+- [ ] `themes/mission-theme/lms/templates/footer.html` (Chatwoot baseUrl)
+- [ ] `/root/chatwoot/.env` (FRONTEND_URL)
+- [ ] Caddyfile (domaines)
+- [ ] DNS OVH (A records)
+- [ ] Certificat SSL (Let's Encrypt pour les nouveaux domaines)
+
+Chatwoot :
+- [ ] Le token widget reste le meme
+- [ ] Copier les volumes Docker (chatwoot-pg-data) si changement de serveur
+- [ ] Documentation complete : `docs/ops/CHATWOOT.md`
 
 ---
 
@@ -145,3 +176,5 @@
 | Page 404 apres deploy | Code non synce dans le container | `./deploy.sh staging` (inclut docker cp) |
 | `git pull` bloque | Fichiers modifies localement | `git stash && git pull && git stash pop` |
 | MySQL down | OOM ou disque plein | `docker restart tutor_local-mysql-1` puis verifier RAM/disque |
+| Widget chat absent | DNS pas propage ou Caddy pas reload | Verifier DNS + reload Caddy |
+| Chatwoot admin inaccessible | Container rails down | `cd /root/chatwoot && docker compose up -d` |
