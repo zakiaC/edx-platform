@@ -79,10 +79,44 @@ window.chatwootSDK.run({
 chat.staging.missionformations.com    A    89.167.50.194    TTL 60
 ```
 
-## Limitations actuelles (raisons du fork)
+## Branding WeWill (corrige le 20 mars 2026)
 
-1. **Branding "Propulse par Chatwoot"** visible dans le widget (iframe, non modifiable en CSS)
-2. **Messages d'erreur en anglais** (ex: mot de passe sans caractere special)
-3. **Interface admin non rebrandee** (logo et nom Chatwoot partout)
-4. **Dependance Docker Hub** (image chatwoot/chatwoot:latest)
-5. **Pas de customisation fonctionnelle** possible sans fork
+Corrections appliquees directement sur le serveur (sans fork) :
+
+| Config | Valeur |
+|--------|--------|
+| INSTALLATION_NAME | WeWill |
+| BRAND_NAME | WeWill |
+| WIDGET_BRAND_URL | https://www.missionformations.com |
+| LOGO_THUMBNAIL | /brand-assets/logo_thumbnail.png (logo Mission Formations) |
+
+Methode : `docker exec chatwoot-rails bundle exec rails runner` pour modifier
+les valeurs dans la table `installation_configs` de PostgreSQL.
+
+Le widget affiche desormais **"Powered by WeWill"** avec un lien vers missionformations.com.
+
+> **Attention** : le logo copie dans le container (`docker cp`) sera perdu au prochain
+> `docker compose pull`. Pour le rendre persistant, monter un volume :
+> `- ./brand-assets:/app/public/brand-assets` dans docker-compose.yaml.
+
+## Limitations restantes
+
+1. **Messages d'erreur en anglais** (ex: mot de passe sans caractere special)
+2. **Interface admin partiellement rebrandee** (nom WeWill OK, mais certains textes restent en anglais)
+3. **Dependance Docker Hub** (image chatwoot/chatwoot:latest)
+4. **Logo perdu au prochain pull** (voir note ci-dessus)
+
+## Tests a creer
+
+| # | Test | Type | Statut |
+|---|------|------|--------|
+| T-CW-01 | Verifier que le widget affiche "Powered by WeWill" (pas Chatwoot) | Manuel | A verifier |
+| T-CW-02 | Verifier que le lien pointe vers missionformations.com (pas chatwoot.com) | Manuel | A verifier |
+| T-CW-03 | Verifier que le logo Mission Formations s'affiche dans le widget | Manuel | A verifier |
+| T-CW-04 | Verifier que le logo persiste apres un `docker compose pull` | Manuel | A faire (volume) |
+| T-CW-05 | Tester une conversation complete (visiteur → agent → reponse) | Manuel | A verifier |
+| T-CW-06 | Tester la notification email quand un agent est absent | Manuel | A verifier |
+| T-CW-07 | Verifier l'identification de l'apprenant connecte (email, nom) dans le chat | Manuel | A verifier |
+| T-CW-08 | Tester le formulaire hors-ligne (aucun agent connecte) | Manuel | A verifier |
+| T-CW-09 | Verifier le branding dans l'interface admin (chat.staging.missionformations.com) | Manuel | A verifier |
+| T-CW-10 | Test de charge : 10 conversations simultanees | Manuel | A faire |
