@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Forum — Académie Mission Formations</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;900&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;
+  --vert:#01E8AE;--vert2:#00c494;--vert-pale:#e6faf4;
+  --dark:#0a1628;--dark2:#0f1f3a;--dark3:#162d50;
+  --noir:#3B3B3B;--gris:#6b6b6b;--gris2:#999;--gris3:#ccc;--gris4:#e8e8e8;
+  --fond:#f5f7fa;--blanc:#fff;
+  --rouge:#e74c3c;--orange:#e67e22;--jaune:#f1c40f;--violet:#8e44ad;
+  --gradient:linear-gradient(135deg,#0965D0,#01E8AE);
+  --h:'Ubuntu',sans-serif;--b:'Raleway',sans-serif;--m:'JetBrains Mono',monospace;
+  --r:12px;--rs:8px;
+}
+body{font-family:var(--b);color:var(--noir);background:#1a1e2e;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* === SELECTOR === */
+.sel{position:sticky;top:0;z-index:200;background:var(--dark);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.04);overflow-x:auto}
+.sel-logo{width:28px;height:28px;background:var(--gradient);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:14px;font-weight:900;color:#fff;flex-shrink:0}
+.sel-title{font-family:var(--h);font-size:11px;font-weight:700;color:#fff;margin-right:8px;white-space:nowrap}
+.sel-title span{display:block;font-size:9px;color:rgba(255,255,255,.2);font-weight:400}
+.st{padding:5px 12px;border-radius:6px;font-family:var(--h);font-size:9px;font-weight:700;color:rgba(255,255,255,.35);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.st:hover{color:#fff;background:rgba(255,255,255,.07)}
+.st.a{color:var(--vert);background:rgba(1,232,174,.1);border-color:rgba(1,232,174,.18)}
+
+/* === PAGE FRAME === */
+.pf{max-width:1100px;margin:20px auto;background:var(--blanc);border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);display:none}
+.pf.a{display:block}
+.pf-bar{background:var(--dark);padding:6px 14px;font-family:var(--m);font-size:9px;color:rgba(255,255,255,.25);display:flex;align-items:center;gap:6px}
+.pf-bar .d{width:7px;height:7px;border-radius:50%}
+.pf-bar .url{flex:1;text-align:center;color:rgba(255,255,255,.4)}
+
+/* === HEADER === */
+.hd{background:var(--dark);height:50px;display:flex;align-items:center;padding:0 20px;gap:12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.hd-logo{width:28px;height:28px;background:var(--gradient);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:14px;font-weight:900;color:#fff}
+.hd-brand{font-family:var(--h);font-size:12px;font-weight:700;color:#fff}
+.hd-brand span{color:rgba(255,255,255,.2);font-size:9px;margin-left:4px;font-weight:400}
+.hd-nav{margin-left:auto;display:flex;gap:2px}
+.hd-nav a{font-family:var(--h);font-size:10px;font-weight:600;color:rgba(255,255,255,.35);padding:5px 12px;border-radius:6px;text-decoration:none;transition:all .12s}
+.hd-nav a:hover{color:#fff;background:rgba(255,255,255,.05)}
+.hd-nav a.a{color:var(--vert);background:rgba(1,232,174,.07)}
+.hd-avatar{width:26px;height:26px;border-radius:7px;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:10px;font-weight:700;color:#fff;margin-left:10px}
+
+/* === COURSE NAV === */
+.cn{display:flex;background:var(--blanc);border-bottom:2px solid var(--gris4);padding:0 20px;gap:2px;overflow-x:auto}
+.cn a{font-family:var(--h);font-size:10px;font-weight:700;color:var(--gris2);padding:10px 14px;text-decoration:none;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .12s;white-space:nowrap}
+.cn a:hover{color:var(--bleu);background:var(--bleu-pale);border-radius:6px 6px 0 0}
+.cn a.a{color:var(--bleu);border-bottom-color:var(--bleu)}
+
+/* === CONTENT === */
+.ct{padding:20px;background:var(--fond);min-height:400px}
+
+/* === SHARED === */
+.btn-p{background:var(--gradient);border:none;border-radius:10px;font-family:var(--h);font-size:11px;font-weight:700;color:#fff;padding:9px 20px;cursor:pointer;box-shadow:0 4px 14px rgba(9,101,208,.16);transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(9,101,208,.25)}
+.btn-s{background:var(--blanc);border:1px solid var(--gris4);border-radius:10px;font-family:var(--h);font-size:11px;font-weight:700;color:var(--bleu);padding:9px 20px;cursor:pointer;transition:all .12s}
+.btn-s:hover{background:var(--bleu-pale);border-color:rgba(9,101,208,.12)}
+.inp{width:100%;border:1px solid var(--gris4);border-radius:var(--rs);font-family:var(--b);padding:9px 14px;font-size:12px;color:var(--noir);background:var(--blanc);transition:all .2s;outline:none}
+.inp:focus{border-color:var(--bleu);box-shadow:0 0 0 3px rgba(9,101,208,.1)}
+.badge{font-family:var(--h);font-size:9px;font-weight:700;padding:3px 10px;border-radius:5px;display:inline-flex;align-items:center;gap:4px}
+
+/* === FORUM LAYOUT === */
+.forum-grid{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:500px}
+.forum-sidebar{background:var(--blanc);border-right:1px solid var(--gris4);overflow-y:auto}
+.forum-main{background:var(--fond);overflow-y:auto}
+
+/* === SIDEBAR === */
+.forum-search{padding:14px;border-bottom:1px solid var(--gris4)}
+.forum-filters{padding:10px 14px;border-bottom:1px solid var(--gris4);display:flex;gap:4px;flex-wrap:wrap}
+.forum-filter{font-family:var(--h);font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid var(--gris4);color:var(--gris2);cursor:pointer;transition:all .12s;background:var(--blanc)}
+.forum-filter:hover{color:var(--bleu);border-color:rgba(9,101,208,.12);background:var(--bleu-pale)}
+.forum-filter.a{color:var(--bleu);border-color:rgba(9,101,208,.15);background:var(--bleu-pale)}
+
+/* Categories */
+.forum-cat{padding:10px 14px;border-bottom:1px solid var(--gris4)}
+.forum-cat-title{font-family:var(--h);font-size:9px;font-weight:700;color:var(--gris2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.forum-cat-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);cursor:pointer;transition:all .12s;margin:2px 0}
+.forum-cat-item:hover{background:var(--bleu-pale)}
+.forum-cat-item.a{background:var(--bleu-pale);color:var(--bleu)}
+.forum-cat-icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.forum-cat-name{font-family:var(--h);font-size:11px;font-weight:600;color:var(--noir)}
+.forum-cat-item.a .forum-cat-name{color:var(--bleu);font-weight:700}
+.forum-cat-count{margin-left:auto;font-family:var(--m);font-size:9px;color:var(--gris3);background:var(--fond);padding:2px 7px;border-radius:5px}
+
+/* === THREAD LIST === */
+.thread{padding:14px 18px;border-bottom:1px solid var(--gris4);cursor:pointer;transition:all .12s;display:flex;align-items:flex-start;gap:12px;background:var(--blanc)}
+.thread:hover{background:var(--bleu-pale)}
+.thread.active{background:var(--bleu-pale);border-left:3px solid var(--bleu)}
+.thread.pinned{background:rgba(1,232,174,.03);border-left:3px solid var(--vert)}
+.thread-avatar{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:12px;font-weight:700;flex-shrink:0}
+.thread-content{flex:1;min-width:0}
+.thread-title{font-family:var(--h);font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thread-excerpt{font-size:11px;color:var(--gris2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.thread-meta{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:9px;color:var(--gris3)}
+.thread-meta .author{color:var(--gris);font-weight:600}
+.thread-stats{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;margin-left:auto}
+.thread-stats-count{font-family:var(--h);font-size:14px;font-weight:900;color:var(--dark)}
+.thread-stats-label{font-size:8px;color:var(--gris3);text-transform:uppercase;letter-spacing:.5px}
+
+/* === THREAD DETAIL === */
+.td-header{padding:20px;background:var(--blanc);border-bottom:1px solid var(--gris4)}
+.td-title{font-family:var(--h);font-size:20px;font-weight:900;color:var(--dark);margin-bottom:6px}
+.td-info{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--gris2);flex-wrap:wrap}
+
+/* Posts */
+.post{padding:18px 20px;border-bottom:1px solid var(--gris4);background:var(--blanc);display:flex;gap:14px}
+.post.is-answer{background:var(--vert-pale);border-left:3px solid var(--vert2)}
+.post.is-instructor{background:var(--bleu-pale);border-left:3px solid var(--bleu)}
+.post-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:14px;font-weight:700;flex-shrink:0}
+.post-content{flex:1;min-width:0}
+.post-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.post-author{font-family:var(--h);font-size:13px;font-weight:700;color:var(--dark)}
+.post-time{font-size:10px;color:var(--gris3)}
+.post-role{font-family:var(--h);font-size:8px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
+.post-body{font-size:13px;color:var(--gris);line-height:1.8}
+.post-body strong{color:var(--dark)}
+.post-body code{font-family:var(--m);font-size:11px;background:var(--fond);padding:1px 6px;border-radius:4px;color:var(--bleu)}
+.post-body blockquote{border-left:3px solid var(--bleu);padding:8px 14px;margin:10px 0;background:var(--bleu-pale);border-radius:0 8px 8px 0;font-size:12px;color:var(--bleu2)}
+.post-actions{display:flex;gap:12px;margin-top:12px}
+.post-action{font-family:var(--h);font-size:10px;font-weight:600;color:var(--gris2);cursor:pointer;display:flex;align-items:center;gap:4px;transition:color .12s}
+.post-action:hover{color:var(--bleu)}
+.post-action.liked{color:var(--rouge)}
+
+/* Vote column */
+.post-votes{display:flex;flex-direction:column;align-items:center;gap:2px;margin-right:4px;flex-shrink:0}
+.post-vote-btn{width:28px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;font-size:10px;color:var(--gris3);transition:all .12s;border:1px solid transparent}
+.post-vote-btn:hover{background:var(--bleu-pale);color:var(--bleu);border-color:rgba(9,101,208,.08)}
+.post-vote-btn.active-up{color:var(--vert2);background:var(--vert-pale)}
+.post-vote-count{font-family:var(--h);font-size:14px;font-weight:900;color:var(--dark)}
+
+/* === REPLY EDITOR === */
+.reply-editor{padding:18px 20px;background:var(--blanc);border-top:1px solid var(--gris4)}
+.reply-editor textarea{width:100%;border:1px solid var(--gris4);border-radius:var(--r);font-family:var(--b);padding:14px 16px;font-size:13px;color:var(--noir);resize:vertical;min-height:100px;outline:none;transition:all .2s;line-height:1.7}
+.reply-editor textarea:focus{border-color:var(--bleu);box-shadow:0 0 0 3px rgba(9,101,208,.1)}
+.reply-toolbar{display:flex;align-items:center;gap:6px;margin-top:10px}
+.reply-tool{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid var(--gris4);cursor:pointer;font-size:12px;color:var(--gris2);transition:all .12s;background:var(--blanc)}
+.reply-tool:hover{background:var(--bleu-pale);color:var(--bleu);border-color:rgba(9,101,208,.08)}
+
+/* === NEW TOPIC FORM === */
+.new-topic{padding:20px;background:var(--blanc)}
+.new-topic-field{margin-bottom:14px}
+.new-topic-label{font-family:var(--h);font-size:10px;font-weight:700;color:var(--gris2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;display:block}
+
+/* === STATS BAR === */
+.stats-bar{display:flex;gap:16px;padding:14px 20px;background:var(--blanc);border-bottom:1px solid var(--gris4)}
+.stat{text-align:center;flex:1}
+.stat-value{font-family:var(--h);font-size:18px;font-weight:900;color:var(--dark)}
+.stat-label{font-size:9px;color:var(--gris2);text-transform:uppercase;letter-spacing:.8px;font-family:var(--h);font-weight:600}
+
+@media(max-width:700px){
+  .forum-grid{grid-template-columns:1fr}
+  .forum-sidebar{display:none}
+  .hd-nav{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- SELECTOR -->
+<div class="sel">
+  <div class="sel-logo">M</div>
+  <div class="sel-title">Forum<span>Discussion de cours</span></div>
+  <div class="st a" onclick="go(0,this)">Vue liste</div>
+  <div class="st" onclick="go(1,this)">Discussion ouverte</div>
+  <div class="st" onclick="go(2,this)">Nouveau sujet</div>
+  <div class="st" onclick="go(3,this)">Vue catégories</div>
+</div>
+
+<!-- ================================================================
+     VUE 1 — LISTE DES DISCUSSIONS
+     ================================================================ -->
+<div class="pf a" id="p0">
+  <div class="pf-bar"><div class="d" style="background:#ff5f57"></div><div class="d" style="background:#ffbd2e"></div><div class="d" style="background:#28c840"></div><span class="url">academie.missionformations.com/courses/MF+VTC101/discussion/forum</span></div>
+  <div class="hd">
+    <div class="hd-logo">M</div><div class="hd-brand">Académie Mission<span>Formations</span></div>
+    <div class="hd-nav"><a href="#">Tableau de bord</a><a href="#">Cours</a><a href="#" class="a">Discussion</a><a href="#">Progression</a></div>
+    <div class="hd-avatar">SA</div>
+  </div>
+  <div class="cn">
+    <a href="#">Contenu du cours</a><a href="#" class="a">Discussion</a><a href="#">Progression</a><a href="#">Wiki</a>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-value">24</div><div class="stat-label">Discussions</div></div>
+    <div class="stat"><div class="stat-value">87</div><div class="stat-label">Réponses</div></div>
+    <div class="stat"><div class="stat-value">42</div><div class="stat-label">Participants</div></div>
+    <div class="stat"><div class="stat-value">6</div><div class="stat-label">Non résolus</div></div>
+  </div>
+
+  <div class="forum-grid">
+    <!-- Sidebar -->
+    <div class="forum-sidebar">
+      <div class="forum-search"><input class="inp" placeholder="🔍 Rechercher..." style="font-size:11px;padding:8px 12px"></div>
+      <div class="forum-filters">
+        <div class="forum-filter a">Tous</div>
+        <div class="forum-filter">Non lus</div>
+        <div class="forum-filter">Non résolus</div>
+        <div class="forum-filter">Mes posts</div>
+      </div>
+      <div class="forum-cat">
+        <div class="forum-cat-title">Catégories</div>
+        <div class="forum-cat-item a">
+          <div class="forum-cat-icon" style="background:var(--bleu-pale);color:var(--bleu)">📚</div>
+          <div class="forum-cat-name">Toutes les discussions</div>
+          <div class="forum-cat-count">24</div>
+        </div>
+        <div class="forum-cat-item">
+          <div class="forum-cat-icon" style="background:rgba(142,68,173,.08);color:var(--violet)">⚖️</div>
+          <div class="forum-cat-name">Module 1 — Cadre juridique</div>
+          <div class="forum-cat-count">12</div>
+        </div>
+        <div class="forum-cat-item">
+          <div class="forum-cat-icon" style="background:var(--vert-pale);color:var(--vert2)">📋</div>
+          <div class="forum-cat-name">Module 2 — Obligations</div>
+          <div class="forum-cat-count">8</div>
+        </div>
+        <div class="forum-cat-item">
+          <div class="forum-cat-icon" style="background:rgba(230,126,34,.08);color:var(--orange)">📝</div>
+          <div class="forum-cat-name">Module 3 — Examen final</div>
+          <div class="forum-cat-count">4</div>
+        </div>
+      </div>
+      <div class="forum-cat">
+        <div class="forum-cat-title">Général</div>
+        <div class="forum-cat-item">
+          <div class="forum-cat-icon" style="background:rgba(241,196,15,.08);color:#d4a00a">💬</div>
+          <div class="forum-cat-name">Présentations</div>
+          <div class="forum-cat-count">6</div>
+        </div>
+        <div class="forum-cat-item">
+          <div class="forum-cat-icon" style="background:rgba(231,76,60,.06);color:var(--rouge)">🐛</div>
+          <div class="forum-cat-name">Problèmes techniques</div>
+          <div class="forum-cat-count">2</div>
+        </div>
+      </div>
+      <div style="padding:14px"><button class="btn-p" style="width:100%;justify-content:center;font-size:10px">+ Nouveau sujet</button></div>
+    </div>
+
+    <!-- Thread list -->
+    <div class="forum-main">
+      <!-- Pinned -->
+      <div class="thread pinned">
+        <div class="thread-avatar" style="background:var(--gradient);color:#fff">FM</div>
+        <div class="thread-content">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span class="badge" style="background:var(--vert-pale);color:var(--vert2)">📌 Épinglé</span>
+            <span class="badge" style="background:var(--bleu-pale);color:var(--bleu)">Annonce</span>
+          </div>
+          <div class="thread-title">Bienvenue ! Lisez ceci avant de poster</div>
+          <div class="thread-excerpt">Bonjour à tous ! Voici les règles du forum et quelques conseils pour tirer le meilleur de cette formation...</div>
+          <div class="thread-meta"><span class="author">François Martin</span><span>·</span><span>il y a 3 semaines</span></div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">14</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+
+      <!-- Thread 1 — active -->
+      <div class="thread active">
+        <div class="thread-avatar" style="background:rgba(9,101,208,.08);color:var(--bleu)">MD</div>
+        <div class="thread-content">
+          <div class="thread-title">Différence entre VTC et taxi sur le plan juridique ?</div>
+          <div class="thread-excerpt">Bonjour, quelqu'un peut m'expliquer clairement la différence juridique entre un VTC et un taxi ? Les deux transportent des passagers mais le cadre légal...</div>
+          <div class="thread-meta">
+            <span class="author">Marc Dupont</span><span>·</span><span>il y a 2h</span>
+            <span style="margin-left:auto" class="badge" style="background:var(--vert-pale);color:var(--vert2)">✓ Résolu</span>
+          </div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">5</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+
+      <!-- Thread 2 -->
+      <div class="thread">
+        <div class="thread-avatar" style="background:rgba(142,68,173,.08);color:var(--violet)">JM</div>
+        <div class="thread-content">
+          <div class="thread-title">Renouvellement de la carte professionnelle — procédure 2026</div>
+          <div class="thread-excerpt">Ma carte pro expire en avril, quelqu'un a-t-il déjà fait la démarche de renouvellement cette année ? Y a-t-il des changements ?</div>
+          <div class="thread-meta"><span class="author">Julie Martin</span><span>·</span><span>hier</span><span>·</span><span>Module 2</span></div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">3</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+
+      <!-- Thread 3 -->
+      <div class="thread">
+        <div class="thread-avatar" style="background:rgba(230,126,34,.08);color:var(--orange)">PL</div>
+        <div class="thread-content">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span class="badge" style="background:rgba(230,126,34,.06);color:var(--orange)">❓ Non résolu</span>
+          </div>
+          <div class="thread-title">Assurance RC professionnelle — quel montant minimum ?</div>
+          <div class="thread-excerpt">Je cherche des infos sur le montant minimum d'assurance RC pro pour un VTC. Le cours mentionne l'obligation mais pas le chiffre exact...</div>
+          <div class="thread-meta"><span class="author">Pierre Lefevre</span><span>·</span><span>il y a 3 jours</span><span>·</span><span>Module 2</span></div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">8</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+
+      <!-- Thread 4 -->
+      <div class="thread">
+        <div class="thread-avatar" style="background:var(--vert-pale);color:var(--vert2)">AB</div>
+        <div class="thread-content">
+          <div class="thread-title">Quelqu'un a réussi l'examen du premier coup ?</div>
+          <div class="thread-excerpt">Je viens de finir le Module 2 et l'examen final me stresse. Des conseils pour bien se préparer ? Quels sont les sujets les plus importants ?</div>
+          <div class="thread-meta"><span class="author">Amina Benali</span><span>·</span><span>il y a 4 jours</span><span>·</span><span>Module 3</span></div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">12</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+
+      <!-- Thread 5 -->
+      <div class="thread">
+        <div class="thread-avatar" style="background:rgba(231,76,60,.06);color:var(--rouge)">TB</div>
+        <div class="thread-content">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span class="badge" style="background:rgba(231,76,60,.06);color:var(--rouge)">🐛 Technique</span>
+          </div>
+          <div class="thread-title">Vidéo du Module 1 ne se charge pas sur mobile</div>
+          <div class="thread-excerpt">La vidéo « Introduction à la réglementation » tourne en boucle sur le chargement depuis mon téléphone Android. Quelqu'un d'autre a ce problème ?</div>
+          <div class="thread-meta"><span class="author">Thomas Bernard</span><span>·</span><span>il y a 5 jours</span></div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">2</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+
+      <!-- Thread 6 -->
+      <div class="thread">
+        <div class="thread-avatar" style="background:rgba(241,196,15,.08);color:#c49a09">CM</div>
+        <div class="thread-content">
+          <div class="thread-title">Bonjour à tous — je me présente ! 👋</div>
+          <div class="thread-excerpt">Salut, moi c'est Claire, en reconversion depuis le secteur de la restauration. J'ai hâte de démarrer cette formation VTC !</div>
+          <div class="thread-meta"><span class="author">Claire Moreau</span><span>·</span><span>il y a 1 semaine</span><span>·</span><span>Présentations</span></div>
+        </div>
+        <div class="thread-stats"><div class="thread-stats-count">7</div><div class="thread-stats-label">réponses</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     VUE 2 — DISCUSSION OUVERTE (Thread detail)
+     ================================================================ -->
+<div class="pf" id="p1">
+  <div class="pf-bar"><div class="d" style="background:#ff5f57"></div><div class="d" style="background:#ffbd2e"></div><div class="d" style="background:#28c840"></div><span class="url">academie.missionformations.com/courses/MF+VTC101/discussion/forum/threads/abc123</span></div>
+  <div class="hd">
+    <div class="hd-logo">M</div><div class="hd-brand">Académie Mission<span>Formations</span></div>
+    <div class="hd-nav"><a href="#">Cours</a><a href="#" class="a">Discussion</a></div>
+    <div class="hd-avatar">SA</div>
+  </div>
+  <div class="cn"><a href="#">Contenu du cours</a><a href="#" class="a">Discussion</a><a href="#">Progression</a></div>
+
+  <!-- Thread header -->
+  <div class="td-header">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+      <a href="#" style="font-family:var(--h);font-size:10px;font-weight:700;color:var(--bleu);text-decoration:none">← Retour au forum</a>
+      <span class="badge" style="background:rgba(142,68,173,.06);color:var(--violet)">Module 1 — Cadre juridique</span>
+      <span class="badge" style="background:var(--vert-pale);color:var(--vert2)">✓ Résolu</span>
+    </div>
+    <div class="td-title">Différence entre VTC et taxi sur le plan juridique ?</div>
+    <div class="td-info">
+      <span>Par <strong style="color:var(--dark)">Marc Dupont</strong></span>
+      <span>·</span><span>il y a 2 heures</span>
+      <span>·</span><span>5 réponses</span>
+      <span>·</span><span>23 vues</span>
+    </div>
+  </div>
+
+  <!-- Original post -->
+  <div class="post">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-right:4px">
+      <div class="post-avatar" style="background:rgba(9,101,208,.08);color:var(--bleu)">MD</div>
+      <div class="post-votes">
+        <div class="post-vote-btn active-up">▲</div>
+        <div class="post-vote-count">4</div>
+        <div class="post-vote-btn">▼</div>
+      </div>
+    </div>
+    <div class="post-content">
+      <div class="post-header">
+        <div class="post-author">Marc Dupont</div>
+        <div class="post-role" style="background:var(--fond);color:var(--gris)">Apprenant</div>
+        <div class="post-time">il y a 2 heures</div>
+      </div>
+      <div class="post-body">
+        <p>Bonjour à tous,</p>
+        <p>Je suis en train de réviser le <strong>Module 1</strong> et j'ai du mal à comprendre la différence juridique précise entre un <strong>VTC</strong> et un <strong>taxi</strong>. Les deux transportent des passagers, mais le cadre légal semble très différent.</p>
+        <p>Plus précisément :</p>
+        <p>→ Un VTC peut-il stationner devant un aéroport comme un taxi ?<br>→ Le système de tarification est-il réglementé de la même manière ?<br>→ Quelles sont les sanctions si un VTC fait de la maraude ?</p>
+        <p>Merci d'avance pour vos éclaircissements !</p>
+      </div>
+      <div class="post-actions">
+        <div class="post-action liked">❤️ 4</div>
+        <div class="post-action">💬 Répondre</div>
+        <div class="post-action">🔖 Sauvegarder</div>
+        <div class="post-action">🚩 Signaler</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructor answer (marked as solution) -->
+  <div class="post is-instructor is-answer">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-right:4px">
+      <div class="post-avatar" style="background:var(--gradient);color:#fff">FM</div>
+      <div class="post-votes">
+        <div class="post-vote-btn active-up">▲</div>
+        <div class="post-vote-count">12</div>
+        <div class="post-vote-btn">▼</div>
+      </div>
+    </div>
+    <div class="post-content">
+      <div class="post-header">
+        <div class="post-author">François Martin</div>
+        <div class="post-role" style="background:var(--bleu);color:#fff">Formateur</div>
+        <div class="post-time">il y a 1h30</div>
+        <span class="badge" style="background:var(--vert-pale);color:var(--vert2)">✓ Meilleure réponse</span>
+      </div>
+      <div class="post-body">
+        <p>Excellente question Marc ! La distinction fondamentale est dans le <strong>Code des transports</strong> :</p>
+        <blockquote>Les VTC fonctionnent <strong>uniquement sur réservation préalable</strong>. Les taxis ont le monopole de la <strong>maraude</strong> (prise en charge dans la rue).</blockquote>
+        <p>Pour répondre point par point :</p>
+        <p><strong>1. Stationnement aéroport :</strong> Non, un VTC ne peut pas stationner en attente de clients. Il doit avoir une <strong>réservation confirmée</strong> avant de se rendre au point de prise en charge. La zone de stationnement des taxis est réservée.</p>
+        <p><strong>2. Tarification :</strong> Les taxis ont un <strong>tarif réglementé par le préfet</strong> avec compteur horokilométrique. Les VTC fixent leurs prix <strong>librement</strong>, mais le client doit connaître le prix avant la course (devis).</p>
+        <p><strong>3. Sanctions maraude :</strong> Un VTC qui fait de la maraude s'expose à une amende de <strong>1 500 €</strong> et à la <strong>suspension de sa carte professionnelle</strong>. C'est l'article <code>L.3120-2</code> du Code des transports.</p>
+        <p>Tout cela sera approfondi dans le QCM du Module 1. N'hésitez pas si d'autres questions !</p>
+      </div>
+      <div class="post-actions">
+        <div class="post-action liked">❤️ 12</div>
+        <div class="post-action">💬 Répondre</div>
+        <div class="post-action">🔖 Sauvegarder</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student reply -->
+  <div class="post">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-right:4px">
+      <div class="post-avatar" style="background:var(--vert-pale);color:var(--vert2)">AB</div>
+      <div class="post-votes">
+        <div class="post-vote-btn">▲</div>
+        <div class="post-vote-count">2</div>
+        <div class="post-vote-btn">▼</div>
+      </div>
+    </div>
+    <div class="post-content">
+      <div class="post-header">
+        <div class="post-author">Amina Benali</div>
+        <div class="post-role" style="background:var(--fond);color:var(--gris)">Apprenant</div>
+        <div class="post-time">il y a 45 min</div>
+      </div>
+      <div class="post-body">
+        <p>Super explication, merci François ! J'avais la même question. Pour compléter, j'ai trouvé que le <strong>décret n°2017-483</strong> précise aussi les conditions de stationnement des VTC à proximité des gares.</p>
+        <p>Très utile pour le QCM 👍</p>
+      </div>
+      <div class="post-actions">
+        <div class="post-action">❤️ 2</div>
+        <div class="post-action">💬 Répondre</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Another reply -->
+  <div class="post">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-right:4px">
+      <div class="post-avatar" style="background:rgba(9,101,208,.08);color:var(--bleu)">MD</div>
+      <div class="post-votes">
+        <div class="post-vote-btn">▲</div>
+        <div class="post-vote-count">1</div>
+        <div class="post-vote-btn">▼</div>
+      </div>
+    </div>
+    <div class="post-content">
+      <div class="post-header">
+        <div class="post-author">Marc Dupont</div>
+        <div class="post-role" style="background:rgba(9,101,208,.06);color:var(--bleu)">Auteur</div>
+        <div class="post-time">il y a 30 min</div>
+      </div>
+      <div class="post-body">
+        <p>Parfait, c'est très clair maintenant ! Merci François et Amina. Je marque comme résolu. 🙏</p>
+      </div>
+      <div class="post-actions">
+        <div class="post-action">❤️ 1</div>
+        <div class="post-action">💬 Répondre</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reply editor -->
+  <div class="reply-editor">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:11px;font-weight:700;color:#fff;flex-shrink:0">SA</div>
+      <div style="font-family:var(--h);font-size:12px;font-weight:700;color:var(--dark)">Répondre à cette discussion</div>
+    </div>
+    <textarea placeholder="Écrivez votre réponse... Utilisez **gras** pour mettre en évidence et `code` pour les références légales."></textarea>
+    <div class="reply-toolbar">
+      <div class="reply-tool" title="Gras"><strong>B</strong></div>
+      <div class="reply-tool" title="Italique"><em>I</em></div>
+      <div class="reply-tool" title="Code">{ }</div>
+      <div class="reply-tool" title="Lien">🔗</div>
+      <div class="reply-tool" title="Citation">❝</div>
+      <div class="reply-tool" title="Image">🖼</div>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <button class="btn-s" style="font-size:10px;padding:7px 14px">Annuler</button>
+        <button class="btn-p" style="font-size:10px;padding:7px 14px">Publier la réponse</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     VUE 3 — NOUVEAU SUJET
+     ================================================================ -->
+<div class="pf" id="p2">
+  <div class="pf-bar"><div class="d" style="background:#ff5f57"></div><div class="d" style="background:#ffbd2e"></div><div class="d" style="background:#28c840"></div><span class="url">academie.missionformations.com/courses/MF+VTC101/discussion/forum/new</span></div>
+  <div class="hd">
+    <div class="hd-logo">M</div><div class="hd-brand">Académie Mission<span>Formations</span></div>
+    <div class="hd-nav"><a href="#">Cours</a><a href="#" class="a">Discussion</a></div>
+    <div class="hd-avatar">SA</div>
+  </div>
+  <div class="cn"><a href="#">Contenu du cours</a><a href="#" class="a">Discussion</a><a href="#">Progression</a></div>
+
+  <div class="new-topic">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">
+      <a href="#" style="font-family:var(--h);font-size:10px;font-weight:700;color:var(--bleu);text-decoration:none">← Retour au forum</a>
+    </div>
+    <h1 style="font-family:var(--h);font-size:20px;font-weight:900;color:var(--dark);margin-bottom:18px">Créer une nouvelle discussion</h1>
+
+    <div class="new-topic-field">
+      <div class="new-topic-label">Type de publication</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;padding:12px 16px;border-radius:var(--r);border:2px solid var(--bleu);background:var(--bleu-pale);cursor:pointer;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">💬</div>
+          <div style="font-family:var(--h);font-size:11px;font-weight:700;color:var(--bleu)">Discussion</div>
+          <div style="font-size:9px;color:var(--gris2)">Échangez avec les autres</div>
+        </div>
+        <div style="flex:1;padding:12px 16px;border-radius:var(--r);border:1px solid var(--gris4);cursor:pointer;text-align:center;transition:all .15s">
+          <div style="font-size:18px;margin-bottom:4px">❓</div>
+          <div style="font-family:var(--h);font-size:11px;font-weight:700;color:var(--noir)">Question</div>
+          <div style="font-size:9px;color:var(--gris2)">Posez une question au formateur</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="new-topic-field">
+      <div class="new-topic-label">Catégorie</div>
+      <select class="inp" style="padding:10px 14px">
+        <option>Choisir une catégorie...</option>
+        <option>Module 1 — Cadre juridique</option>
+        <option>Module 2 — Obligations administratives</option>
+        <option>Module 3 — Examen final</option>
+        <option>Présentations</option>
+        <option>Problèmes techniques</option>
+      </select>
+    </div>
+
+    <div class="new-topic-field">
+      <div class="new-topic-label">Titre de la discussion</div>
+      <input class="inp" placeholder="Un titre clair et descriptif...">
+    </div>
+
+    <div class="new-topic-field">
+      <div class="new-topic-label">Votre message</div>
+      <textarea class="inp" rows="8" style="resize:vertical;line-height:1.7;font-size:13px" placeholder="Décrivez votre question ou sujet de discussion en détail..."></textarea>
+      <div class="reply-toolbar" style="margin-top:8px">
+        <div class="reply-tool"><strong>B</strong></div>
+        <div class="reply-tool"><em>I</em></div>
+        <div class="reply-tool">{ }</div>
+        <div class="reply-tool">🔗</div>
+        <div class="reply-tool">❝</div>
+        <div class="reply-tool">🖼</div>
+      </div>
+    </div>
+
+    <div style="padding:14px 0;border-top:1px solid var(--gris4);margin-top:8px;display:flex;align-items:center;justify-content:space-between">
+      <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gris);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--bleu)"> Suivre cette discussion (notifications email)
+      </label>
+      <div style="display:flex;gap:8px">
+        <button class="btn-s">Annuler</button>
+        <button class="btn-p">Publier la discussion</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     VUE 4 — CATÉGORIES
+     ================================================================ -->
+<div class="pf" id="p3">
+  <div class="pf-bar"><div class="d" style="background:#ff5f57"></div><div class="d" style="background:#ffbd2e"></div><div class="d" style="background:#28c840"></div><span class="url">academie.missionformations.com/courses/MF+VTC101/discussion/forum/categories</span></div>
+  <div class="hd">
+    <div class="hd-logo">M</div><div class="hd-brand">Académie Mission<span>Formations</span></div>
+    <div class="hd-nav"><a href="#">Cours</a><a href="#" class="a">Discussion</a></div>
+    <div class="hd-avatar">SA</div>
+  </div>
+  <div class="cn"><a href="#">Contenu du cours</a><a href="#" class="a">Discussion</a><a href="#">Progression</a></div>
+
+  <div class="ct">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <h1 style="font-family:var(--h);font-size:20px;font-weight:900;color:var(--dark)">Forum de la formation</h1>
+        <p style="font-size:12px;color:var(--gris)">Réglementation et droit des transports VTC · 42 participants</p>
+      </div>
+      <button class="btn-p">+ Nouveau sujet</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px">
+      <!-- Cat 1 -->
+      <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer;border-left:4px solid var(--violet)" onmouseover="this.style.boxShadow='0 8px 24px rgba(9,101,208,.07)'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:rgba(142,68,173,.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">⚖️</div>
+          <div>
+            <div style="font-family:var(--h);font-size:14px;font-weight:700;color:var(--dark)">Module 1 — Cadre juridique</div>
+            <div style="font-size:11px;color:var(--gris2)">Questions sur la loi Thévenoud, le Code des transports</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--h);font-size:11px">
+          <div><span style="font-weight:900;color:var(--dark)">12</span> <span style="color:var(--gris2)">sujets</span></div>
+          <div><span style="font-weight:900;color:var(--dark)">34</span> <span style="color:var(--gris2)">réponses</span></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--gris3)">Dernier post : il y a 2h</div>
+        </div>
+      </div>
+
+      <!-- Cat 2 -->
+      <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer;border-left:4px solid var(--vert2)" onmouseover="this.style.boxShadow='0 8px 24px rgba(9,101,208,.07)'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:var(--vert-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📋</div>
+          <div>
+            <div style="font-family:var(--h);font-size:14px;font-weight:700;color:var(--dark)">Module 2 — Obligations administratives</div>
+            <div style="font-size:11px;color:var(--gris2)">Carte pro, registre VTC, assurance, contrôle technique</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--h);font-size:11px">
+          <div><span style="font-weight:900;color:var(--dark)">8</span> <span style="color:var(--gris2)">sujets</span></div>
+          <div><span style="font-weight:900;color:var(--dark)">22</span> <span style="color:var(--gris2)">réponses</span></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--gris3)">Dernier post : hier</div>
+        </div>
+      </div>
+
+      <!-- Cat 3 -->
+      <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer;border-left:4px solid var(--orange)" onmouseover="this.style.boxShadow='0 8px 24px rgba(9,101,208,.07)'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:rgba(230,126,34,.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📝</div>
+          <div>
+            <div style="font-family:var(--h);font-size:14px;font-weight:700;color:var(--dark)">Module 3 — Examen final</div>
+            <div style="font-size:11px;color:var(--gris2)">Préparation, retours d'expérience, conseils</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--h);font-size:11px">
+          <div><span style="font-weight:900;color:var(--dark)">4</span> <span style="color:var(--gris2)">sujets</span></div>
+          <div><span style="font-weight:900;color:var(--dark)">19</span> <span style="color:var(--gris2)">réponses</span></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--gris3)">Dernier post : il y a 4j</div>
+        </div>
+      </div>
+
+      <!-- Cat 4 -->
+      <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer;border-left:4px solid var(--jaune)" onmouseover="this.style.boxShadow='0 8px 24px rgba(9,101,208,.07)'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:rgba(241,196,15,.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💬</div>
+          <div>
+            <div style="font-family:var(--h);font-size:14px;font-weight:700;color:var(--dark)">Présentations</div>
+            <div style="font-size:11px;color:var(--gris2)">Présentez-vous et faites connaissance</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--h);font-size:11px">
+          <div><span style="font-weight:900;color:var(--dark)">6</span> <span style="color:var(--gris2)">sujets</span></div>
+          <div><span style="font-weight:900;color:var(--dark)">18</span> <span style="color:var(--gris2)">réponses</span></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--gris3)">Dernier post : il y a 1 sem</div>
+        </div>
+      </div>
+
+      <!-- Cat 5 -->
+      <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer;border-left:4px solid var(--rouge)" onmouseover="this.style.boxShadow='0 8px 24px rgba(9,101,208,.07)'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:rgba(231,76,60,.06);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🐛</div>
+          <div>
+            <div style="font-family:var(--h);font-size:14px;font-weight:700;color:var(--dark)">Problèmes techniques</div>
+            <div style="font-size:11px;color:var(--gris2)">Bugs, vidéos qui ne chargent pas, accès</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--h);font-size:11px">
+          <div><span style="font-weight:900;color:var(--dark)">2</span> <span style="color:var(--gris2)">sujets</span></div>
+          <div><span style="font-weight:900;color:var(--dark)">5</span> <span style="color:var(--gris2)">réponses</span></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--gris3)">Dernier post : il y a 5j</div>
+        </div>
+      </div>
+
+      <!-- Cat 6 -->
+      <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer;border-left:4px solid var(--bleu)" onmouseover="this.style.boxShadow='0 8px 24px rgba(9,101,208,.07)'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:var(--bleu-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📢</div>
+          <div>
+            <div style="font-family:var(--h);font-size:14px;font-weight:700;color:var(--dark)">Annonces du formateur</div>
+            <div style="font-size:11px;color:var(--gris2)">Mises à jour, nouveaux modules, dates importantes</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-family:var(--h);font-size:11px">
+          <div><span style="font-weight:900;color:var(--dark)">3</span> <span style="color:var(--gris2)">sujets</span></div>
+          <div><span style="font-weight:900;color:var(--dark)">9</span> <span style="color:var(--gris2)">réponses</span></div>
+          <div style="margin-left:auto;font-size:10px;color:var(--gris3)">Dernier post : il y a 3j</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active users -->
+    <div style="background:var(--blanc);border:1px solid var(--gris4);border-radius:var(--r);padding:18px;margin-top:16px">
+      <div style="font-family:var(--h);font-size:12px;font-weight:700;color:var(--dark);margin-bottom:10px">Contributeurs les plus actifs</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:30px;height:30px;border-radius:8px;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:10px;font-weight:700;color:#fff">FM</div>
+          <div><div style="font-family:var(--h);font-size:11px;font-weight:700;color:var(--dark)">F. Martin</div><div style="font-size:9px;color:var(--gris2)">18 posts</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:30px;height:30px;border-radius:8px;background:var(--vert-pale);display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:10px;font-weight:700;color:var(--vert2)">AB</div>
+          <div><div style="font-family:var(--h);font-size:11px;font-weight:700;color:var(--dark)">A. Benali</div><div style="font-size:9px;color:var(--gris2)">14 posts</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:30px;height:30px;border-radius:8px;background:rgba(9,101,208,.08);display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:10px;font-weight:700;color:var(--bleu)">MD</div>
+          <div><div style="font-family:var(--h);font-size:11px;font-weight:700;color:var(--dark)">M. Dupont</div><div style="font-size:9px;color:var(--gris2)">11 posts</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:30px;height:30px;border-radius:8px;background:rgba(142,68,173,.08);display:flex;align-items:center;justify-content:center;font-family:var(--h);font-size:10px;font-weight:700;color:var(--violet)">JM</div>
+          <div><div style="font-family:var(--h);font-size:11px;font-weight:700;color:var(--dark)">J. Martin</div><div style="font-size:9px;color:var(--gris2)">9 posts</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;font-size:9px;color:rgba(255,255,255,.12)">Mission Formations — Forum Discussion · Février 2026</div>
+
+<script>
+function go(i,el){
+  document.querySelectorAll('.pf').forEach(p=>p.classList.remove('a'));
+  document.querySelectorAll('.st').forEach(t=>t.classList.remove('a'));
+  document.getElementById('p'+i).classList.add('a');
+  el.classList.add('a');
+}
+</script>
+</body>
+</html>
