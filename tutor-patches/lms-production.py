@@ -332,6 +332,12 @@ if importlib.util.find_spec('lms.djangoapps.mission_central_admin'):
         INSTALLED_APPS.append('lms.djangoapps.mission_central_admin')
 # mission_certificates_policy: sidebar menu includes only obtained certificates
 MF_CERTIFICATES_MENU_ONLY_OBTAINED = True
+
+# Certificats HTML — activer le rendu web des certificats Mission Formations
+FEATURES['CERTIFICATES_HTML_VIEW'] = True
+
+# Permettre les templates de certificats personnalises (theme ou DB)
+FEATURES['CUSTOM_CERTIFICATE_TEMPLATES_ENABLED'] = True
 # mission_theme_lock: enforce Mission themed auth stack
 DEFAULT_SITE_THEME = "mission-theme"
 FEATURES['ENABLE_AUTHN_MICROFRONTEND'] = False

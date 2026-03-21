@@ -1,14 +1,22 @@
-"""Tutor plugin: Mission certificates visibility policy.
+"""Tutor plugin: Mission certificates — feature flags + visibility policy.
 
-Role ownership (single responsibility):
-- Certificate menu policy in LMS settings.
+Responsabilites :
+- Activer le rendu HTML des certificats web
+- Activer les templates de certificats personnalises
+- Limiter le menu sidebar aux certificats obtenus
 """
 
 from tutor import hooks
 from tutor.hooks import priorities
 
 PATCH_CONTENT = """
-# mission_certificates_policy: sidebar menu includes only obtained certificates
+# mission_certificates_policy: activer les certificats HTML web
+FEATURES['CERTIFICATES_HTML_VIEW'] = True
+
+# Permettre les templates de certificats personnalises (theme ou DB)
+FEATURES['CUSTOM_CERTIFICATE_TEMPLATES_ENABLED'] = True
+
+# Sidebar menu : afficher uniquement les certificats obtenus
 MF_CERTIFICATES_MENU_ONLY_OBTAINED = True
 """.strip()
 
