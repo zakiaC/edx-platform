@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Certificats — 10 Templates Mission Formations</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;900&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;
+  --vert:#01E8AE;--vert2:#00c494;--vert-pale:#e6faf4;
+  --dark:#0a1628;--dark2:#0f1f3a;--dark3:#162d50;
+  --noir:#3B3B3B;--gris:#4a4a4a;--gris2:#6b6b6b;--gris3:#888;--gris4:#e8e8e8;
+  --fond:#e2e6ec;--blanc:#fff;
+  --rouge:#e74c3c;--orange:#e67e22;--jaune:#f1c40f;--violet:#8e44ad;
+  --heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace;--serif:'Playfair Display',serif;
+}
+body{font-family:var(--body);color:var(--noir);background:var(--fond);-webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* Selector */
+.selector{position:sticky;top:0;z-index:200;background:var(--dark);padding:14px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06)}
+.selector-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--bleu),var(--vert));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
+.selector-title{font-family:var(--heading);font-size:13px;font-weight:700;color:#fff;margin-right:12px}
+.selector-title span{color:rgba(255,255,255,.55);font-weight:400;font-size:10px;display:block}
+.stab{padding:6px 14px;border-radius:7px;font-family:var(--heading);font-size:10px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .15s;white-space:nowrap}
+.stab:hover{color:#fff;background:rgba(255,255,255,.08)}
+.stab.active{color:var(--vert);background:rgba(1,232,174,.1);border-color:rgba(1,232,174,.2)}
+
+/* Certificate wrapper */
+.cert-wrapper{max-width:900px;margin:32px auto;padding:0 20px;display:none}
+.cert-wrapper.active{display:block}
+
+/* Certificate frame (A4 landscape ratio) */
+.cert{
+  width:100%;aspect-ratio:1.414;
+  border-radius:8px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.15),0 0 0 1px rgba(0,0,0,.05);
+  position:relative;
+  background:#fff;
+}
+
+/* ============================================================
+   TEMPLATE 1 — VTC TRANSPORT
+   Premium dark with road motif
+   ============================================================ */
+.cert-vtc{background:linear-gradient(160deg,#0a1628 0%,#0f2847 40%,#0a1628 100%)}
+.cert-vtc .cert-border{position:absolute;inset:12px;border:1px solid rgba(255,255,255,.08);border-radius:4px;pointer-events:none}
+.cert-vtc .cert-border::before{content:'';position:absolute;inset:4px;border:1px solid rgba(255,255,255,.04);border-radius:2px}
+.cert-vtc .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--bleu),var(--vert))}
+.cert-vtc .cert-glow{position:absolute;top:-20%;right:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(9,101,208,.12),transparent 65%);pointer-events:none}
+.cert-vtc .cert-glow2{position:absolute;bottom:-30%;left:-5%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(1,232,174,.06),transparent 65%);pointer-events:none}
+.cert-vtc .cert-road{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:70%;height:2px;background:rgba(255,255,255,.06)}
+.cert-vtc .cert-road::before{content:'';position:absolute;top:-1px;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.1) 0,rgba(255,255,255,.1) 20px,transparent 20px,transparent 40px)}
+.cert-vtc .cert-inner{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 60px}
+.cert-vtc .cert-logo{width:48px;height:48px;background:linear-gradient(135deg,var(--bleu),var(--vert));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:24px;font-weight:900;color:#fff;margin-bottom:20px}
+.cert-vtc .cert-label{font-family:var(--heading);font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:4px;color:rgba(255,255,255,.55);margin-bottom:8px}
+.cert-vtc .cert-main-title{font-family:var(--serif);font-size:28px;font-weight:900;color:#fff;margin-bottom:6px}
+.cert-vtc .cert-subtitle{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:28px}
+.cert-vtc .cert-name{font-family:var(--serif);font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--bleu),var(--vert));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.cert-vtc .cert-course{font-family:var(--heading);font-size:13px;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:4px}
+.cert-vtc .cert-desc{font-size:11px;color:rgba(255,255,255,.85);max-width:450px;line-height:1.7;margin-bottom:24px}
+.cert-vtc .cert-score{font-family:var(--heading);font-size:32px;font-weight:900;color:var(--vert);margin-bottom:4px}
+.cert-vtc .cert-score-label{font-size:9px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:2px;margin-bottom:24px}
+.cert-vtc .cert-footer{display:flex;align-items:center;gap:40px}
+.cert-vtc .cert-sign{text-align:center}
+.cert-vtc .cert-sign-line{width:120px;height:1px;background:rgba(255,255,255,.12);margin-bottom:6px}
+.cert-vtc .cert-sign-name{font-family:var(--heading);font-size:10px;font-weight:700;color:rgba(255,255,255,.7)}
+.cert-vtc .cert-sign-role{font-size:8px;color:rgba(255,255,255,.75)}
+.cert-vtc .cert-id{font-family:var(--mono);font-size:8px;color:rgba(255,255,255,.65);margin-top:16px}
+.cert-vtc .cert-date{font-family:var(--heading);font-size:10px;color:rgba(255,255,255,.85);margin-bottom:24px}
+
+/* ============================================================
+   TEMPLATE 2 — GESTION D'ENTREPRISE
+   Clean white, gold accents
+   ============================================================ */
+.cert-gestion{background:#fff}
+.cert-gestion .cert-gold-top{position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#b8860b,#daa520,#f4d03f,#daa520,#b8860b)}
+.cert-gestion .cert-gold-bottom{position:absolute;bottom:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#b8860b,#daa520,#f4d03f,#daa520,#b8860b)}
+.cert-gestion .cert-corner{position:absolute;width:60px;height:60px;pointer-events:none}
+.cert-gestion .cert-corner.tl{top:20px;left:20px;border-top:2px solid #daa520;border-left:2px solid #daa520}
+.cert-gestion .cert-corner.tr{top:20px;right:20px;border-top:2px solid #daa520;border-right:2px solid #daa520}
+.cert-gestion .cert-corner.bl{bottom:20px;left:20px;border-bottom:2px solid #daa520;border-left:2px solid #daa520}
+.cert-gestion .cert-corner.br{bottom:20px;right:20px;border-bottom:2px solid #daa520;border-right:2px solid #daa520}
+.cert-gestion .cert-inner{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 60px;position:relative;z-index:1}
+.cert-gestion .cert-logo{width:44px;height:44px;background:linear-gradient(135deg,var(--bleu),var(--vert));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:22px;font-weight:900;color:#fff;margin-bottom:16px}
+.cert-gestion .cert-label{font-family:var(--heading);font-size:8px;text-transform:uppercase;letter-spacing:4px;color:#daa520;font-weight:700;margin-bottom:8px}
+.cert-gestion .cert-main-title{font-family:var(--serif);font-size:26px;font-weight:900;color:var(--dark);margin-bottom:4px}
+.cert-gestion .cert-subtitle{font-size:11px;color:var(--gris2);margin-bottom:24px}
+.cert-gestion .cert-name{font-family:var(--serif);font-size:34px;font-weight:900;color:#b8860b;margin-bottom:6px}
+.cert-gestion .cert-course{font-family:var(--heading);font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.cert-gestion .cert-desc{font-size:11px;color:var(--gris2);max-width:420px;margin-bottom:20px}
+.cert-gestion .cert-score{font-family:var(--heading);font-size:28px;font-weight:900;color:var(--bleu);margin-bottom:2px}
+.cert-gestion .cert-score-label{font-size:9px;color:var(--gris3);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px}
+.cert-gestion .cert-footer{display:flex;gap:50px}.cert-gestion .cert-sign{text-align:center}
+.cert-gestion .cert-sign-line{width:120px;height:1px;background:var(--gris4);margin-bottom:6px}
+.cert-gestion .cert-sign-name{font-family:var(--heading);font-size:10px;font-weight:700;color:var(--dark)}
+.cert-gestion .cert-sign-role{font-size:8px;color:var(--gris3)}
+.cert-gestion .cert-id{font-family:var(--mono);font-size:8px;color:var(--gris3);margin-top:14px}
+.cert-gestion .cert-date{font-family:var(--heading);font-size:10px;color:var(--gris2);margin-bottom:20px}
+.cert-gestion .cert-watermark{position:absolute;font-family:var(--heading);font-size:200px;font-weight:900;color:rgba(0,0,0,.015);pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* ============================================================
+   TEMPLATE 3 — SÉCURITÉ ROUTIÈRE
+   Bold red/dark, shield motif
+   ============================================================ */
+.cert-securite{background:linear-gradient(160deg,#1c0808,#3a1515,#1c0808)}
+.cert-securite .cert-stripe{position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,#e74c3c 0,#e74c3c 30px,#f1c40f 30px,#f1c40f 60px)}
+.cert-securite .cert-stripe-b{position:absolute;bottom:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,#e74c3c 0,#e74c3c 30px,#f1c40f 30px,#f1c40f 60px)}
+.cert-securite .cert-border{position:absolute;inset:14px;border:1px solid rgba(231,76,60,.2);border-radius:4px;pointer-events:none}
+.cert-securite .cert-inner{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 60px;position:relative;z-index:1}
+.cert-securite .cert-shield{width:60px;height:60px;background:linear-gradient(180deg,#ff5e4f,#c0392b);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 8px 28px rgba(231,76,60,.4);font-size:28px}
+.cert-securite .cert-label{font-family:var(--heading);font-size:9px;text-transform:uppercase;letter-spacing:4px;color:#ff8a7a;font-weight:700;margin-bottom:8px}
+.cert-securite .cert-main-title{font-family:var(--serif);font-size:28px;font-weight:900;color:#fff;margin-bottom:6px}
+.cert-securite .cert-subtitle{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:24px}
+.cert-securite .cert-name{font-family:var(--serif);font-size:36px;font-weight:900;color:#ff9585;margin-bottom:8px;text-shadow:0 2px 20px rgba(231,76,60,.3)}
+.cert-securite .cert-course{font-family:var(--heading);font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.cert-securite .cert-desc{font-size:12px;color:rgba(255,255,255,.65);max-width:440px;margin-bottom:22px;line-height:1.7}
+.cert-securite .cert-score{font-family:var(--heading);font-size:32px;font-weight:900;color:#f1c40f;margin-bottom:2px;text-shadow:0 2px 16px rgba(241,196,15,.25)}
+.cert-securite .cert-score-label{font-size:10px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:2px;margin-bottom:22px}
+.cert-securite .cert-footer{display:flex;gap:50px}.cert-securite .cert-sign{text-align:center}.cert-securite .cert-sign-line{width:120px;height:1px;background:rgba(255,255,255,.2);margin-bottom:6px}.cert-securite .cert-sign-name{font-family:var(--heading);font-size:11px;font-weight:700;color:rgba(255,255,255,.85)}.cert-securite .cert-sign-role{font-size:9px;color:rgba(255,255,255,.55)}
+.cert-securite .cert-id{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.4);margin-top:14px}
+.cert-securite .cert-date{font-family:var(--heading);font-size:11px;color:rgba(255,255,255,.7);margin-bottom:22px}
+
+/* ============================================================
+   SHARED STYLES FOR TEMPLATES 4-10
+   ============================================================ */
+.cert-generic .cert-inner{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 60px;position:relative;z-index:1}
+.cert-generic .cert-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:24px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.cert-generic .cert-label{font-family:var(--heading);font-size:8px;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:8px}
+.cert-generic .cert-main-title{font-family:var(--serif);font-size:26px;font-weight:900;margin-bottom:4px}
+.cert-generic .cert-subtitle{font-size:11px;margin-bottom:24px}
+.cert-generic .cert-name{font-family:var(--serif);font-size:34px;font-weight:900;margin-bottom:6px}
+.cert-generic .cert-course{font-family:var(--heading);font-size:13px;font-weight:700;margin-bottom:4px}
+.cert-generic .cert-desc{font-size:11px;max-width:420px;margin-bottom:20px;line-height:1.7}
+.cert-generic .cert-score{font-family:var(--heading);font-size:28px;font-weight:900;margin-bottom:2px}
+.cert-generic .cert-score-label{font-size:9px;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px}
+.cert-generic .cert-footer{display:flex;gap:50px}.cert-generic .cert-sign{text-align:center}.cert-generic .cert-sign-line{width:120px;height:1px;margin-bottom:6px}.cert-generic .cert-sign-name{font-family:var(--heading);font-size:10px;font-weight:700}.cert-generic .cert-sign-role{font-size:8px}
+.cert-generic .cert-id{font-family:var(--mono);font-size:8px;margin-top:14px}
+.cert-generic .cert-date{font-family:var(--heading);font-size:10px;margin-bottom:20px}
+.cert-generic .cert-border{position:absolute;pointer-events:none}
+.cert-generic .cert-orb{position:absolute;border-radius:50%;pointer-events:none}
+
+/* 4 — RELATION CLIENT — Warm coral/peach */
+.cert-client{background:linear-gradient(160deg,#fef7f0,#fff5ed,#fef7f0)}
+.cert-client .cert-label{color:#d35400}
+.cert-client .cert-main-title{color:var(--dark)}
+.cert-client .cert-subtitle{color:var(--gris2)}
+.cert-client .cert-name{color:#d35400}
+.cert-client .cert-course{color:var(--dark)}
+.cert-client .cert-desc{color:var(--gris2)}
+.cert-client .cert-score{color:var(--orange)}
+.cert-client .cert-score-label{color:var(--gris3)}
+.cert-client .cert-sign-line{background:rgba(211,84,0,.15)}
+.cert-client .cert-sign-name{color:var(--dark)}
+.cert-client .cert-sign-role{color:var(--gris3)}
+.cert-client .cert-id{color:var(--gris3)}
+.cert-client .cert-date{color:var(--gris2)}
+.cert-client .cert-icon{background:linear-gradient(135deg,#e67e22,#d35400)}
+.cert-client .c-border{position:absolute;inset:16px;border:2px solid rgba(211,84,0,.06);border-radius:4px;pointer-events:none}
+.cert-client .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#e67e22,#f39c12,#e67e22)}
+
+/* 5 — LANGUES — Blue gradient, globe */
+.cert-langues{background:linear-gradient(160deg,#0a1628,#0d2240,#0a1628)}
+.cert-langues .cert-label{color:rgba(52,152,219,.75)}
+.cert-langues .cert-main-title{color:#fff}
+.cert-langues .cert-subtitle{color:rgba(255,255,255,.85)}
+.cert-langues .cert-name{color:#3498db}
+.cert-langues .cert-course{color:rgba(255,255,255,.85)}
+.cert-langues .cert-desc{color:rgba(255,255,255,.55)}
+.cert-langues .cert-score{color:#2ecc71}
+.cert-langues .cert-score-label{color:rgba(255,255,255,.75)}
+.cert-langues .cert-sign-line{background:rgba(255,255,255,.1)}
+.cert-langues .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-langues .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-langues .cert-id{color:rgba(255,255,255,.3)}
+.cert-langues .cert-date{color:rgba(255,255,255,.55)}
+.cert-langues .cert-icon{background:linear-gradient(135deg,#2980b9,#3498db)}
+.cert-langues .c-orb{position:absolute;top:-15%;right:-8%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(52,152,219,.1),transparent 65%);pointer-events:none}
+.cert-langues .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#2980b9,#3498db,#2ecc71)}
+
+/* 6 — DIGITAL / NUMÉRIQUE — Cyber dark */
+.cert-digital{background:linear-gradient(160deg,#0a0a14,#0f0f28,#0a0a14)}
+.cert-digital .cert-label{color:rgba(155,89,182,.75)}
+.cert-digital .cert-main-title{color:#fff}
+.cert-digital .cert-subtitle{color:rgba(255,255,255,.85)}
+.cert-digital .cert-name{color:#9b59b6}
+.cert-digital .cert-course{color:rgba(255,255,255,.85)}
+.cert-digital .cert-desc{color:rgba(255,255,255,.55)}
+.cert-digital .cert-score{color:#01E8AE}
+.cert-digital .cert-score-label{color:rgba(255,255,255,.75)}
+.cert-digital .cert-sign-line{background:rgba(255,255,255,.1)}
+.cert-digital .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-digital .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-digital .cert-id{color:rgba(255,255,255,.3)}
+.cert-digital .cert-date{color:rgba(255,255,255,.55)}
+.cert-digital .cert-icon{background:linear-gradient(135deg,#8e44ad,#9b59b6)}
+.cert-digital .c-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(155,89,182,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(155,89,182,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.cert-digital .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8e44ad,#9b59b6,#01E8AE)}
+
+/* 7 — COMPTABILITÉ — Green/formal */
+.cert-compta{background:#f8faf8}
+.cert-compta .cert-label{color:#27ae60}
+.cert-compta .cert-main-title{color:var(--dark)}
+.cert-compta .cert-subtitle{color:var(--gris2)}
+.cert-compta .cert-name{color:#27ae60}
+.cert-compta .cert-course{color:var(--dark)}
+.cert-compta .cert-desc{color:var(--gris2)}
+.cert-compta .cert-score{color:#27ae60}
+.cert-compta .cert-score-label{color:var(--gris3)}
+.cert-compta .cert-sign-line{background:rgba(39,174,96,.15)}
+.cert-compta .cert-sign-name{color:var(--dark)}
+.cert-compta .cert-sign-role{color:var(--gris3)}
+.cert-compta .cert-id{color:var(--gris3)}
+.cert-compta .cert-date{color:var(--gris2)}
+.cert-compta .cert-icon{background:linear-gradient(135deg,#27ae60,#2ecc71)}
+.cert-compta .c-border{position:absolute;inset:14px;border:2px solid rgba(39,174,96,.06);border-radius:0;pointer-events:none}
+.cert-compta .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#27ae60,#2ecc71,#27ae60)}
+
+/* 8 — DROIT DU TRAVAIL — Navy/serious */
+.cert-droit{background:linear-gradient(160deg,#0a1225,#132044,#0a1225)}
+.cert-droit .cert-label{color:rgba(189,195,199,.7)}
+.cert-droit .cert-main-title{color:#fff}
+.cert-droit .cert-subtitle{color:rgba(255,255,255,.85)}
+.cert-droit .cert-name{color:#ecf0f1}
+.cert-droit .cert-course{color:rgba(255,255,255,.85)}
+.cert-droit .cert-desc{color:rgba(255,255,255,.55)}
+.cert-droit .cert-score{color:var(--bleu)}
+.cert-droit .cert-score-label{color:rgba(255,255,255,.75)}
+.cert-droit .cert-sign-line{background:rgba(255,255,255,.1)}
+.cert-droit .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-droit .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-droit .cert-id{color:rgba(255,255,255,.3)}
+.cert-droit .cert-date{color:rgba(255,255,255,.55)}
+.cert-droit .cert-icon{background:linear-gradient(135deg,#2c3e50,#34495e)}
+.cert-droit .c-border{position:absolute;inset:14px;border:1px solid rgba(255,255,255,.05);pointer-events:none}
+.cert-droit .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#2c3e50,var(--bleu),#2c3e50)}
+
+/* 9 — PREMIERS SECOURS / SST — Red cross white */
+.cert-secours{background:#fff}
+.cert-secours .cert-label{color:#c0392b}
+.cert-secours .cert-main-title{color:var(--dark)}
+.cert-secours .cert-subtitle{color:var(--gris2)}
+.cert-secours .cert-name{color:#c0392b}
+.cert-secours .cert-course{color:var(--dark)}
+.cert-secours .cert-desc{color:var(--gris2)}
+.cert-secours .cert-score{color:#c0392b}
+.cert-secours .cert-score-label{color:var(--gris3)}
+.cert-secours .cert-sign-line{background:rgba(192,57,43,.15)}
+.cert-secours .cert-sign-name{color:var(--dark)}
+.cert-secours .cert-sign-role{color:var(--gris3)}
+.cert-secours .cert-id{color:var(--gris3)}
+.cert-secours .cert-date{color:var(--gris2)}
+.cert-secours .cert-icon{background:linear-gradient(135deg,#e74c3c,#c0392b)}
+.cert-secours .c-cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;pointer-events:none;opacity:.02}
+.cert-secours .c-cross::before{content:'';position:absolute;top:33%;left:0;right:0;height:34%;background:var(--rouge)}
+.cert-secours .c-cross::after{content:'';position:absolute;left:33%;top:0;bottom:0;width:34%;background:var(--rouge)}
+.cert-secours .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#e74c3c,#fff,#e74c3c)}
+
+/* 10 — MANAGEMENT / LEADERSHIP — Royal purple gradient */
+.cert-management{background:linear-gradient(160deg,#1a0a28,#2d1050,#1a0a28)}
+.cert-management .cert-label{color:rgba(155,89,182,.75)}
+.cert-management .cert-main-title{color:#fff}
+.cert-management .cert-subtitle{color:rgba(255,255,255,.85)}
+.cert-management .cert-name{color:#f39c12}
+.cert-management .cert-course{color:rgba(255,255,255,.85)}
+.cert-management .cert-desc{color:rgba(255,255,255,.55)}
+.cert-management .cert-score{color:#f39c12}
+.cert-management .cert-score-label{color:rgba(255,255,255,.75)}
+.cert-management .cert-sign-line{background:rgba(255,255,255,.1)}
+.cert-management .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-management .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-management .cert-id{color:rgba(255,255,255,.3)}
+.cert-management .cert-date{color:rgba(255,255,255,.55)}
+.cert-management .cert-icon{background:linear-gradient(135deg,#f39c12,#e67e22)}
+.cert-management .c-orb{position:absolute;top:-20%;right:-10%;width:450px;height:450px;border-radius:50%;background:radial-gradient(circle,rgba(155,89,182,.1),transparent 65%);pointer-events:none}
+.cert-management .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8e44ad,#f39c12,#8e44ad)}
+
+/* ============================================================
+   TEMPLATE 11 — IMMOBILIER — Marble cream, elegant
+   ============================================================ */
+.cert-immo{background:linear-gradient(160deg,#faf8f5,#f5f0e8,#faf8f5)}
+.cert-immo .cert-label{color:#8b6914}
+.cert-immo .cert-main-title{color:var(--dark)}
+.cert-immo .cert-subtitle{color:#8b7355}
+.cert-immo .cert-name{color:#6b4c00}
+.cert-immo .cert-course{color:var(--dark)}
+.cert-immo .cert-desc{color:#8b7355}
+.cert-immo .cert-score{color:#8b6914}
+.cert-immo .cert-score-label{color:#b5a48a}
+.cert-immo .cert-sign-line{background:rgba(139,105,20,.2)}
+.cert-immo .cert-sign-name{color:var(--dark)}
+.cert-immo .cert-sign-role{color:#b5a48a}
+.cert-immo .cert-id{color:#c4b69c}
+.cert-immo .cert-date{color:#8b7355}
+.cert-immo .cert-icon{background:linear-gradient(135deg,#8b6914,#b8860b);color:#fff}
+.cert-immo .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#8b6914,#daa520,#8b6914)}
+.cert-immo .c-marble{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.02' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.02'/%3E%3C/svg%3E");pointer-events:none}
+.cert-immo .c-corner{position:absolute;width:50px;height:50px;pointer-events:none}
+.cert-immo .c-corner.tl{top:18px;left:18px;border-top:2px solid rgba(139,105,20,.15);border-left:2px solid rgba(139,105,20,.15)}
+.cert-immo .c-corner.tr{top:18px;right:18px;border-top:2px solid rgba(139,105,20,.15);border-right:2px solid rgba(139,105,20,.15)}
+.cert-immo .c-corner.bl{bottom:18px;left:18px;border-bottom:2px solid rgba(139,105,20,.15);border-left:2px solid rgba(139,105,20,.15)}
+.cert-immo .c-corner.br{bottom:18px;right:18px;border-bottom:2px solid rgba(139,105,20,.15);border-right:2px solid rgba(139,105,20,.15)}
+
+/* ============================================================
+   TEMPLATE 12 — SANTÉ / BIEN-ÊTRE — Teal mint fresh
+   ============================================================ */
+.cert-sante{background:linear-gradient(160deg,#0a2025,#0e3a3f,#0a2025)}
+.cert-sante .cert-label{color:#5ec4b6}
+.cert-sante .cert-main-title{color:#fff}
+.cert-sante .cert-subtitle{color:rgba(255,255,255,.65)}
+.cert-sante .cert-name{color:#5ec4b6;text-shadow:0 2px 20px rgba(94,196,182,.2)}
+.cert-sante .cert-course{color:#fff}
+.cert-sante .cert-desc{color:rgba(255,255,255,.6)}
+.cert-sante .cert-score{color:#7ee8d6}
+.cert-sante .cert-score-label{color:rgba(255,255,255,.5)}
+.cert-sante .cert-sign-line{background:rgba(94,196,182,.2)}
+.cert-sante .cert-sign-name{color:rgba(255,255,255,.8)}
+.cert-sante .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-sante .cert-id{color:rgba(255,255,255,.3)}
+.cert-sante .cert-date{color:rgba(255,255,255,.6)}
+.cert-sante .cert-icon{background:linear-gradient(135deg,#0d9488,#5ec4b6);color:#fff}
+.cert-sante .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#0d9488,#5ec4b6,#7ee8d6)}
+.cert-sante .c-orb{position:absolute;top:-20%;right:-8%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(94,196,182,.08),transparent 65%);pointer-events:none}
+.cert-sante .c-orb2{position:absolute;bottom:-25%;left:-5%;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.06),transparent 65%);pointer-events:none}
+
+/* ============================================================
+   TEMPLATE 13 — MARKETING — Bold magenta/pink
+   ============================================================ */
+.cert-marketing{background:#fff}
+.cert-marketing .cert-label{color:#c2185b}
+.cert-marketing .cert-main-title{color:var(--dark)}
+.cert-marketing .cert-subtitle{color:#777}
+.cert-marketing .cert-name{color:#c2185b}
+.cert-marketing .cert-course{color:var(--dark)}
+.cert-marketing .cert-desc{color:#777}
+.cert-marketing .cert-score{color:#ad1457}
+.cert-marketing .cert-score-label{color:#bbb}
+.cert-marketing .cert-sign-line{background:rgba(194,24,91,.15)}
+.cert-marketing .cert-sign-name{color:var(--dark)}
+.cert-marketing .cert-sign-role{color:#999}
+.cert-marketing .cert-id{color:#ccc}
+.cert-marketing .cert-date{color:#777}
+.cert-marketing .cert-icon{background:linear-gradient(135deg,#c2185b,#e91e63);color:#fff}
+.cert-marketing .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#ad1457,#e91e63,#f06292,#e91e63,#ad1457)}
+.cert-marketing .c-shape{position:absolute;bottom:30px;right:40px;width:120px;height:120px;border-radius:50%;border:20px solid rgba(194,24,91,.03);pointer-events:none}
+.cert-marketing .c-shape2{position:absolute;top:40px;left:40px;width:80px;height:80px;border-radius:50%;border:14px solid rgba(194,24,91,.02);pointer-events:none}
+
+/* ============================================================
+   TEMPLATE 14 — LOGISTIQUE — Industrial steel blue
+   ============================================================ */
+.cert-logistique{background:linear-gradient(160deg,#1a1e2e,#252b40,#1a1e2e)}
+.cert-logistique .cert-label{color:rgba(96,165,250,.7)}
+.cert-logistique .cert-main-title{color:#fff}
+.cert-logistique .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-logistique .cert-name{color:#60a5fa;text-shadow:0 2px 16px rgba(96,165,250,.2)}
+.cert-logistique .cert-course{color:#fff}
+.cert-logistique .cert-desc{color:rgba(255,255,255,.55)}
+.cert-logistique .cert-score{color:#93c5fd}
+.cert-logistique .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-logistique .cert-sign-line{background:rgba(96,165,250,.15)}
+.cert-logistique .cert-sign-name{color:rgba(255,255,255,.8)}
+.cert-logistique .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-logistique .cert-id{color:rgba(255,255,255,.3)}
+.cert-logistique .cert-date{color:rgba(255,255,255,.6)}
+.cert-logistique .cert-icon{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff}
+.cert-logistique .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1e3a5f,#3b82f6,#60a5fa,#3b82f6,#1e3a5f)}
+.cert-logistique .c-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(96,165,250,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.cert-logistique .c-border{position:absolute;inset:12px;border:1px solid rgba(96,165,250,.06);pointer-events:none}
+
+/* ============================================================
+   TEMPLATE 15 — ENVIRONNEMENT / RSE — Nature organic green
+   ============================================================ */
+.cert-environnement{background:linear-gradient(160deg,#f0f7f0,#e8f5e8,#f0f7f0)}
+.cert-environnement .cert-label{color:#2d6a2e}
+.cert-environnement .cert-main-title{color:#1a3c1a}
+.cert-environnement .cert-subtitle{color:#5a7d5a}
+.cert-environnement .cert-name{color:#2d6a2e}
+.cert-environnement .cert-course{color:#1a3c1a}
+.cert-environnement .cert-desc{color:#5a7d5a}
+.cert-environnement .cert-score{color:#2d6a2e}
+.cert-environnement .cert-score-label{color:#8da88d}
+.cert-environnement .cert-sign-line{background:rgba(45,106,46,.15)}
+.cert-environnement .cert-sign-name{color:#1a3c1a}
+.cert-environnement .cert-sign-role{color:#8da88d}
+.cert-environnement .cert-id{color:#a8c0a8}
+.cert-environnement .cert-date{color:#5a7d5a}
+.cert-environnement .cert-icon{background:linear-gradient(135deg,#2d6a2e,#43a047);color:#fff}
+.cert-environnement .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#2d6a2e,#43a047,#66bb6a,#43a047,#2d6a2e)}
+.cert-environnement .c-leaf{position:absolute;bottom:20px;right:30px;font-size:150px;opacity:.03;pointer-events:none;line-height:1}
+
+/* ============================================================
+   TEMPLATE 16 — INTELLIGENCE ARTIFICIELLE — Futuristic neon
+   ============================================================ */
+.cert-ia{background:linear-gradient(160deg,#05050f,#0a0a1e,#05050f)}
+.cert-ia .cert-label{color:rgba(0,230,180,.6)}
+.cert-ia .cert-main-title{color:#fff}
+.cert-ia .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-ia .cert-name{color:#00e6b4;text-shadow:0 0 30px rgba(0,230,180,.3)}
+.cert-ia .cert-course{color:#fff}
+.cert-ia .cert-desc{color:rgba(255,255,255,.55)}
+.cert-ia .cert-score{color:#00e6b4;text-shadow:0 0 20px rgba(0,230,180,.25)}
+.cert-ia .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-ia .cert-sign-line{background:rgba(0,230,180,.15)}
+.cert-ia .cert-sign-name{color:rgba(255,255,255,.8)}
+.cert-ia .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-ia .cert-id{color:rgba(255,255,255,.3)}
+.cert-ia .cert-date{color:rgba(255,255,255,.6)}
+.cert-ia .cert-icon{background:linear-gradient(135deg,#00b894,#00e6b4);color:#fff;box-shadow:0 0 24px rgba(0,230,180,.25)}
+.cert-ia .c-accent{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#00e6b4,transparent)}
+.cert-ia .c-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,230,180,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,180,.015) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.cert-ia .c-scanline{position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,230,180,.008) 2px,rgba(0,230,180,.008) 4px);pointer-events:none}
+.cert-ia .c-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,230,180,.04),transparent 60%);pointer-events:none}
+
+/* ============================================================
+   TEMPLATE 17 — RESSOURCES HUMAINES — Warm burgundy
+   ============================================================ */
+.cert-rh{background:linear-gradient(160deg,#200a14,#3a1228,#200a14)}
+.cert-rh .cert-label{color:rgba(220,120,160,.7)}
+.cert-rh .cert-main-title{color:#fff}
+.cert-rh .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-rh .cert-name{color:#e8a0be;text-shadow:0 2px 16px rgba(220,120,160,.2)}
+.cert-rh .cert-course{color:#fff}
+.cert-rh .cert-desc{color:rgba(255,255,255,.55)}
+.cert-rh .cert-score{color:#e8a0be}
+.cert-rh .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-rh .cert-sign-line{background:rgba(220,120,160,.15)}
+.cert-rh .cert-sign-name{color:rgba(255,255,255,.8)}
+.cert-rh .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-rh .cert-id{color:rgba(255,255,255,.3)}
+.cert-rh .cert-date{color:rgba(255,255,255,.6)}
+.cert-rh .cert-icon{background:linear-gradient(135deg,#8b1a4a,#c2185b);color:#fff}
+.cert-rh .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#6a0f38,#c2185b,#e8a0be,#c2185b,#6a0f38)}
+.cert-rh .c-border{position:absolute;inset:14px;border:1px solid rgba(220,120,160,.06);border-radius:4px;pointer-events:none}
+
+/* ============================================================
+   TEMPLATE 18 — COMMUNICATION — Bright coral/peach gradient on white
+   ============================================================ */
+.cert-comm{background:#fff}
+.cert-comm .cert-label{color:#e84393}
+.cert-comm .cert-main-title{color:var(--dark)}
+.cert-comm .cert-subtitle{color:#888}
+.cert-comm .cert-name{color:#e84393}
+.cert-comm .cert-course{color:var(--dark)}
+.cert-comm .cert-desc{color:#777}
+.cert-comm .cert-score{color:#fd79a8}
+.cert-comm .cert-score-label{color:#bbb}
+.cert-comm .cert-sign-line{background:rgba(232,67,147,.12)}
+.cert-comm .cert-sign-name{color:var(--dark)}
+.cert-comm .cert-sign-role{color:#999}
+.cert-comm .cert-id{color:#ccc}
+.cert-comm .cert-date{color:#888}
+.cert-comm .cert-icon{background:linear-gradient(135deg,#e84393,#fd79a8);color:#fff}
+.cert-comm .c-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#e84393,#fd79a8,#fab1d0,#fd79a8,#e84393)}
+.cert-comm .c-wave{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(180deg,transparent,rgba(232,67,147,.02));pointer-events:none}
+.cert-comm .c-circle{position:absolute;top:50%;right:-20px;width:200px;height:200px;border-radius:50%;border:30px solid rgba(232,67,147,.02);pointer-events:none;transform:translateY(-50%)}
+
+/* ============================================================
+   TEMPLATE 19 — FINANCE / INVESTISSEMENT — Black & gold luxury
+   ============================================================ */
+.cert-finance{background:linear-gradient(160deg,#0a0a0a,#141414,#0a0a0a)}
+.cert-finance .cert-label{color:#c9a84c}
+.cert-finance .cert-main-title{color:#fff}
+.cert-finance .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-finance .cert-name{color:#daa520;text-shadow:0 2px 20px rgba(218,165,32,.2)}
+.cert-finance .cert-course{color:#fff}
+.cert-finance .cert-desc{color:rgba(255,255,255,.55)}
+.cert-finance .cert-score{color:#f4d03f}
+.cert-finance .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-finance .cert-sign-line{background:rgba(218,165,32,.2)}
+.cert-finance .cert-sign-name{color:rgba(255,255,255,.85)}
+.cert-finance .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-finance .cert-id{color:rgba(255,255,255,.3)}
+.cert-finance .cert-date{color:rgba(255,255,255,.6)}
+.cert-finance .cert-icon{background:linear-gradient(135deg,#b8860b,#daa520);color:#fff}
+.cert-finance .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8b6914,#daa520,#f4d03f,#daa520,#8b6914)}
+.cert-finance .c-accent-b{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8b6914,#daa520,#f4d03f,#daa520,#8b6914)}
+.cert-finance .c-border{position:absolute;inset:14px;border:1px solid rgba(218,165,32,.08);pointer-events:none}
+.cert-finance .c-border::before{content:'';position:absolute;inset:4px;border:1px solid rgba(218,165,32,.04)}
+
+/* ============================================================
+   TEMPLATE 20 — TOURISME / HÔTELLERIE — Elegant navy/turquoise
+   ============================================================ */
+.cert-tourisme{background:linear-gradient(160deg,#0a1628,#0f2847,#0a1628)}
+.cert-tourisme .cert-label{color:rgba(72,209,204,.7)}
+.cert-tourisme .cert-main-title{color:#fff}
+.cert-tourisme .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-tourisme .cert-name{color:#48d1cc;text-shadow:0 2px 20px rgba(72,209,204,.2)}
+.cert-tourisme .cert-course{color:#fff}
+.cert-tourisme .cert-desc{color:rgba(255,255,255,.55)}
+.cert-tourisme .cert-score{color:#7fffd4}
+.cert-tourisme .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-tourisme .cert-sign-line{background:rgba(72,209,204,.15)}
+.cert-tourisme .cert-sign-name{color:rgba(255,255,255,.85)}
+.cert-tourisme .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-tourisme .cert-id{color:rgba(255,255,255,.3)}
+.cert-tourisme .cert-date{color:rgba(255,255,255,.6)}
+.cert-tourisme .cert-icon{background:linear-gradient(135deg,#20b2aa,#48d1cc);color:#fff}
+.cert-tourisme .c-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#0a6a66,#20b2aa,#48d1cc,#7fffd4,#48d1cc,#20b2aa,#0a6a66)}
+.cert-tourisme .c-orb{position:absolute;top:-15%;right:-8%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(72,209,204,.08),transparent 60%);pointer-events:none}
+.cert-tourisme .c-wave{position:absolute;bottom:30px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 10%,rgba(72,209,204,.08) 30%,rgba(72,209,204,.12) 50%,rgba(72,209,204,.08) 70%,transparent 90%);pointer-events:none}
+.cert-tourisme .c-wave::before{content:'';position:absolute;top:-8px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 15%,rgba(72,209,204,.05) 35%,rgba(72,209,204,.08) 50%,rgba(72,209,204,.05) 65%,transparent 85%)}
+
+@media(max-width:700px){
+  .cert-wrapper{padding:0 8px;margin:16px auto}
+  .cert-vtc .cert-inner,.cert-gestion .cert-inner,.cert-securite .cert-inner,.cert-generic .cert-inner{padding:24px 20px}
+  .cert-vtc .cert-name,.cert-gestion .cert-name,.cert-securite .cert-name,.cert-generic .cert-name{font-size:22px}
+  .cert-vtc .cert-main-title,.cert-gestion .cert-main-title,.cert-securite .cert-main-title,.cert-generic .cert-main-title{font-size:18px}
+  .selector{overflow-x:auto;flex-wrap:nowrap}
+}
+</style>
+</head>
+<body>
+
+<!-- SELECTOR -->
+<div class="selector">
+  <div class="selector-logo">M</div>
+  <div class="selector-title">Certificats<span>20 templates par domaine</span></div>
+  <div class="stab active" onclick="show(0,this)">1. VTC</div>
+  <div class="stab" onclick="show(1,this)">2. Gestion</div>
+  <div class="stab" onclick="show(2,this)">3. Sécurité</div>
+  <div class="stab" onclick="show(3,this)">4. Relation client</div>
+  <div class="stab" onclick="show(4,this)">5. Langues</div>
+  <div class="stab" onclick="show(5,this)">6. Digital</div>
+  <div class="stab" onclick="show(6,this)">7. Comptabilité</div>
+  <div class="stab" onclick="show(7,this)">8. Droit</div>
+  <div class="stab" onclick="show(8,this)">9. Secours</div>
+  <div class="stab" onclick="show(9,this)">10. Management</div>
+  <div class="stab" onclick="show(10,this)">11. Immobilier</div>
+  <div class="stab" onclick="show(11,this)">12. Santé</div>
+  <div class="stab" onclick="show(12,this)">13. Marketing</div>
+  <div class="stab" onclick="show(13,this)">14. Logistique</div>
+  <div class="stab" onclick="show(14,this)">15. Environnement</div>
+  <div class="stab" onclick="show(15,this)">16. IA</div>
+  <div class="stab" onclick="show(16,this)">17. RH</div>
+  <div class="stab" onclick="show(17,this)">18. Communication</div>
+  <div class="stab" onclick="show(18,this)">19. Finance</div>
+  <div class="stab" onclick="show(19,this)">20. Tourisme</div>
+</div>
+
+<!-- 1. VTC -->
+<div class="cert-wrapper active">
+  <div class="cert cert-vtc">
+    <div class="cert-accent"></div><div class="cert-border"></div><div class="cert-glow"></div><div class="cert-glow2"></div><div class="cert-road"></div>
+    <div class="cert-inner">
+      <div class="cert-logo">M</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Attestation de réussite</div>
+      <div class="cert-subtitle">Certification professionnelle VTC</div>
+      <div class="cert-name">Sarah Arnaud</div>
+      <div class="cert-course">Réglementation et droit des transports VTC</div>
+      <div class="cert-desc">A complété avec succès l'ensemble des modules et validé l'examen final de la formation réglementaire VTC.</div>
+      <div class="cert-date">Délivré le 1 février 2026</div>
+      <div class="cert-score">87%</div>
+      <div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer">
+        <div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div>
+        <div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Responsable formation</div><div class="cert-sign-role">Certification VTC</div></div>
+      </div>
+      <div class="cert-id">MF-2026-VTC-00042</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. GESTION -->
+<div class="cert-wrapper">
+  <div class="cert cert-gestion">
+    <div class="cert-gold-top"></div><div class="cert-gold-bottom"></div>
+    <div class="cert-corner tl"></div><div class="cert-corner tr"></div><div class="cert-corner bl"></div><div class="cert-corner br"></div>
+    <div class="cert-watermark">M</div>
+    <div class="cert-inner">
+      <div class="cert-logo">M</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certificat de compétence</div>
+      <div class="cert-subtitle">Formation en gestion d'entreprise</div>
+      <div class="cert-name">Marc Dupont</div>
+      <div class="cert-course">Gestion d'entreprise et développement commercial</div>
+      <div class="cert-desc">A démontré ses compétences en comptabilité, fiscalité, prospection et fidélisation de clientèle.</div>
+      <div class="cert-date">Délivré le 15 mars 2026</div>
+      <div class="cert-score">82%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Département Gestion</div><div class="cert-sign-role">Validation académique</div></div></div>
+      <div class="cert-id">MF-2026-GES-00018</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. SÉCURITÉ ROUTIÈRE -->
+<div class="cert-wrapper">
+  <div class="cert cert-securite">
+    <div class="cert-stripe"></div><div class="cert-stripe-b"></div><div class="cert-border"></div>
+    <div class="cert-inner">
+      <div class="cert-shield">🛡️</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification Sécurité</div>
+      <div class="cert-subtitle">Formation sécurité routière et conduite préventive</div>
+      <div class="cert-name">Julie Martin</div>
+      <div class="cert-course">Sécurité routière et conduite préventive</div>
+      <div class="cert-desc">A validé les modules de gestion des risques, premiers secours routiers et éco-conduite professionnelle.</div>
+      <div class="cert-date">Délivré le 20 février 2026</div>
+      <div class="cert-score">91%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Référent Sécurité</div><div class="cert-sign-role">Certification conduite</div></div></div>
+      <div class="cert-id">MF-2026-SEC-00031</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. RELATION CLIENT -->
+<div class="cert-wrapper">
+  <div class="cert cert-client cert-generic">
+    <div class="c-border"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">🤝</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Attestation de formation</div>
+      <div class="cert-subtitle">Techniques d'accueil et relation client</div>
+      <div class="cert-name">Pierre Lefevre</div>
+      <div class="cert-course">Techniques d'accueil et relation client VTC</div>
+      <div class="cert-desc">A développé ses compétences en communication, accueil professionnel et gestion des situations difficiles.</div>
+      <div class="cert-date">Délivré le 8 janvier 2026</div>
+      <div class="cert-score">79%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Resp. Relation Client</div><div class="cert-sign-role">Validation pratique</div></div></div>
+      <div class="cert-id">MF-2026-CLI-00056</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. LANGUES -->
+<div class="cert-wrapper">
+  <div class="cert cert-langues cert-generic">
+    <div class="c-orb"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">🌍</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Language Proficiency Certificate</div>
+      <div class="cert-subtitle">Professional English for VTC drivers</div>
+      <div class="cert-name">Amina Benali</div>
+      <div class="cert-course">Anglais professionnel pour chauffeurs VTC</div>
+      <div class="cert-desc">Has demonstrated professional-level English skills for client interaction, navigation and business communication.</div>
+      <div class="cert-date">Issued February 14, 2026</div>
+      <div class="cert-score">85%</div><div class="cert-score-label">Proficiency score</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Language Department</div><div class="cert-sign-role">Certification</div></div></div>
+      <div class="cert-id">MF-2026-LNG-00019</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. DIGITAL -->
+<div class="cert-wrapper">
+  <div class="cert cert-digital cert-generic">
+    <div class="c-grid"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">💻</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification Numérique</div>
+      <div class="cert-subtitle">Compétences digitales professionnelles</div>
+      <div class="cert-name">Thomas Bernard</div>
+      <div class="cert-course">Outils numériques et présence en ligne</div>
+      <div class="cert-desc">A maîtrisé les outils de gestion numérique, réseaux sociaux professionnels et marketing digital.</div>
+      <div class="cert-date">Délivré le 22 février 2026</div>
+      <div class="cert-score">88%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Pôle Digital</div><div class="cert-sign-role">Certification tech</div></div></div>
+      <div class="cert-id">MF-2026-DIG-00012</div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. COMPTABILITÉ -->
+<div class="cert-wrapper">
+  <div class="cert cert-compta cert-generic">
+    <div class="c-border"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">📊</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certificat de compétence</div>
+      <div class="cert-subtitle">Comptabilité et gestion financière</div>
+      <div class="cert-name">Claire Moreau</div>
+      <div class="cert-course">Comptabilité appliquée à l'activité VTC</div>
+      <div class="cert-desc">A validé les modules de tenue comptable, déclarations fiscales et gestion de trésorerie d'une micro-entreprise VTC.</div>
+      <div class="cert-date">Délivré le 5 mars 2026</div>
+      <div class="cert-score">76%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Expert comptable</div><div class="cert-sign-role">Validation technique</div></div></div>
+      <div class="cert-id">MF-2026-CPT-00008</div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. DROIT DU TRAVAIL -->
+<div class="cert-wrapper">
+  <div class="cert cert-droit cert-generic">
+    <div class="c-border"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">⚖️</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Attestation juridique</div>
+      <div class="cert-subtitle">Droit du travail et statuts professionnels</div>
+      <div class="cert-name">Karim Hadj</div>
+      <div class="cert-course">Droit du travail appliqué aux indépendants VTC</div>
+      <div class="cert-desc">A acquis les connaissances en droit social, contrats commerciaux et protection juridique de l'activité VTC.</div>
+      <div class="cert-date">Délivré le 12 janvier 2026</div>
+      <div class="cert-score">83%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Consultant juridique</div><div class="cert-sign-role">Validation droit</div></div></div>
+      <div class="cert-id">MF-2026-DRT-00015</div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. PREMIERS SECOURS -->
+<div class="cert-wrapper">
+  <div class="cert cert-secours cert-generic">
+    <div class="c-cross"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">🏥</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification SST</div>
+      <div class="cert-subtitle">Sauveteur Secouriste du Travail</div>
+      <div class="cert-name">Laura Petit</div>
+      <div class="cert-course">Premiers secours et SST pour chauffeurs VTC</div>
+      <div class="cert-desc">A validé la formation aux gestes de premiers secours, alertes et prise en charge des urgences en milieu professionnel.</div>
+      <div class="cert-date">Délivré le 18 février 2026</div>
+      <div class="cert-score">94%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Formateur SST</div><div class="cert-sign-role">Habilitation INRS</div></div></div>
+      <div class="cert-id">MF-2026-SST-00023</div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. MANAGEMENT -->
+<div class="cert-wrapper">
+  <div class="cert cert-management cert-generic">
+    <div class="c-orb"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon" style="color:#fff">👑</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Leadership Certificate</div>
+      <div class="cert-subtitle">Management et développement des équipes</div>
+      <div class="cert-name">Nicolas Roux</div>
+      <div class="cert-course">Management d'équipe et leadership VTC</div>
+      <div class="cert-desc">A développé ses compétences en gestion d'équipe, prise de décision, motivation et communication managériale.</div>
+      <div class="cert-date">Délivré le 28 février 2026</div>
+      <div class="cert-score">90%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Coach Management</div><div class="cert-sign-role">Executive Certification</div></div></div>
+      <div class="cert-id">MF-2026-MGT-00007</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:24px;font-size:10px;color:#999">Mission Formations — 20 templates de certificats · Février 2026</div>
+
+<!-- 11. IMMOBILIER -->
+<div class="cert-wrapper">
+  <div class="cert cert-immo cert-generic">
+    <div class="c-marble"></div><div class="c-accent"></div>
+    <div class="c-corner tl"></div><div class="c-corner tr"></div><div class="c-corner bl"></div><div class="c-corner br"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">🏠</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certificat en immobilier</div>
+      <div class="cert-subtitle">Transaction et gestion de patrimoine</div>
+      <div class="cert-name">Sophie Lambert</div>
+      <div class="cert-course">Fondamentaux de la transaction immobilière</div>
+      <div class="cert-desc">A validé les compétences en estimation, négociation, cadre juridique de la vente et gestion locative professionnelle.</div>
+      <div class="cert-date">Délivré le 10 mars 2026</div>
+      <div class="cert-score">81%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Expert immobilier</div><div class="cert-sign-role">Certification transaction</div></div></div>
+      <div class="cert-id">MF-2026-IMM-00014</div>
+    </div>
+  </div>
+</div>
+
+<!-- 12. SANTÉ -->
+<div class="cert-wrapper">
+  <div class="cert cert-sante cert-generic">
+    <div class="c-orb"></div><div class="c-orb2"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">💚</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification Santé & Bien-être</div>
+      <div class="cert-subtitle">Prévention et qualité de vie au travail</div>
+      <div class="cert-name">Élodie Girard</div>
+      <div class="cert-course">Santé au travail et prévention des TMS</div>
+      <div class="cert-desc">A complété la formation en ergonomie, gestion du stress, prévention des troubles musculo-squelettiques et bien-être professionnel.</div>
+      <div class="cert-date">Délivré le 25 janvier 2026</div>
+      <div class="cert-score">89%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Médecin du travail</div><div class="cert-sign-role">Validation santé</div></div></div>
+      <div class="cert-id">MF-2026-SAN-00009</div>
+    </div>
+  </div>
+</div>
+
+<!-- 13. MARKETING -->
+<div class="cert-wrapper">
+  <div class="cert cert-marketing cert-generic">
+    <div class="c-accent"></div><div class="c-shape"></div><div class="c-shape2"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">📣</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification Marketing</div>
+      <div class="cert-subtitle">Stratégie digitale et acquisition client</div>
+      <div class="cert-name">Léa Rousseau</div>
+      <div class="cert-course">Marketing digital et stratégie d'acquisition</div>
+      <div class="cert-desc">A maîtrisé le référencement, la publicité en ligne, les réseaux sociaux et les techniques de conversion client.</div>
+      <div class="cert-date">Délivré le 3 février 2026</div>
+      <div class="cert-score">86%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Directeur Marketing</div><div class="cert-sign-role">Certification digitale</div></div></div>
+      <div class="cert-id">MF-2026-MKT-00021</div>
+    </div>
+  </div>
+</div>
+
+<!-- 14. LOGISTIQUE -->
+<div class="cert-wrapper">
+  <div class="cert cert-logistique cert-generic">
+    <div class="c-grid"></div><div class="c-border"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">📦</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certificat Supply Chain</div>
+      <div class="cert-subtitle">Logistique et gestion des flux</div>
+      <div class="cert-name">Romain Faure</div>
+      <div class="cert-course">Logistique, supply chain et gestion des stocks</div>
+      <div class="cert-desc">A acquis les compétences en optimisation des flux, gestion d'entrepôt, planification transport et pilotage de la chaîne logistique.</div>
+      <div class="cert-date">Délivré le 14 février 2026</div>
+      <div class="cert-score">77%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Resp. Logistique</div><div class="cert-sign-role">Certification supply chain</div></div></div>
+      <div class="cert-id">MF-2026-LOG-00006</div>
+    </div>
+  </div>
+</div>
+
+<!-- 15. ENVIRONNEMENT -->
+<div class="cert-wrapper">
+  <div class="cert cert-environnement cert-generic">
+    <div class="c-accent"></div><div class="c-leaf">🌿</div>
+    <div class="cert-inner">
+      <div class="cert-icon">🌱</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification RSE & Environnement</div>
+      <div class="cert-subtitle">Responsabilité sociétale et développement durable</div>
+      <div class="cert-name">Antoine Mercier</div>
+      <div class="cert-course">RSE, bilan carbone et mobilité durable</div>
+      <div class="cert-desc">A validé les modules en développement durable, réduction de l'empreinte carbone, éco-conduite et responsabilité sociétale d'entreprise.</div>
+      <div class="cert-date">Délivré le 22 mars 2026</div>
+      <div class="cert-score">92%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Référent RSE</div><div class="cert-sign-role">Certification environnement</div></div></div>
+      <div class="cert-id">MF-2026-RSE-00011</div>
+    </div>
+  </div>
+</div>
+
+<!-- 16. INTELLIGENCE ARTIFICIELLE -->
+<div class="cert-wrapper">
+  <div class="cert cert-ia cert-generic">
+    <div class="c-grid"></div><div class="c-scanline"></div><div class="c-orb"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">🤖</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">AI Proficiency Certificate</div>
+      <div class="cert-subtitle">Intelligence artificielle et automatisation</div>
+      <div class="cert-name">Maxime Caron</div>
+      <div class="cert-course">Intelligence artificielle appliquée au métier</div>
+      <div class="cert-desc">A maîtrisé les fondamentaux de l'IA, le prompt engineering, l'automatisation des tâches et l'utilisation des outils d'IA en contexte professionnel.</div>
+      <div class="cert-date">Délivré le 18 février 2026</div>
+      <div class="cert-score">93%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Lead IA</div><div class="cert-sign-role">Certification tech</div></div></div>
+      <div class="cert-id">MF-2026-AIA-00004</div>
+    </div>
+  </div>
+</div>
+
+<!-- 17. RESSOURCES HUMAINES -->
+<div class="cert-wrapper">
+  <div class="cert cert-rh cert-generic">
+    <div class="c-border"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">👥</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification RH</div>
+      <div class="cert-subtitle">Gestion des ressources humaines</div>
+      <div class="cert-name">Camille Duval</div>
+      <div class="cert-course">Fondamentaux RH et gestion des talents</div>
+      <div class="cert-desc">A démontré ses compétences en recrutement, gestion des compétences, droit social et développement des collaborateurs.</div>
+      <div class="cert-date">Délivré le 7 mars 2026</div>
+      <div class="cert-score">84%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">DRH Partenaire</div><div class="cert-sign-role">Certification RH</div></div></div>
+      <div class="cert-id">MF-2026-RHU-00010</div>
+    </div>
+  </div>
+</div>
+
+<!-- 18. COMMUNICATION -->
+<div class="cert-wrapper">
+  <div class="cert cert-comm cert-generic">
+    <div class="c-accent"></div><div class="c-wave"></div><div class="c-circle"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">🎤</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certificat de communication</div>
+      <div class="cert-subtitle">Prise de parole et communication professionnelle</div>
+      <div class="cert-name">Inès Blanchard</div>
+      <div class="cert-course">Communication orale et écrite professionnelle</div>
+      <div class="cert-desc">A perfectionné ses techniques de prise de parole, rédaction professionnelle, gestion de conflit et communication non verbale.</div>
+      <div class="cert-date">Délivré le 20 janvier 2026</div>
+      <div class="cert-score">88%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Coach communication</div><div class="cert-sign-role">Certification expression</div></div></div>
+      <div class="cert-id">MF-2026-COM-00017</div>
+    </div>
+  </div>
+</div>
+
+<!-- 19. FINANCE -->
+<div class="cert-wrapper">
+  <div class="cert cert-finance cert-generic">
+    <div class="c-accent"></div><div class="c-accent-b"></div><div class="c-border"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">💰</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Financial Excellence Certificate</div>
+      <div class="cert-subtitle">Finance d'entreprise et investissement</div>
+      <div class="cert-name">Hugo Fontaine</div>
+      <div class="cert-course">Finance, investissement et gestion de trésorerie</div>
+      <div class="cert-desc">A démontré sa maîtrise de l'analyse financière, de la gestion de portefeuille, du business plan et de l'optimisation fiscale.</div>
+      <div class="cert-date">Délivré le 1 mars 2026</div>
+      <div class="cert-score">91%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Directeur financier</div><div class="cert-sign-role">Certification finance</div></div></div>
+      <div class="cert-id">MF-2026-FIN-00005</div>
+    </div>
+  </div>
+</div>
+
+<!-- 20. TOURISME -->
+<div class="cert-wrapper">
+  <div class="cert cert-tourisme cert-generic">
+    <div class="c-orb"></div><div class="c-wave"></div><div class="c-accent"></div>
+    <div class="cert-inner">
+      <div class="cert-icon">✈️</div>
+      <div class="cert-label">Académie Mission Formations</div>
+      <div class="cert-main-title">Certification Tourisme & Hôtellerie</div>
+      <div class="cert-subtitle">Accueil touristique et hospitalité professionnelle</div>
+      <div class="cert-name">Yasmine Khelifi</div>
+      <div class="cert-course">Tourisme, hôtellerie et accueil international</div>
+      <div class="cert-desc">A validé les compétences en accueil touristique multilingue, gestion hôtelière, protocole international et expérience client premium.</div>
+      <div class="cert-date">Délivré le 15 mars 2026</div>
+      <div class="cert-score">87%</div><div class="cert-score-label">Score de réussite</div>
+      <div class="cert-footer"><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Direction pédagogique</div><div class="cert-sign-role">Mission Formations</div></div><div class="cert-sign"><div class="cert-sign-line"></div><div class="cert-sign-name">Resp. Tourisme</div><div class="cert-sign-role">Certification hôtellerie</div></div></div>
+      <div class="cert-id">MF-2026-TOU-00013</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(i, el) {
+  document.querySelectorAll('.cert-wrapper').forEach(w => w.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.cert-wrapper')[i].classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
