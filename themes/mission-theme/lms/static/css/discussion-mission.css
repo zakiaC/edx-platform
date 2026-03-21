@@ -1,0 +1,580 @@
+/* ============================================================
+   MISSION FORMATIONS — Discussion Forum Custom CSS
+   Override du forum natif OpenEdX avec le design Mission
+   ============================================================ */
+
+:root {
+  --mf-bleu: #0965D0;
+  --mf-bleu2: #074da0;
+  --mf-bleu-pale: #e8f0fb;
+  --mf-vert: #01E8AE;
+  --mf-vert2: #00c494;
+  --mf-vert-pale: #e6faf4;
+  --mf-dark: #0a1628;
+  --mf-noir: #3B3B3B;
+  --mf-gris: #6b6b6b;
+  --mf-gris2: #999;
+  --mf-gris3: #ccc;
+  --mf-gris4: #e8e8e8;
+  --mf-fond: #f5f7fa;
+  --mf-blanc: #fff;
+  --mf-rouge: #e74c3c;
+  --mf-orange: #e67e22;
+  --mf-violet: #8e44ad;
+  --mf-gradient: linear-gradient(135deg, #0965D0, #01E8AE);
+  --mf-heading: 'Ubuntu', sans-serif;
+  --mf-body: 'Raleway', sans-serif;
+  --mf-mono: 'JetBrains Mono', monospace;
+  --mf-radius: 12px;
+  --mf-radius-s: 8px;
+}
+
+/* === DISCUSSION BOARD CONTAINER === */
+.discussion.discussion-board {
+  font-family: var(--mf-body) !important;
+  background: var(--mf-fond) !important;
+}
+
+/* === PAGE HEADER === */
+.discussion-board .page-header {
+  background: var(--mf-blanc) !important;
+  border-bottom: 1px solid var(--mf-gris4) !important;
+  padding: 14px 20px !important;
+  box-shadow: none !important;
+}
+
+.discussion-board .page-header-main {
+  font-family: var(--mf-heading) !important;
+}
+
+.discussion-board .page-header .has-breadcrumbs {
+  font-family: var(--mf-heading) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--mf-dark) !important;
+}
+
+/* === ADD POST BUTTON === */
+.discussion-board .new-post-btn,
+.discussion-board .forum-actions .btn {
+  background: var(--mf-gradient) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-family: var(--mf-heading) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  padding: 9px 20px !important;
+  box-shadow: 0 4px 14px rgba(9, 101, 208, 0.16) !important;
+  transition: all 0.2s !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.discussion-board .new-post-btn:hover,
+.discussion-board .forum-actions .btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 22px rgba(9, 101, 208, 0.25) !important;
+}
+
+/* === SEARCH BOX === */
+.discussion-board .forum-search input,
+.discussion-board .search-input {
+  border: 1px solid var(--mf-gris4) !important;
+  border-radius: var(--mf-radius-s) !important;
+  font-family: var(--mf-body) !important;
+  padding: 9px 14px !important;
+  font-size: 12px !important;
+  color: var(--mf-noir) !important;
+  background: var(--mf-blanc) !important;
+  transition: all 0.2s !important;
+}
+
+.discussion-board .forum-search input:focus,
+.discussion-board .search-input:focus {
+  border-color: var(--mf-bleu) !important;
+  box-shadow: 0 0 0 3px rgba(9, 101, 208, 0.1) !important;
+  outline: none !important;
+}
+
+/* === DISCUSSION BODY LAYOUT === */
+.discussion-board .discussion-body {
+  display: flex !important;
+  min-height: 500px !important;
+}
+
+/* === SIDEBAR (FORUM NAV) === */
+.discussion-board .forum-nav {
+  background: var(--mf-blanc) !important;
+  border-right: 1px solid var(--mf-gris4) !important;
+  width: 280px !important;
+  min-width: 280px !important;
+}
+
+.discussion-board .forum-nav .forum-nav-header {
+  padding: 14px !important;
+  border-bottom: 1px solid var(--mf-gris4) !important;
+}
+
+/* === FILTER BUTTONS === */
+.discussion-board .forum-nav .all-filter,
+.discussion-board .forum-nav .unread-filter,
+.discussion-board .forum-nav .unanswered-filter,
+.discussion-board .forum-nav .flagged-filter,
+.discussion-board .forum-nav .following-filter,
+.discussion-board .btn-default,
+.discussion-board .forum-nav-filter-main .btn,
+.discussion-board .forum-nav-browse-filter .btn {
+  font-family: var(--mf-heading) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--mf-gris4) !important;
+  color: var(--mf-gris2) !important;
+  background: var(--mf-blanc) !important;
+  transition: all 0.12s !important;
+  text-transform: none !important;
+}
+
+.discussion-board .forum-nav .btn:hover {
+  color: var(--mf-bleu) !important;
+  border-color: rgba(9, 101, 208, 0.12) !important;
+  background: var(--mf-bleu-pale) !important;
+}
+
+.discussion-board .forum-nav .btn.is-active,
+.discussion-board .forum-nav .btn.active {
+  color: var(--mf-bleu) !important;
+  border-color: rgba(9, 101, 208, 0.15) !important;
+  background: var(--mf-bleu-pale) !important;
+}
+
+/* === TOPIC/CATEGORY LIST === */
+.discussion-board .forum-nav-browse-title {
+  font-family: var(--mf-heading) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  color: var(--mf-gris2) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 10px 14px 6px !important;
+}
+
+.discussion-board .forum-nav-browse-menu-item,
+.discussion-board .forum-nav-thread-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 7px 14px !important;
+  border-radius: var(--mf-radius-s) !important;
+  cursor: pointer !important;
+  transition: all 0.12s !important;
+  margin: 2px 6px !important;
+  font-family: var(--mf-heading) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--mf-noir) !important;
+  text-decoration: none !important;
+}
+
+.discussion-board .forum-nav-browse-menu-item:hover,
+.discussion-board .forum-nav-thread-link:hover {
+  background: var(--mf-bleu-pale) !important;
+}
+
+.discussion-board .forum-nav-browse-menu-item.is-active,
+.discussion-board .forum-nav-thread-link.is-active {
+  background: var(--mf-bleu-pale) !important;
+  color: var(--mf-bleu) !important;
+  font-weight: 700 !important;
+}
+
+/* === THREAD LIST === */
+.discussion-board .discussion-thread,
+.discussion-board .forum-nav-thread {
+  padding: 14px 18px !important;
+  border-bottom: 1px solid var(--mf-gris4) !important;
+  cursor: pointer !important;
+  transition: all 0.12s !important;
+  background: var(--mf-blanc) !important;
+}
+
+.discussion-board .discussion-thread:hover,
+.discussion-board .forum-nav-thread:hover {
+  background: var(--mf-bleu-pale) !important;
+}
+
+.discussion-board .discussion-thread.is-active,
+.discussion-board .forum-nav-thread.is-active {
+  background: var(--mf-bleu-pale) !important;
+  border-left: 3px solid var(--mf-bleu) !important;
+}
+
+/* Thread title */
+.discussion-board .thread-title,
+.discussion-board .forum-nav-thread-title {
+  font-family: var(--mf-heading) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--mf-dark) !important;
+  margin-bottom: 2px !important;
+}
+
+/* Thread excerpt/preview */
+.discussion-board .thread-preview-body,
+.discussion-board .forum-nav-thread-description {
+  font-size: 11px !important;
+  color: var(--mf-gris2) !important;
+  line-height: 1.5 !important;
+}
+
+/* Thread metadata */
+.discussion-board .thread-meta,
+.discussion-board .forum-nav-thread-wrapper-1 {
+  font-size: 9px !important;
+  color: var(--mf-gris3) !important;
+}
+
+.discussion-board .thread-author {
+  color: var(--mf-gris) !important;
+  font-weight: 600 !important;
+}
+
+/* === THREAD DETAIL / POST === */
+.discussion-board .discussion-post,
+.discussion-board .response-body,
+.discussion-board .forum-thread-main-wrapper {
+  padding: 18px 20px !important;
+  border-bottom: 1px solid var(--mf-gris4) !important;
+  background: var(--mf-blanc) !important;
+}
+
+/* Post header */
+.discussion-board .post-header-content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+/* Post author */
+.discussion-board .username,
+.discussion-board .post-label-by-author {
+  font-family: var(--mf-heading) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--mf-dark) !important;
+}
+
+/* Post time */
+.discussion-board .timeago,
+.discussion-board .posted-details {
+  font-size: 10px !important;
+  color: var(--mf-gris3) !important;
+}
+
+/* Post body */
+.discussion-board .post-body,
+.discussion-board .response-body .post-body {
+  font-size: 13px !important;
+  color: var(--mf-gris) !important;
+  line-height: 1.8 !important;
+  font-family: var(--mf-body) !important;
+}
+
+.discussion-board .post-body strong {
+  color: var(--mf-dark) !important;
+}
+
+.discussion-board .post-body code {
+  font-family: var(--mf-mono) !important;
+  font-size: 11px !important;
+  background: var(--mf-fond) !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  color: var(--mf-bleu) !important;
+}
+
+.discussion-board .post-body blockquote {
+  border-left: 3px solid var(--mf-bleu) !important;
+  padding: 8px 14px !important;
+  margin: 10px 0 !important;
+  background: var(--mf-bleu-pale) !important;
+  border-radius: 0 8px 8px 0 !important;
+  font-size: 12px !important;
+  color: var(--mf-bleu2) !important;
+}
+
+/* === STAFF/INSTRUCTOR POST === */
+.discussion-board .post-label-by-staff,
+.discussion-board .staff-label {
+  font-family: var(--mf-heading) !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  background: var(--mf-bleu-pale) !important;
+  color: var(--mf-bleu) !important;
+}
+
+/* Instructor post highlight */
+.discussion-board .discussion-post.is-staff,
+.discussion-board .response-body.is-staff {
+  background: var(--mf-bleu-pale) !important;
+  border-left: 3px solid var(--mf-bleu) !important;
+}
+
+/* Endorsed/answered post */
+.discussion-board .discussion-post.is-endorsed,
+.discussion-board .response-body.is-endorsed {
+  background: var(--mf-vert-pale) !important;
+  border-left: 3px solid var(--mf-vert2) !important;
+}
+
+/* === VOTE BUTTONS === */
+.discussion-board .vote-btn,
+.discussion-board .action-vote {
+  width: 28px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  font-size: 10px !important;
+  color: var(--mf-gris3) !important;
+  transition: all 0.12s !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+}
+
+.discussion-board .vote-btn:hover,
+.discussion-board .action-vote:hover {
+  background: var(--mf-bleu-pale) !important;
+  color: var(--mf-bleu) !important;
+  border-color: rgba(9, 101, 208, 0.08) !important;
+}
+
+.discussion-board .vote-btn.is-upvoted,
+.discussion-board .action-vote.is-upvoted {
+  color: var(--mf-vert2) !important;
+  background: var(--mf-vert-pale) !important;
+}
+
+.discussion-board .vote-count {
+  font-family: var(--mf-heading) !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: var(--mf-dark) !important;
+}
+
+/* === POST ACTIONS (like, follow, report) === */
+.discussion-board .post-actions-list .action-button,
+.discussion-board .discussion-actions .action-button,
+.discussion-board .action-follow,
+.discussion-board .action-endorse,
+.discussion-board .action-report {
+  font-family: var(--mf-heading) !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: var(--mf-gris2) !important;
+  cursor: pointer !important;
+  transition: color 0.12s !important;
+  background: none !important;
+  border: none !important;
+  padding: 4px 8px !important;
+}
+
+.discussion-board .post-actions-list .action-button:hover,
+.discussion-board .action-follow:hover {
+  color: var(--mf-bleu) !important;
+}
+
+/* === REPLY EDITOR === */
+.discussion-board .reply-body textarea,
+.discussion-board .new-post-body textarea,
+.discussion-board .discussion-submit-post textarea,
+.discussion-board .edit-post-body textarea,
+.discussion-board .wmd-input {
+  width: 100% !important;
+  border: 1px solid var(--mf-gris4) !important;
+  border-radius: var(--mf-radius) !important;
+  font-family: var(--mf-body) !important;
+  padding: 14px 16px !important;
+  font-size: 13px !important;
+  color: var(--mf-noir) !important;
+  resize: vertical !important;
+  min-height: 100px !important;
+  outline: none !important;
+  transition: all 0.2s !important;
+  line-height: 1.7 !important;
+}
+
+.discussion-board .reply-body textarea:focus,
+.discussion-board .wmd-input:focus {
+  border-color: var(--mf-bleu) !important;
+  box-shadow: 0 0 0 3px rgba(9, 101, 208, 0.1) !important;
+}
+
+/* Submit button */
+.discussion-board .submit,
+.discussion-board .discussion-submit-post .submit {
+  background: var(--mf-gradient) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-family: var(--mf-heading) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  padding: 9px 20px !important;
+  box-shadow: 0 4px 14px rgba(9, 101, 208, 0.16) !important;
+  text-transform: none !important;
+}
+
+.discussion-board .submit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 22px rgba(9, 101, 208, 0.25) !important;
+}
+
+/* Cancel button */
+.discussion-board .cancel,
+.discussion-board .discussion-submit-post .cancel {
+  background: var(--mf-blanc) !important;
+  border: 1px solid var(--mf-gris4) !important;
+  border-radius: 10px !important;
+  font-family: var(--mf-heading) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--mf-bleu) !important;
+  padding: 9px 20px !important;
+}
+
+.discussion-board .cancel:hover {
+  background: var(--mf-bleu-pale) !important;
+  border-color: rgba(9, 101, 208, 0.12) !important;
+}
+
+/* === BADGES (pinned, resolved, etc.) === */
+.discussion-board .badge,
+.discussion-board .post-label {
+  font-family: var(--mf-heading) !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.discussion-board .badge.pinned,
+.discussion-board .post-label-pinned {
+  background: var(--mf-vert-pale) !important;
+  color: var(--mf-vert2) !important;
+}
+
+.discussion-board .badge.answered,
+.discussion-board .post-label-answered {
+  background: var(--mf-vert-pale) !important;
+  color: var(--mf-vert2) !important;
+}
+
+.discussion-board .badge.unanswered {
+  background: rgba(230, 126, 34, 0.06) !important;
+  color: var(--mf-orange) !important;
+}
+
+/* === AVATAR === */
+.discussion-board .user-image,
+.discussion-board .discussion-response .user-image {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 9px !important;
+}
+
+/* === EMPTY STATE === */
+.discussion-board .forum-nav-thread-list-empty {
+  padding: 40px 20px !important;
+  text-align: center !important;
+  font-family: var(--mf-heading) !important;
+  font-size: 13px !important;
+  color: var(--mf-gris2) !important;
+}
+
+/* === NEW POST FORM === */
+.discussion-board .new-post-article,
+.discussion-board .new-post-form {
+  padding: 20px !important;
+  background: var(--mf-blanc) !important;
+}
+
+.discussion-board .new-post-form label,
+.discussion-board .new-post-article label {
+  font-family: var(--mf-heading) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: var(--mf-gris2) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  margin-bottom: 5px !important;
+  display: block !important;
+}
+
+.discussion-board .new-post-form input[type="text"],
+.discussion-board .new-post-article input[type="text"],
+.discussion-board .new-post-form select {
+  width: 100% !important;
+  border: 1px solid var(--mf-gris4) !important;
+  border-radius: var(--mf-radius-s) !important;
+  font-family: var(--mf-body) !important;
+  padding: 9px 14px !important;
+  font-size: 12px !important;
+  color: var(--mf-noir) !important;
+  background: var(--mf-blanc) !important;
+  transition: all 0.2s !important;
+  outline: none !important;
+}
+
+.discussion-board .new-post-form input[type="text"]:focus {
+  border-color: var(--mf-bleu) !important;
+  box-shadow: 0 0 0 3px rgba(9, 101, 208, 0.1) !important;
+}
+
+/* === DISCUSSION INLINE (in-course) === */
+.discussion-module .discussion-body {
+  background: var(--mf-blanc) !important;
+  border-radius: var(--mf-radius) !important;
+  border: 1px solid var(--mf-gris4) !important;
+  overflow: hidden !important;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 700px) {
+  .discussion-board .forum-nav {
+    display: none !important;
+  }
+
+  .discussion-board .discussion-column {
+    width: 100% !important;
+  }
+}
+
+/* === SCROLLBAR CUSTOM === */
+.discussion-board .forum-nav::-webkit-scrollbar,
+.discussion-board .discussion-column::-webkit-scrollbar {
+  width: 4px;
+}
+
+.discussion-board .forum-nav::-webkit-scrollbar-thumb,
+.discussion-board .discussion-column::-webkit-scrollbar-thumb {
+  background: var(--mf-gris3);
+  border-radius: 4px;
+}
+
+.discussion-board .forum-nav::-webkit-scrollbar-track,
+.discussion-board .discussion-column::-webkit-scrollbar-track {
+  background: transparent;
+}
