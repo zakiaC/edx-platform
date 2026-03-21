@@ -1,6 +1,9 @@
 # .gitignore for edx-platform.
 # There's a lot here, please try to keep it organized.
 
+### Prompts IA (non versionnes)
+prompts/
+
 ### Files private to developers
 
 # Files that should be git-ignored, but are hand-edited or otherwise valued,
