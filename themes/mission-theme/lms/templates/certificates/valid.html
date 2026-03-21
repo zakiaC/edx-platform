@@ -1,0 +1,422 @@
+<%page expression_filter="h"/>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${accomplishment_copy_name} — ${accomplishment_copy_course_name} | Mission Formations</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;900&family=Raleway:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bleu:#0965D0;--bleu2:#074da0;--bleu-pale:#e8f0fb;
+  --vert:#01E8AE;--vert2:#00c494;--vert-pale:#e6faf4;
+  --dark:#0a1628;--dark2:#0f1f3a;--dark3:#162d50;
+  --noir:#3B3B3B;--gris:#4a4a4a;--gris2:#6b6b6b;--gris3:#888;--gris4:#e8e8e8;
+  --fond:#e2e6ec;--blanc:#fff;
+  --rouge:#e74c3c;--orange:#e67e22;--jaune:#f1c40f;--violet:#8e44ad;
+  --heading:'Ubuntu',sans-serif;--body:'Raleway',sans-serif;--mono:'JetBrains Mono',monospace;--serif:'Playfair Display',serif;
+}
+body{font-family:var(--body);color:var(--noir);background:var(--fond);-webkit-font-smoothing:antialiased;line-height:1.6;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+
+.cert-page{max-width:900px;width:100%}
+
+/* Print */
+@media print{
+  body{background:#fff;padding:0}
+  .cert-actions,.cert-meta{display:none!important}
+  .cert{box-shadow:none!important;border-radius:0!important}
+}
+
+/* Actions bar */
+.cert-actions{text-align:center;margin-bottom:20px}
+.cert-actions a,.cert-actions button{display:inline-block;padding:10px 24px;border-radius:8px;font-family:var(--heading);font-size:12px;font-weight:700;text-decoration:none;margin:0 6px;cursor:pointer;border:none;transition:all .15s}
+.btn-print{background:var(--bleu);color:#fff}
+.btn-print:hover{background:var(--bleu2)}
+.btn-back{background:rgba(0,0,0,.06);color:var(--noir)}
+.btn-back:hover{background:rgba(0,0,0,.1)}
+.btn-download{background:var(--vert);color:var(--dark)}
+.btn-download:hover{background:var(--vert2)}
+
+/* Certificate frame (A4 landscape ratio) */
+.cert{
+  width:100%;aspect-ratio:1.414;
+  border-radius:8px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.15),0 0 0 1px rgba(0,0,0,.05);
+  position:relative;
+  background:#fff;
+}
+
+/* Certificate meta */
+.cert-meta{text-align:center;margin-top:20px;font-size:11px;color:var(--gris3)}
+.cert-meta a{color:var(--bleu);text-decoration:none}
+
+/* ============================================================
+   SHARED STYLES (all templates)
+   ============================================================ */
+.cert .cert-inner{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 60px}
+.cert .cert-logo{width:48px;height:48px;background:linear-gradient(135deg,var(--bleu),var(--vert));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-size:24px;font-weight:900;color:#fff;margin-bottom:20px}
+.cert .cert-label{font-family:var(--heading);font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:4px;margin-bottom:8px}
+.cert .cert-main-title{font-family:var(--serif);font-size:28px;font-weight:900;margin-bottom:6px}
+.cert .cert-subtitle{font-size:11px;margin-bottom:28px}
+.cert .cert-name{font-family:var(--serif);font-size:36px;font-weight:900;margin-bottom:8px}
+.cert .cert-course{font-family:var(--heading);font-size:13px;font-weight:700;margin-bottom:4px}
+.cert .cert-desc{font-size:11px;max-width:450px;line-height:1.7;margin-bottom:24px}
+.cert .cert-score{font-family:var(--heading);font-size:32px;font-weight:900;margin-bottom:4px}
+.cert .cert-score-label{font-size:9px;text-transform:uppercase;letter-spacing:2px;margin-bottom:24px}
+.cert .cert-footer{display:flex;align-items:center;gap:40px}
+.cert .cert-sign{text-align:center}
+.cert .cert-sign-line{width:120px;height:1px;margin-bottom:6px}
+.cert .cert-sign-name{font-family:var(--heading);font-size:10px;font-weight:700}
+.cert .cert-sign-role{font-size:8px}
+.cert .cert-id{font-family:var(--mono);font-size:8px;margin-top:16px}
+.cert .cert-date{font-family:var(--heading);font-size:10px;margin-bottom:24px}
+.cert .cert-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:24px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+
+/* ============================================================
+   TEMPLATE DEFAULT — MF Blue/Green (for unknown orgs)
+   ============================================================ */
+.cert-default{background:linear-gradient(160deg,#0a1628 0%,#0f2847 40%,#0a1628 100%)}
+.cert-default .cert-border{position:absolute;inset:12px;border:1px solid rgba(255,255,255,.08);border-radius:4px;pointer-events:none}
+.cert-default .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--bleu),var(--vert))}
+.cert-default .cert-glow{position:absolute;top:-20%;right:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(9,101,208,.12),transparent 65%);pointer-events:none}
+.cert-default .cert-label{color:rgba(255,255,255,.55)}
+.cert-default .cert-main-title{color:#fff}
+.cert-default .cert-subtitle{color:rgba(255,255,255,.65)}
+.cert-default .cert-name{background:linear-gradient(135deg,var(--bleu),var(--vert));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cert-default .cert-course{color:rgba(255,255,255,.85)}
+.cert-default .cert-desc{color:rgba(255,255,255,.85)}
+.cert-default .cert-score{color:var(--vert)}
+.cert-default .cert-score-label{color:rgba(255,255,255,.55)}
+.cert-default .cert-date{color:rgba(255,255,255,.85)}
+.cert-default .cert-sign-line{background:rgba(255,255,255,.12)}
+.cert-default .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-default .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-default .cert-id{color:rgba(255,255,255,.65)}
+
+/* ============================================================
+   TEMPLATE VTC — Dark premium road motif
+   ============================================================ */
+.cert-vtc{background:linear-gradient(160deg,#0a1628 0%,#0f2847 40%,#0a1628 100%)}
+.cert-vtc .cert-border{position:absolute;inset:12px;border:1px solid rgba(255,255,255,.08);border-radius:4px;pointer-events:none}
+.cert-vtc .cert-border::before{content:'';position:absolute;inset:4px;border:1px solid rgba(255,255,255,.04);border-radius:2px}
+.cert-vtc .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--bleu),var(--vert))}
+.cert-vtc .cert-glow{position:absolute;top:-20%;right:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(9,101,208,.12),transparent 65%);pointer-events:none}
+.cert-vtc .cert-glow2{position:absolute;bottom:-30%;left:-5%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(1,232,174,.06),transparent 65%);pointer-events:none}
+.cert-vtc .cert-road{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:70%;height:2px;background:rgba(255,255,255,.06)}
+.cert-vtc .cert-road::before{content:'';position:absolute;top:-1px;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.1) 0,rgba(255,255,255,.1) 20px,transparent 20px,transparent 40px)}
+.cert-vtc .cert-label{color:rgba(255,255,255,.55)}
+.cert-vtc .cert-main-title{color:#fff}
+.cert-vtc .cert-subtitle{color:rgba(255,255,255,.65)}
+.cert-vtc .cert-name{background:linear-gradient(135deg,var(--bleu),var(--vert));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cert-vtc .cert-course{color:rgba(255,255,255,.85)}
+.cert-vtc .cert-desc{color:rgba(255,255,255,.85)}
+.cert-vtc .cert-score{color:var(--vert)}
+.cert-vtc .cert-score-label{color:rgba(255,255,255,.55)}
+.cert-vtc .cert-date{color:rgba(255,255,255,.85)}
+.cert-vtc .cert-sign-line{background:rgba(255,255,255,.12)}
+.cert-vtc .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-vtc .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-vtc .cert-id{color:rgba(255,255,255,.65)}
+
+/* ============================================================
+   TEMPLATE IA — Futuristic neon
+   ============================================================ */
+.cert-ia{background:linear-gradient(160deg,#05050f,#0a0a1e,#05050f)}
+.cert-ia .cert-accent{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#00e6b4,transparent)}
+.cert-ia .cert-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,230,180,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,180,.015) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.cert-ia .cert-scanline{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,230,180,.008) 2px,rgba(0,230,180,.008) 4px);pointer-events:none}
+.cert-ia .cert-orb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,230,180,.04),transparent 60%);pointer-events:none}
+.cert-ia .cert-label{color:rgba(0,230,180,.6)}
+.cert-ia .cert-main-title{color:#fff}
+.cert-ia .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-ia .cert-name{color:#00e6b4;text-shadow:0 0 30px rgba(0,230,180,.3)}
+.cert-ia .cert-course{color:#fff}
+.cert-ia .cert-desc{color:rgba(255,255,255,.55)}
+.cert-ia .cert-score{color:#00e6b4;text-shadow:0 0 20px rgba(0,230,180,.25)}
+.cert-ia .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-ia .cert-date{color:rgba(255,255,255,.6)}
+.cert-ia .cert-sign-line{background:rgba(0,230,180,.15)}
+.cert-ia .cert-sign-name{color:rgba(255,255,255,.8)}
+.cert-ia .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-ia .cert-id{color:rgba(255,255,255,.3)}
+.cert-ia .cert-icon{background:linear-gradient(135deg,#00b894,#00e6b4);color:#fff;box-shadow:0 0 24px rgba(0,230,180,.25)}
+
+/* ============================================================
+   TEMPLATE MGMT — Royal purple
+   ============================================================ */
+.cert-mgmt{background:linear-gradient(160deg,#1a0a28,#2d1050,#1a0a28)}
+.cert-mgmt .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8e44ad,#f39c12,#8e44ad)}
+.cert-mgmt .cert-orb{position:absolute;top:-20%;right:-10%;width:450px;height:450px;border-radius:50%;background:radial-gradient(circle,rgba(155,89,182,.1),transparent 65%);pointer-events:none}
+.cert-mgmt .cert-label{color:rgba(155,89,182,.75)}
+.cert-mgmt .cert-main-title{color:#fff}
+.cert-mgmt .cert-subtitle{color:rgba(255,255,255,.85)}
+.cert-mgmt .cert-name{color:#f39c12}
+.cert-mgmt .cert-course{color:rgba(255,255,255,.85)}
+.cert-mgmt .cert-desc{color:rgba(255,255,255,.55)}
+.cert-mgmt .cert-score{color:#f39c12}
+.cert-mgmt .cert-score-label{color:rgba(255,255,255,.75)}
+.cert-mgmt .cert-date{color:rgba(255,255,255,.55)}
+.cert-mgmt .cert-sign-line{background:rgba(255,255,255,.1)}
+.cert-mgmt .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-mgmt .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-mgmt .cert-id{color:rgba(255,255,255,.3)}
+.cert-mgmt .cert-icon{background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff}
+
+/* ============================================================
+   TEMPLATE DIGITAL — Cyber violet
+   ============================================================ */
+.cert-digital{background:linear-gradient(160deg,#0a0a14,#0f0f28,#0a0a14)}
+.cert-digital .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8e44ad,#9b59b6,#01E8AE)}
+.cert-digital .cert-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(155,89,182,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(155,89,182,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.cert-digital .cert-label{color:rgba(155,89,182,.75)}
+.cert-digital .cert-main-title{color:#fff}
+.cert-digital .cert-subtitle{color:rgba(255,255,255,.85)}
+.cert-digital .cert-name{color:#9b59b6}
+.cert-digital .cert-course{color:rgba(255,255,255,.85)}
+.cert-digital .cert-desc{color:rgba(255,255,255,.55)}
+.cert-digital .cert-score{color:#01E8AE}
+.cert-digital .cert-score-label{color:rgba(255,255,255,.75)}
+.cert-digital .cert-date{color:rgba(255,255,255,.55)}
+.cert-digital .cert-sign-line{background:rgba(255,255,255,.1)}
+.cert-digital .cert-sign-name{color:rgba(255,255,255,.7)}
+.cert-digital .cert-sign-role{color:rgba(255,255,255,.75)}
+.cert-digital .cert-id{color:rgba(255,255,255,.3)}
+.cert-digital .cert-icon{background:linear-gradient(135deg,#8e44ad,#9b59b6);color:#fff}
+
+/* ============================================================
+   TEMPLATE RH — Warm burgundy
+   ============================================================ */
+.cert-rh{background:linear-gradient(160deg,#200a14,#3a1228,#200a14)}
+.cert-rh .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#6a0f38,#c2185b,#e8a0be,#c2185b,#6a0f38)}
+.cert-rh .cert-border{position:absolute;inset:14px;border:1px solid rgba(220,120,160,.06);border-radius:4px;pointer-events:none}
+.cert-rh .cert-label{color:rgba(220,120,160,.7)}
+.cert-rh .cert-main-title{color:#fff}
+.cert-rh .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-rh .cert-name{color:#e8a0be;text-shadow:0 2px 16px rgba(220,120,160,.2)}
+.cert-rh .cert-course{color:#fff}
+.cert-rh .cert-desc{color:rgba(255,255,255,.55)}
+.cert-rh .cert-score{color:#e8a0be}
+.cert-rh .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-rh .cert-date{color:rgba(255,255,255,.6)}
+.cert-rh .cert-sign-line{background:rgba(220,120,160,.15)}
+.cert-rh .cert-sign-name{color:rgba(255,255,255,.8)}
+.cert-rh .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-rh .cert-id{color:rgba(255,255,255,.3)}
+.cert-rh .cert-icon{background:linear-gradient(135deg,#8b1a4a,#c2185b);color:#fff}
+
+/* ============================================================
+   TEMPLATE FINANCE — Black & gold luxury
+   ============================================================ */
+.cert-finance{background:linear-gradient(160deg,#0a0a0a,#141414,#0a0a0a)}
+.cert-finance .cert-accent{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8b6914,#daa520,#f4d03f,#daa520,#8b6914)}
+.cert-finance .cert-accent-b{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#8b6914,#daa520,#f4d03f,#daa520,#8b6914)}
+.cert-finance .cert-border{position:absolute;inset:14px;border:1px solid rgba(218,165,32,.08);pointer-events:none}
+.cert-finance .cert-border::before{content:'';position:absolute;inset:4px;border:1px solid rgba(218,165,32,.04)}
+.cert-finance .cert-label{color:#c9a84c}
+.cert-finance .cert-main-title{color:#fff}
+.cert-finance .cert-subtitle{color:rgba(255,255,255,.6)}
+.cert-finance .cert-name{color:#daa520;text-shadow:0 2px 20px rgba(218,165,32,.2)}
+.cert-finance .cert-course{color:#fff}
+.cert-finance .cert-desc{color:rgba(255,255,255,.55)}
+.cert-finance .cert-score{color:#f4d03f}
+.cert-finance .cert-score-label{color:rgba(255,255,255,.45)}
+.cert-finance .cert-date{color:rgba(255,255,255,.6)}
+.cert-finance .cert-sign-line{background:rgba(218,165,32,.2)}
+.cert-finance .cert-sign-name{color:rgba(255,255,255,.85)}
+.cert-finance .cert-sign-role{color:rgba(255,255,255,.5)}
+.cert-finance .cert-id{color:rgba(255,255,255,.3)}
+.cert-finance .cert-icon{background:linear-gradient(135deg,#b8860b,#daa520);color:#fff}
+
+/* ============================================================
+   TEMPLATE VENTE — Warm white gold
+   ============================================================ */
+.cert-vente{background:#fff}
+.cert-vente .cert-accent{position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#b8860b,#daa520,#f4d03f,#daa520,#b8860b)}
+.cert-vente .cert-accent-b{position:absolute;bottom:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#b8860b,#daa520,#f4d03f,#daa520,#b8860b)}
+.cert-vente .cert-corner-tl{position:absolute;top:20px;left:20px;width:60px;height:60px;border-top:2px solid #daa520;border-left:2px solid #daa520;pointer-events:none}
+.cert-vente .cert-corner-tr{position:absolute;top:20px;right:20px;width:60px;height:60px;border-top:2px solid #daa520;border-right:2px solid #daa520;pointer-events:none}
+.cert-vente .cert-corner-bl{position:absolute;bottom:20px;left:20px;width:60px;height:60px;border-bottom:2px solid #daa520;border-left:2px solid #daa520;pointer-events:none}
+.cert-vente .cert-corner-br{position:absolute;bottom:20px;right:20px;width:60px;height:60px;border-bottom:2px solid #daa520;border-right:2px solid #daa520;pointer-events:none}
+.cert-vente .cert-label{color:#daa520}
+.cert-vente .cert-main-title{color:var(--dark)}
+.cert-vente .cert-subtitle{color:var(--gris2)}
+.cert-vente .cert-name{color:#b8860b}
+.cert-vente .cert-course{color:var(--dark)}
+.cert-vente .cert-desc{color:var(--gris2)}
+.cert-vente .cert-score{color:var(--bleu)}
+.cert-vente .cert-score-label{color:var(--gris3)}
+.cert-vente .cert-date{color:var(--gris2)}
+.cert-vente .cert-sign-line{background:var(--gris4)}
+.cert-vente .cert-sign-name{color:var(--dark)}
+.cert-vente .cert-sign-role{color:var(--gris3)}
+.cert-vente .cert-id{color:var(--gris3)}
+
+@media(max-width:700px){
+  .cert .cert-inner{padding:24px 20px}
+  .cert .cert-name{font-size:22px}
+  .cert .cert-main-title{font-size:18px}
+}
+</style>
+</head>
+<body>
+<%!
+# Mapping organisation → classe CSS du certificat
+ORG_TEMPLATE_MAP = {
+    'MF-VTC': 'cert-vtc',
+    'MissionFormations': 'cert-vtc',
+    'MF-IA': 'cert-ia',
+    'MF-MGMT': 'cert-mgmt',
+    'MF-DIGITAL': 'cert-digital',
+    'MF-RH': 'cert-rh',
+    'MF-FINANCE': 'cert-finance',
+    'MF-VENTE': 'cert-vente',
+}
+
+# Mapping organisation → icone emoji
+ORG_ICON_MAP = {
+    'MF-VTC': 'M',
+    'MissionFormations': 'M',
+    'MF-IA': '&#x1F916;',
+    'MF-MGMT': '&#x1F451;',
+    'MF-DIGITAL': '&#x1F4BB;',
+    'MF-RH': '&#x1F465;',
+    'MF-FINANCE': '&#x1F4B0;',
+    'MF-VENTE': '&#x1F91D;',
+}
+
+# Mapping organisation → titre du certificat
+ORG_TITLE_MAP = {
+    'MF-VTC': 'Attestation de reussite',
+    'MissionFormations': 'Attestation de reussite',
+    'MF-IA': 'AI Proficiency Certificate',
+    'MF-MGMT': 'Leadership Certificate',
+    'MF-DIGITAL': 'Certification Numerique',
+    'MF-RH': 'Certification RH',
+    'MF-FINANCE': 'Financial Excellence Certificate',
+    'MF-VENTE': 'Certificat de competence',
+}
+%>
+<%
+  org = accomplishment_copy_course_org if accomplishment_copy_course_org else 'MissionFormations'
+  cert_class = ORG_TEMPLATE_MAP.get(org, 'cert-default')
+  cert_icon = ORG_ICON_MAP.get(org, 'M')
+  cert_title = ORG_TITLE_MAP.get(org, 'Attestation de reussite')
+  grade_display = ''
+  if context.get('grade'):
+      try:
+          grade_display = str(int(float(context['grade']) * 100)) + '%'
+      except (ValueError, TypeError):
+          grade_display = str(context['grade'])
+%>
+
+<div class="cert-page">
+
+  <!-- Actions (not printed) -->
+  <div class="cert-actions">
+    <button class="btn-print" onclick="window.print()">Imprimer</button>
+    <a class="btn-back" href="/dashboard">Retour au dashboard</a>
+  </div>
+
+  <!-- Certificate -->
+  <div class="cert ${cert_class}">
+    % if cert_class in ('cert-vtc', 'cert-default'):
+    <div class="cert-accent"></div>
+    <div class="cert-border"></div>
+    <div class="cert-glow"></div>
+    % if cert_class == 'cert-vtc':
+    <div class="cert-glow2"></div>
+    <div class="cert-road"></div>
+    % endif
+    % elif cert_class == 'cert-ia':
+    <div class="cert-accent"></div>
+    <div class="cert-grid"></div>
+    <div class="cert-scanline"></div>
+    <div class="cert-orb"></div>
+    % elif cert_class == 'cert-mgmt':
+    <div class="cert-accent"></div>
+    <div class="cert-orb"></div>
+    % elif cert_class == 'cert-digital':
+    <div class="cert-accent"></div>
+    <div class="cert-grid"></div>
+    % elif cert_class == 'cert-rh':
+    <div class="cert-accent"></div>
+    <div class="cert-border"></div>
+    % elif cert_class == 'cert-finance':
+    <div class="cert-accent"></div>
+    <div class="cert-accent-b"></div>
+    <div class="cert-border"></div>
+    % elif cert_class == 'cert-vente':
+    <div class="cert-accent"></div>
+    <div class="cert-accent-b"></div>
+    <div class="cert-corner-tl"></div>
+    <div class="cert-corner-tr"></div>
+    <div class="cert-corner-bl"></div>
+    <div class="cert-corner-br"></div>
+    % endif
+
+    <div class="cert-inner">
+      % if cert_class in ('cert-vtc', 'cert-default', 'cert-vente'):
+      <div class="cert-logo">M</div>
+      % else:
+      <div class="cert-icon" style="color:#fff">${cert_icon}</div>
+      % endif
+
+      <div class="cert-label">Academie Mission Formations</div>
+      <div class="cert-main-title">${cert_title}</div>
+      <div class="cert-subtitle">${accomplishment_copy_course_name}</div>
+
+      <div class="cert-name">${accomplishment_copy_name}</div>
+
+      <div class="cert-course">${accomplishment_copy_course_name}</div>
+      <div class="cert-desc">${accomplishment_copy_description_full}</div>
+
+      <div class="cert-date">Delivre le ${certificate_date_issued}</div>
+
+      % if grade_display:
+      <div class="cert-score">${grade_display}</div>
+      <div class="cert-score-label">Score de reussite</div>
+      % endif
+
+      <div class="cert-footer">
+        % if certificate_data and hasattr(certificate_data, 'get') and certificate_data.get('signatories'):
+          % for signatory in certificate_data['signatories']:
+          <div class="cert-sign">
+            % if signatory.get('signature_image_path'):
+            <img src="${signatory['signature_image_path']}" alt="Signature" style="height:40px;margin-bottom:6px">
+            % else:
+            <div class="cert-sign-line"></div>
+            % endif
+            <div class="cert-sign-name">${signatory.get('name', 'Direction pedagogique')}</div>
+            <div class="cert-sign-role">${signatory.get('title', 'Mission Formations')}</div>
+          </div>
+          % endfor
+        % else:
+        <div class="cert-sign">
+          <div class="cert-sign-line"></div>
+          <div class="cert-sign-name">Direction pedagogique</div>
+          <div class="cert-sign-role">Mission Formations</div>
+        </div>
+        <div class="cert-sign">
+          <div class="cert-sign-line"></div>
+          <div class="cert-sign-name">Responsable formation</div>
+          <div class="cert-sign-role">${accomplishment_copy_course_org}</div>
+        </div>
+        % endif
+      </div>
+
+      <div class="cert-id">${certificate_id_number}</div>
+    </div>
+  </div>
+
+  <!-- Meta info (not printed) -->
+  <div class="cert-meta">
+    Certificat ${certificate_id_number} &mdash;
+    <a href="${certificate_verify_url}">Verifier ce certificat</a> &mdash;
+    Mission Formations &copy; 2026
+  </div>
+
+</div>
+
+</body>
+</html>
