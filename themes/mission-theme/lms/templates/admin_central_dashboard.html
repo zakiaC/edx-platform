@@ -417,7 +417,7 @@ svg.ic-xl{width:22px;height:22px}
       break
   mission_dates_url = '/courses/{}/dates'.format(mission_first_course_id) if mission_first_course_id else '/courses'
   mission_learners_admin_url = '/admin/auth/user/?is_staff__exact=0&is_superuser__exact=0'
-  mission_studio_home_url = 'http://studio.local.openedx.io/home/'
+  mission_studio_home_url = settings.MFE_CONFIG.get('STUDIO_BASE_URL', 'https://studio.staging.missionformations.com') + '/home/' if hasattr(settings, 'MFE_CONFIG') and settings.MFE_CONFIG.get('STUDIO_BASE_URL') else 'https://studio.staging.missionformations.com/home/'
   mission_recent_students = recent_students if 'recent_students' in locals() else []
   mission_recent_activity = recent_activity if 'recent_activity' in locals() else []
 %>
@@ -482,6 +482,13 @@ svg.ic-xl{width:22px;height:22px}
       </a>
       <a class="sb-lk" href="/admin/student/courseenrollment/" target="_blank">
         <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Inscriptions
+      </a>
+    </div>
+
+    <div class="sb-sec">
+      <div class="sb-sec-t">Studio</div>
+      <a class="sb-lk" href="${mission_studio_home_url}" target="_blank">
+        <span class="sb-ic"><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>Ouvrir Studio
       </a>
     </div>
 
