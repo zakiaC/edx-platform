@@ -1,0 +1,282 @@
+// themes/mission-theme — Forum Discussion custom styles
+// Design Mission Formations pour le forum OpenEdX legacy
+
+.discussion.discussion-board {
+  font-family: 'Raleway', sans-serif !important;
+  background: #f5f7fa !important;
+
+  .page-header {
+    background: #fff !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    padding: 14px 20px !important;
+    box-shadow: none !important;
+  }
+
+  // Bouton "Ajouter un post"
+  .new-post-btn,
+  .forum-actions .btn {
+    background: linear-gradient(135deg, #0965D0, #01E8AE) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    padding: 9px 20px !important;
+    box-shadow: 0 4px 14px rgba(9, 101, 208, 0.16) !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    transition: all 0.2s !important;
+
+    &:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 22px rgba(9, 101, 208, 0.25) !important;
+    }
+  }
+
+  // Sidebar navigation
+  .forum-nav {
+    background: #fff !important;
+    border-right: 1px solid #e8e8e8 !important;
+
+    .btn-default,
+    .btn {
+      font-family: 'Ubuntu', sans-serif !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      padding: 4px 10px !important;
+      border-radius: 6px !important;
+      border: 1px solid #e8e8e8 !important;
+      color: #999 !important;
+      background: #fff !important;
+      text-transform: none !important;
+      transition: all 0.12s !important;
+
+      &:hover {
+        color: #0965D0 !important;
+        border-color: rgba(9, 101, 208, 0.12) !important;
+        background: #e8f0fb !important;
+      }
+
+      &.is-active,
+      &.active {
+        color: #0965D0 !important;
+        border-color: rgba(9, 101, 208, 0.15) !important;
+        background: #e8f0fb !important;
+      }
+    }
+  }
+
+  // Titres de categories
+  .forum-nav-browse-title {
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: #999 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+  }
+
+  // Items de navigation
+  .forum-nav-browse-menu-item,
+  .forum-nav-thread-link {
+    padding: 7px 14px !important;
+    border-radius: 8px !important;
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #3B3B3B !important;
+    text-decoration: none !important;
+    transition: all 0.12s !important;
+
+    &:hover {
+      background: #e8f0fb !important;
+    }
+
+    &.is-active {
+      background: #e8f0fb !important;
+      color: #0965D0 !important;
+      font-weight: 700 !important;
+    }
+  }
+
+  // Thread list
+  .discussion-thread,
+  .forum-nav-thread {
+    padding: 14px 18px !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    background: #fff !important;
+    transition: all 0.12s !important;
+
+    &:hover {
+      background: #e8f0fb !important;
+    }
+
+    &.is-active {
+      background: #e8f0fb !important;
+      border-left: 3px solid #0965D0 !important;
+    }
+  }
+
+  // Thread title
+  .thread-title,
+  .forum-nav-thread-title {
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #0a1628 !important;
+  }
+
+  // Thread preview
+  .thread-preview-body,
+  .forum-nav-thread-description {
+    font-size: 11px !important;
+    color: #999 !important;
+  }
+
+  // Posts
+  .discussion-post,
+  .response-body {
+    padding: 18px 20px !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    background: #fff !important;
+
+    // Instructor post
+    &.is-staff {
+      background: #e8f0fb !important;
+      border-left: 3px solid #0965D0 !important;
+    }
+
+    // Endorsed/answered
+    &.is-endorsed {
+      background: #e6faf4 !important;
+      border-left: 3px solid #00c494 !important;
+    }
+  }
+
+  // Post author
+  .username,
+  .post-label-by-author {
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #0a1628 !important;
+  }
+
+  // Post body
+  .post-body {
+    font-size: 13px !important;
+    color: #6b6b6b !important;
+    line-height: 1.8 !important;
+    font-family: 'Raleway', sans-serif !important;
+
+    strong { color: #0a1628 !important; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 11px !important;
+      background: #f5f7fa !important;
+      padding: 1px 6px !important;
+      border-radius: 4px !important;
+      color: #0965D0 !important;
+    }
+
+    blockquote {
+      border-left: 3px solid #0965D0 !important;
+      padding: 8px 14px !important;
+      margin: 10px 0 !important;
+      background: #e8f0fb !important;
+      border-radius: 0 8px 8px 0 !important;
+      font-size: 12px !important;
+      color: #074da0 !important;
+    }
+  }
+
+  // Staff badge
+  .post-label-by-staff,
+  .staff-label {
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 8px !important;
+    font-weight: 700 !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    background: #e8f0fb !important;
+    color: #0965D0 !important;
+  }
+
+  // Vote count
+  .vote-count {
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    color: #0a1628 !important;
+  }
+
+  // Reply editor
+  .reply-body textarea,
+  .wmd-input {
+    border: 1px solid #e8e8e8 !important;
+    border-radius: 12px !important;
+    font-family: 'Raleway', sans-serif !important;
+    padding: 14px 16px !important;
+    font-size: 13px !important;
+    color: #3B3B3B !important;
+    min-height: 100px !important;
+    line-height: 1.7 !important;
+
+    &:focus {
+      border-color: #0965D0 !important;
+      box-shadow: 0 0 0 3px rgba(9, 101, 208, 0.1) !important;
+      outline: none !important;
+    }
+  }
+
+  // Submit
+  .submit {
+    background: linear-gradient(135deg, #0965D0, #01E8AE) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    padding: 9px 20px !important;
+    text-transform: none !important;
+  }
+
+  // Cancel
+  .cancel {
+    background: #fff !important;
+    border: 1px solid #e8e8e8 !important;
+    border-radius: 10px !important;
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #0965D0 !important;
+    padding: 9px 20px !important;
+  }
+
+  // Search
+  .forum-search input,
+  .search-input {
+    border: 1px solid #e8e8e8 !important;
+    border-radius: 8px !important;
+    font-family: 'Raleway', sans-serif !important;
+    padding: 9px 14px !important;
+    font-size: 12px !important;
+
+    &:focus {
+      border-color: #0965D0 !important;
+      box-shadow: 0 0 0 3px rgba(9, 101, 208, 0.1) !important;
+      outline: none !important;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 700px) {
+  .discussion-board .forum-nav {
+    display: none !important;
+  }
+}
