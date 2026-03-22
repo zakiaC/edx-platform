@@ -90,22 +90,16 @@ elif [ "$ENV" = "staging" ]; then
     "docker exec $CONTAINER \
     ./manage.py lms collectstatic --noinput 2>&1 | tail -3"
 
-  # FIX regression 2026-03-22: collectstatic ne remplace pas les CSS si le hash
-  # Django n'a pas change. On force la copie du CSS theme par-dessus staticfiles.
+  # Force-copy : copier le CSS du theme par-dessus les fichiers collectstatic
+  # Necessaire car collectstatic ne remplace pas si le hash Django n'a pas change
   echo "    Force-copy theme CSS → staticfiles..."
-  ssh staging-openedx "\
-    docker exec $CONTAINER bash -c '\
-      for f in /openedx/themes/mission-theme/lms/static/css/lms-main-v1*.css; do \
-        bn=\$(basename \"\$f\"); \
-        cp -f \"\$f\" /openedx/staticfiles/css/\"\$bn\"; \
-        for hf in /openedx/staticfiles/css/\$(echo \"\$bn\" | sed \"s/\\.css\$/\").*.css; do \
-          [ -f \"\$hf\" ] && cp -f \"\$f\" \"\$hf\"; \
-        done; \
-      done && echo \"Force-copy OK\"'"
+  ssh staging-openedx "docker exec $CONTAINER bash -c 'cp -f /openedx/themes/mission-theme/lms/static/css/lms-main-v1.css /openedx/staticfiles/css/lms-main-v1.css 2>/dev/null; cp -f /openedx/themes/mission-theme/lms/static/css/lms-main-v1-rtl.css /openedx/staticfiles/css/lms-main-v1-rtl.css 2>/dev/null; echo Force-copy OK'"
 
-  # Vérification post-copy
-  POST_COUNT=$(ssh staging-openedx \
-    "docker exec $CONTAINER bash -c \"grep -c 'mf-hero' /openedx/staticfiles/css/lms-main-v1.css || echo 0\"")
+  # Copier aussi vers les fichiers hashes (si ils existent)
+  ssh staging-openedx "docker exec $CONTAINER bash -c 'for hf in /openedx/staticfiles/css/lms-main-v1.*.css; do [ -f \"\$hf\" ] && cp -f /openedx/themes/mission-theme/lms/static/css/lms-main-v1.css \"\$hf\"; done 2>/dev/null; echo Hash-copy OK'"
+
+  # Verification post-copy
+  POST_COUNT=$(ssh staging-openedx "docker exec $CONTAINER bash -c 'grep -c mf-hero /openedx/staticfiles/css/lms-main-v1.css 2>/dev/null || echo 0'")
   echo "    mf-hero in staticfiles: $POST_COUNT"
   [ "$POST_COUNT" = "0" ] && echo "ERREUR: CSS theme absent de staticfiles apres force-copy" && exit 1
 
