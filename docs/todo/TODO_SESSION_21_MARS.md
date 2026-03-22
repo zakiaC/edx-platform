@@ -47,6 +47,14 @@
 
 ---
 
+## A FAIRE — Langue FR (prochain sprint)
+
+- [ ] Passer LANGUAGE_CODE = 'fr' dans un plugin Tutor (pas en direct)
+- [ ] Verifier la traduction du MFE Learning (cookie openedx-language-preference)
+- [ ] Verifier la traduction de Studio (labels FR)
+- [ ] Verifier que les emails sont en francais
+- [ ] Tester avec un nouvel utilisateur que tout est en FR par defaut
+
 ## A FAIRE AVANT MARDI 24 (demo)
 
 - [ ] Instance demo prete et testee
