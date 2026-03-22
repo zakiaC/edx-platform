@@ -19,8 +19,8 @@ FEATURES['ENABLE_COMBINED_LOGIN_REGISTRATION'] = True
 ENABLE_LEARNER_HOME_MFE = False
 LEARNER_HOME_MFE_REDIRECT_PERCENTAGE = 0
 
-# Desactiver la redirection vers le MFE Learning — utiliser le courseware Mako legacy
-LEARNING_MICROFRONTEND_URL = ""
+# MFE Learning URL (obligatoire — sans ca, les redirections /courses/.../course/ → 404)
+LEARNING_MICROFRONTEND_URL = "https://apps.academie.staging.missionformations.com/learning"
 
 if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
     COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")
