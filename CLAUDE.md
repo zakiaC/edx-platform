@@ -71,6 +71,18 @@ Si un de ces tests echoue, rollback AVANT de continuer.
 - Si un deploy casse le staging : `git checkout <tag>` + redeploy
 - Garder le backup des settings serveur pendant 7 jours minimum
 
+### Plugins Tutor OBLIGATOIRES (ne jamais desinstaller)
+Ces plugins doivent TOUJOURS etre installes et actives sur le serveur :
+- tutor-mfe (MFEs : Learning, Account, Discussions, etc.) — SANS LUI LES COURS NE FONCTIONNENT PAS
+- tutor-forum (forum de discussion)
+- Tous les plugins mission_* custom
+
+Avant d'installer un nouveau plugin (`pip install tutor-xxx`) :
+1. Lister les plugins actifs : `tutor plugins list`
+2. Lister les packages installes : `pip list | grep tutor`
+3. Apres l'install, VERIFIER que les plugins existants sont toujours la
+4. Si un plugin a disparu : le reinstaller immediatement
+
 ### Settings qui DOIVENT etre dans les plugins Tutor
 Ces variables sont ecrasees par `tutor config save` si elles ne sont pas dans un plugin :
 - LEARNING_MICROFRONTEND_URL → mission_theme_lock.py
