@@ -20,10 +20,22 @@ if [ "$ENV" = "local" ]; then
   echo "mf- occurrences: $COUNT"
   [ "$COUNT" = "0" ] && echo "ERREUR: CSS vide" && exit 1
 
-  echo "--- 3/3 Collectstatic ---"
+  echo "--- 3/4 Collectstatic ---"
   # IMPORTANT: PAS de --clear sinon webpack-stats.json est supprime → 500 sur toutes les pages
   docker exec $CONTAINER \
     ./manage.py lms collectstatic --noinput 2>&1 | tail -3
+
+  echo "--- 4/4 Force-copy theme CSS → staticfiles ---"
+  # FIX regression 2026-03-22: collectstatic ne remplace pas les CSS si le hash
+  # Django n'a pas change. On force la copie du CSS theme par-dessus staticfiles.
+  docker exec $CONTAINER bash -c '\
+    for f in /openedx/themes/mission-theme/lms/static/css/lms-main-v1*.css; do \
+      bn=$(basename "$f"); \
+      cp -f "$f" /openedx/staticfiles/css/"$bn"; \
+      for hf in /openedx/staticfiles/css/$(echo "$bn" | sed "s/\.css$//").*.css; do \
+        [ -f "$hf" ] && cp -f "$f" "$hf"; \
+      done; \
+    done && echo "Force-copy OK"'
 
 elif [ "$ENV" = "staging" ]; then
   CONTAINER="tutor_local-lms-1"
@@ -63,11 +75,30 @@ elif [ "$ENV" = "staging" ]; then
   echo "mf- occurrences: $COUNT"
   [ "$COUNT" = "0" ] && echo "ERREUR: CSS vide" && exit 1
 
-  echo "--- 4/6 Collectstatic ---"
+  echo "--- 4/6 Collectstatic + force-copy theme CSS ---"
   # IMPORTANT: PAS de --clear sinon webpack-stats.json est supprime → 500 sur toutes les pages
   ssh staging-openedx \
     "docker exec $CONTAINER \
     ./manage.py lms collectstatic --noinput 2>&1 | tail -3"
+
+  # FIX regression 2026-03-22: collectstatic ne remplace pas les CSS si le hash
+  # Django n'a pas change. On force la copie du CSS theme par-dessus staticfiles.
+  echo "    Force-copy theme CSS → staticfiles..."
+  ssh staging-openedx "\
+    docker exec $CONTAINER bash -c '\
+      for f in /openedx/themes/mission-theme/lms/static/css/lms-main-v1*.css; do \
+        bn=\$(basename \"\$f\"); \
+        cp -f \"\$f\" /openedx/staticfiles/css/\"\$bn\"; \
+        for hf in /openedx/staticfiles/css/\$(echo \"\$bn\" | sed \"s/\\.css\$/\").*.css; do \
+          [ -f \"\$hf\" ] && cp -f \"\$f\" \"\$hf\"; \
+        done; \
+      done && echo \"Force-copy OK\"'"
+
+  # Vérification post-copy
+  POST_COUNT=$(ssh staging-openedx \
+    "docker exec $CONTAINER bash -c \"grep -c 'mf-hero' /openedx/staticfiles/css/lms-main-v1.css || echo 0\"")
+  echo "    mf-hero in staticfiles: $POST_COUNT"
+  [ "$POST_COUNT" = "0" ] && echo "ERREUR: CSS theme absent de staticfiles apres force-copy" && exit 1
 
   echo "--- 5/6 Vider cache Mako + Restart ---"
   ssh staging-openedx "\
