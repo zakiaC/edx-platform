@@ -73,3 +73,15 @@ hooks.Filters.ENV_PATCHES.add_item(
     ("caddyfile", CADDY_ACADEMIES),
     priority=priorities.DEFAULT,
 )
+
+# Route /qualiopi/* vers l'app Qualiopi (container qualiopi-app:8080)
+CADDY_QUALIOPI = """
+    handle_path /qualiopi/* {
+        reverse_proxy qualiopi-app:8080
+    }
+""".strip()
+
+hooks.Filters.ENV_PATCHES.add_item(
+    ("caddyfile-lms", CADDY_QUALIOPI),
+    priority=priorities.DEFAULT,
+)
