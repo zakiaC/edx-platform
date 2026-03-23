@@ -61,6 +61,12 @@ finance.academie.staging.missionformations.com {
 vente.academie.staging.missionformations.com {
     import proxy "lms:8000"
 }
+communication.academie.staging.missionformations.com {
+    import proxy "lms:8000"
+}
+cybersecurite.academie.staging.missionformations.com {
+    import proxy "lms:8000"
+}
 """.strip()
 
 hooks.Filters.ENV_PATCHES.add_item(
