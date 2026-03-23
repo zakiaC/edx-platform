@@ -1135,7 +1135,21 @@ def catalogue_view(request):
     """Catalogue des formations — page publique avec filtres et cartes cours."""
     courses_qs = CourseOverview.objects.filter(
         catalog_visibility="both",
-    ).order_by("-start")[:50]
+    ).order_by("-start")
+
+    # Multi-tenant : filtrer par org si eox-tenant detecte un tenant
+    try:
+        from eox_tenant.models import TenantConfig, Route
+        host = request.get_host().split(':')[0]
+        route = Route.objects.filter(domain=host).select_related('config').first()
+        if route and route.config:
+            org_filter = route.config.lms_configs.get('course_org_filter', [])
+            if org_filter:
+                courses_qs = courses_qs.filter(org__in=org_filter)
+    except Exception:
+        pass  # eox-tenant pas installe ou erreur → pas de filtrage
+
+    courses_qs = courses_qs[:50]
 
     # Images par defaut par domaine
     domain_images = {
