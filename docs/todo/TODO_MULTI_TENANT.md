@@ -47,3 +47,12 @@
 - [ ] **Cross-selling Canal B** : email de recommandation J+7 apres fin de formation
 - [ ] **Cross-selling Canal C** : catalogue global avec filtre par academie
 - [ ] **Facturation par tenant** : comptage apprenants par academie dans Odoo
+
+## A faire — Integration emargement dans les dashboards LMS
+
+- [ ] **Dashboard admin** : ajouter onglet "Emargement" (appel API Qualiopi /emargement/dashboard/ en AJAX)
+- [ ] **Dashboard admin** : liste des signatures par session (appel API /emargement/signatures/)
+- [ ] **Dashboard admin** : bouton "Generer QR code" pour le presentiel
+- [ ] **Dashboard apprenant** : section "Mon assiduite" (appel API /emargement/logs/?user_id=...)
+- [ ] **Dashboard apprenant** : historique des signatures presentiel
+- [ ] **Fiche apprenant** : assiduite visible quand l'admin consulte un apprenant
