@@ -19,8 +19,6 @@
   }
 
   /* ══ MISSION FORMATIONS THEME — INLINE ══ */
-  /* Variables par defaut — ecrasees par body-extra.html si tenant */
-  :root { --bleu: #0965D0; --vert: #01E8AE; }
   .logo img { max-height: 60px !important; width: auto !important; }
   .footer-logo img { max-height: 50px !important; width: auto !important; }
 
@@ -213,6 +211,8 @@
     from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
     _hp_courses_qs = CourseOverview.objects.filter(catalog_visibility="both").order_by("-start")
     _tenant_name = 'Mission Formations'
+    _tenant_primary = '#0965D0'
+    _tenant_secondary = '#01E8AE'
     try:
         from eox_tenant.models import Route as _Route
         _host = request.get_host().split(':')[0]
@@ -222,10 +222,14 @@
             if _org_filter:
                 _hp_courses_qs = _hp_courses_qs.filter(org__in=_org_filter)
             _tenant_name = _route.config.lms_configs.get('PLATFORM_NAME', 'Mission Formations')
+            if _route.config.theming_configs:
+                _tenant_primary = _route.config.theming_configs.get('primary_color', '#0965D0')
+                _tenant_secondary = _route.config.theming_configs.get('secondary_color', '#01E8AE')
     except Exception:
         pass
     _hp_courses = list(_hp_courses_qs[:6])
 %>
+<style>:root { --bleu: ${_tenant_primary} !important; --vert: ${_tenant_secondary} !important; }</style>
 <div class="mf-home">
 
 <!-- HERO -->
