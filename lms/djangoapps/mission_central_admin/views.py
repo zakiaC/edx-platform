@@ -1668,6 +1668,74 @@ def academy_detail(request, slug):
     except Academy.DoesNotExist:
         raise Http404("Academie introuvable")
 
+    success_message = ""
+
+    # POST : mise a jour des parametres de l'academie
+    if request.method == "POST":
+        action = request.POST.get("action", "")
+
+        if action == "update_branding":
+            new_name = (request.POST.get("name") or "").strip()
+            new_primary = (request.POST.get("primary_color") or "").strip()
+            new_secondary = (request.POST.get("secondary_color") or "").strip()
+            new_description = (request.POST.get("description") or "").strip()
+
+            # Mettre a jour le modele Academy
+            if new_name:
+                academy.name = new_name
+            if new_primary:
+                academy.primary_color = new_primary
+            if new_secondary:
+                academy.secondary_color = new_secondary
+            if new_description:
+                academy.description = new_description
+            academy.save()
+
+            # Mettre a jour le TenantConfig eox-tenant
+            try:
+                import json
+                from django.db import connection
+                cursor = connection.cursor()
+
+                # Determiner le domaine du tenant
+                base_domain = request.get_host().split(':')[0]
+                tenant_domain = "{}.{}".format(academy.slug, base_domain)
+
+                # Mettre a jour lms_configs (nom plateforme)
+                if new_name:
+                    cursor.execute(
+                        "SELECT lms_configs FROM eox_tenant_tenantconfig WHERE external_key = %s",
+                        [tenant_domain]
+                    )
+                    row = cursor.fetchone()
+                    if row:
+                        lms_configs = json.loads(row[0]) if isinstance(row[0], str) else row[0]
+                        lms_configs["PLATFORM_NAME"] = new_name
+                        lms_configs["platform_name"] = new_name
+                        cursor.execute(
+                            "UPDATE eox_tenant_tenantconfig SET lms_configs = %s WHERE external_key = %s",
+                            [json.dumps(lms_configs), tenant_domain]
+                        )
+
+                # Mettre a jour theming_configs (couleurs)
+                if new_primary or new_secondary:
+                    theming = json.dumps({
+                        "primary_color": new_primary or academy.primary_color or "#0965D0",
+                        "secondary_color": new_secondary or academy.secondary_color or "#01E8AE",
+                    })
+                    cursor.execute(
+                        "UPDATE eox_tenant_tenantconfig SET theming_configs = %s WHERE external_key = %s",
+                        [theming, tenant_domain]
+                    )
+
+                success_message = "Branding mis a jour avec succes."
+            except Exception as exc:
+                import logging
+                logging.getLogger(__name__).warning(
+                    "[Academy Manager] Tenant update failed for %s: %s", academy.slug, exc
+                )
+                success_message = "Academie mise a jour (tenant non modifie)."
+
     courses = AcademyCourse.objects.filter(academy=academy).order_by("order")
     enrollments = AcademyEnrollment.objects.filter(academy=academy).select_related("user").order_by("-enrolled_at")[:100]
     admins = AcadAdmin.objects.filter(academy=academy).select_related("user")
@@ -1684,6 +1752,10 @@ def academy_detail(request, slug):
 
     tab = request.GET.get("tab", "overview")
 
+    # URL du sous-domaine de l'academie
+    base_domain = request.get_host().split(':')[0]
+    academy_url = "https://{}.{}".format(academy.slug, base_domain)
+
     context = {
         "academy": academy,
         "courses": courses,
@@ -1694,6 +1766,8 @@ def academy_detail(request, slug):
         "available_courses": available_courses,
         "tab": tab,
         "dashboard_url": "/admin/mission-dashboard/",
+        "academy_url": academy_url,
+        "success_message": success_message,
     }
     return render_to_response("academy_manager/detail.html", context)
 
