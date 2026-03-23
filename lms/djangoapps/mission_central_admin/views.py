@@ -1528,6 +1528,104 @@ def academy_create(request):
                 except Exception:
                     pass
 
+                # Creer le tenant multi-tenant (eox-tenant)
+                try:
+                    from django.contrib.sites.models import Site as DjangoSite
+                    from django.db import connection
+
+                    # Determiner le sous-domaine
+                    base_domain = request.get_host().split(':')[0]  # academie.staging.mf.com
+                    tenant_domain = "{}.{}".format(academy.slug, base_domain)
+                    academy.subdomain = academy.slug
+                    academy.save(update_fields=["subdomain"])
+
+                    # 1. Creer le Django Site
+                    tenant_site, _ = DjangoSite.objects.get_or_create(
+                        domain=tenant_domain,
+                        defaults={"name": name},
+                    )
+                    academy.site_id = tenant_site.id
+                    academy.save(update_fields=["site_id"])
+
+                    # 2. Creer le TenantConfig via raw SQL (eviter les signaux eox-tenant
+                    #    qui tentent de recreer les orgs et causent des IntegrityError)
+                    import json
+                    cursor = connection.cursor()
+                    cursor.execute(
+                        "SELECT id FROM eox_tenant_tenantconfig WHERE external_key = %s",
+                        [tenant_domain]
+                    )
+                    row = cursor.fetchone()
+                    if not row:
+                        lms_configs = json.dumps({
+                            "SITE_NAME": tenant_domain,
+                            "PLATFORM_NAME": name,
+                            "platform_name": name,
+                            "course_org_filter": [short_name],
+                            "LMS_BASE": tenant_domain,
+                        })
+                        cursor.execute(
+                            "INSERT INTO eox_tenant_tenantconfig "
+                            "(external_key, lms_configs, studio_configs, theming_configs, meta) "
+                            "VALUES (%s, %s, '{}', '{}', '{}')",
+                            [tenant_domain, lms_configs]
+                        )
+                        cursor.execute(
+                            "SELECT id FROM eox_tenant_tenantconfig WHERE external_key = %s",
+                            [tenant_domain]
+                        )
+                        row = cursor.fetchone()
+
+                    tc_id = row[0]
+
+                    # 3. Creer la Route
+                    cursor.execute(
+                        "SELECT id FROM eox_tenant_route WHERE domain = %s",
+                        [tenant_domain]
+                    )
+                    if not cursor.fetchone():
+                        cursor.execute(
+                            "INSERT INTO eox_tenant_route (domain, config_id) VALUES (%s, %s)",
+                            [tenant_domain, tc_id]
+                        )
+
+                    # 4. Creer la TenantOrganization (lien M2M pour le filtrage)
+                    cursor.execute(
+                        "SELECT id FROM eox_tenant_tenantorganization WHERE name = %s",
+                        [short_name]
+                    )
+                    to_row = cursor.fetchone()
+                    if not to_row:
+                        cursor.execute(
+                            "INSERT INTO eox_tenant_tenantorganization (name) VALUES (%s)",
+                            [short_name]
+                        )
+                        cursor.execute(
+                            "SELECT id FROM eox_tenant_tenantorganization WHERE name = %s",
+                            [short_name]
+                        )
+                        to_row = cursor.fetchone()
+
+                    # 5. Lier TenantOrganization au TenantConfig (M2M)
+                    cursor.execute(
+                        "SELECT id FROM eox_tenant_tenantconfig_organizations "
+                        "WHERE tenantconfig_id = %s AND tenantorganization_id = %s",
+                        [tc_id, to_row[0]]
+                    )
+                    if not cursor.fetchone():
+                        cursor.execute(
+                            "INSERT INTO eox_tenant_tenantconfig_organizations "
+                            "(tenantconfig_id, tenantorganization_id) VALUES (%s, %s)",
+                            [tc_id, to_row[0]]
+                        )
+
+                except Exception as exc:
+                    import logging
+                    logging.getLogger(__name__).warning(
+                        "[Academy Manager] Tenant creation failed for %s: %s",
+                        academy.slug, exc
+                    )
+
                 # Assigner l'admin si email fourni
                 if admin_email:
                     User = get_user_model()
