@@ -207,6 +207,23 @@
 </%block>
 
 <%block name="content">
+<%
+    from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+    _hp_courses_qs = CourseOverview.objects.filter(catalog_visibility="both").order_by("-start")
+    _tenant_name = 'Mission Formations'
+    try:
+        from eox_tenant.models import Route as _Route
+        _host = request.get_host().split(':')[0]
+        _route = _Route.objects.filter(domain=_host).select_related('config').first()
+        if _route and _route.config:
+            _org_filter = _route.config.lms_configs.get('course_org_filter', [])
+            if _org_filter:
+                _hp_courses_qs = _hp_courses_qs.filter(org__in=_org_filter)
+            _tenant_name = _route.config.lms_configs.get('PLATFORM_NAME', 'Mission Formations')
+    except Exception:
+        pass
+    _hp_courses = list(_hp_courses_qs[:6])
+%>
 <div class="mf-home">
 
 <!-- HERO -->
@@ -260,39 +277,6 @@
 </section>
 
 <!-- CATALOGUE (dynamique — filtre par tenant multi-tenant) -->
-<%!
-def _get_homepage_courses(request):
-    """Recupere les cours filtres par tenant pour la homepage."""
-    from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
-    courses_qs = CourseOverview.objects.filter(catalog_visibility="both").order_by("-start")
-    try:
-        from eox_tenant.models import Route
-        host = request.get_host().split(':')[0]
-        route = Route.objects.filter(domain=host).select_related('config').first()
-        if route and route.config:
-            org_filter = route.config.lms_configs.get('course_org_filter', [])
-            if org_filter:
-                courses_qs = courses_qs.filter(org__in=org_filter)
-    except Exception:
-        pass
-    return list(courses_qs[:6])
-
-def _get_tenant_name(request):
-    """Recupere le nom du tenant pour le hero."""
-    try:
-        from eox_tenant.models import Route
-        host = request.get_host().split(':')[0]
-        route = Route.objects.filter(domain=host).select_related('config').first()
-        if route and route.config:
-            return route.config.lms_configs.get('PLATFORM_NAME', 'Mission Formations')
-    except Exception:
-        pass
-    return 'Mission Formations'
-%>
-<%
-    _hp_courses = _get_homepage_courses(request)
-    _tenant_name = _get_tenant_name(request)
-%>
 <section class="mf-catalog" id="mf-catalog">
   <div class="mf-wrap">
     <div class="mf-catalog__head">
