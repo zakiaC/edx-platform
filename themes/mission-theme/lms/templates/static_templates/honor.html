@@ -1,0 +1,80 @@
+<%page expression_filter="h"/>
+<%inherit file="../main.html" />
+<%block name="pagetitle">Code d'honneur — Mission Formations</%block>
+
+<%block name="content">
+<style>
+.honor-page{max-width:800px;margin:40px auto;padding:0 24px;font-family:'Raleway',sans-serif}
+.honor-hero{background:linear-gradient(135deg,#0965D0,#01E8AE);border-radius:16px;padding:40px 32px;color:#fff;margin-bottom:32px}
+.honor-hero h1{font-family:'Ubuntu',sans-serif;font-size:28px;margin:0 0 8px}
+.honor-hero p{font-size:14px;opacity:.85;margin:0}
+.honor-card{background:#fff;border-radius:12px;border:1px solid #e8e8e8;padding:28px 24px;margin-bottom:16px}
+.honor-card h2{font-family:'Ubuntu',sans-serif;font-size:18px;color:#0a1628;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.honor-card h2 .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.honor-card p,.honor-card li{font-size:13px;color:#6b6b6b;line-height:1.8}
+.honor-card ul{padding-left:20px;margin:8px 0}
+.honor-footer{text-align:center;font-size:12px;color:#999;margin-top:32px;padding:16px}
+</style>
+
+<div class="honor-page">
+  <div class="honor-hero">
+    <h1>Code d'honneur</h1>
+    <p>Engagement de chaque apprenant envers l'integrite academique</p>
+  </div>
+
+  <div class="honor-card">
+    <h2><span class="icon" style="background:#e8f0fb;color:#0965D0">1</span> Engagement personnel</h2>
+    <p>En m'inscrivant sur la plateforme Mission Formations, je m'engage a :</p>
+    <ul>
+      <li>Realiser personnellement les exercices, quiz et evaluations</li>
+      <li>Ne pas communiquer mes identifiants de connexion a un tiers</li>
+      <li>Ne pas utiliser de moyens frauduleux pour valider les evaluations</li>
+      <li>Respecter les delais et le rythme de la formation</li>
+    </ul>
+  </div>
+
+  <div class="honor-card">
+    <h2><span class="icon" style="background:#e6faf4;color:#00c494">2</span> Respect de la propriete intellectuelle</h2>
+    <p>Les contenus de formation (videos, supports, exercices) sont la propriete de Mission Formations et de ses formateurs. Je m'engage a :</p>
+    <ul>
+      <li>Ne pas reproduire, copier ou diffuser les contenus de formation</li>
+      <li>Ne pas enregistrer les sessions de visioconference sans autorisation</li>
+      <li>Ne pas partager les documents telecharges en dehors du cadre de la formation</li>
+      <li>Citer les sources si je reutilise des elements dans un cadre professionnel</li>
+    </ul>
+  </div>
+
+  <div class="honor-card">
+    <h2><span class="icon" style="background:rgba(142,68,173,.08);color:#8e44ad">3</span> Comportement et respect</h2>
+    <p>Dans les espaces d'echange (forum, chat, visioconference), je m'engage a :</p>
+    <ul>
+      <li>Respecter les autres apprenants et les formateurs</li>
+      <li>Ne pas tenir de propos discriminatoires, injurieux ou diffamatoires</li>
+      <li>Contribuer de maniere constructive aux discussions</li>
+      <li>Signaler tout comportement inapproprie</li>
+    </ul>
+  </div>
+
+  <div class="honor-card">
+    <h2><span class="icon" style="background:rgba(231,76,60,.08);color:#e74c3c">4</span> Consequences du non-respect</h2>
+    <p>Le non-respect de ce code d'honneur peut entrainer :</p>
+    <ul>
+      <li>Un avertissement de la part de l'equipe pedagogique</li>
+      <li>L'annulation d'une evaluation ou d'un certificat</li>
+      <li>L'exclusion definitive de la plateforme</li>
+      <li>Des poursuites en cas de violation de la propriete intellectuelle</li>
+    </ul>
+  </div>
+
+  <div class="honor-card">
+    <h2><span class="icon" style="background:rgba(9,101,208,.08);color:#0965D0">5</span> Acceptation</h2>
+    <p>En utilisant la plateforme Mission Formations, vous reconnaissez avoir pris connaissance de ce code d'honneur et vous engagez a le respecter.</p>
+    <p>Ce code d'honneur est complementaire au <a href="/tos" style="color:#0965D0">reglement interieur</a> et aux <a href="/privacy" style="color:#0965D0">conditions generales</a> de Mission Formations.</p>
+  </div>
+
+  <div class="honor-footer">
+    Mission Formations — Organisme de formation certifie Qualiopi<br>
+    Derniere mise a jour : mars 2026
+  </div>
+</div>
+</%block>
