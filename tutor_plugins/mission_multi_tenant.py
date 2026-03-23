@@ -29,6 +29,9 @@ EOX_TENANT_USE_TENANTCONFIG = True
 
 # Autoriser tous les sous-domaines d'academies
 ALLOWED_HOSTS.append('.academie.staging.missionformations.com')
+
+# Signal forwarder → app Qualiopi (webhook interne)
+QUALIOPI_WEBHOOK_URL = 'http://qualiopi-app:8080'
 """.strip()
 
 # Priorite BASSE pour que le patch s'execute APRES la redefinition de ALLOWED_HOSTS

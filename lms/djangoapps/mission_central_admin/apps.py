@@ -25,6 +25,18 @@ class MissionCentralAdminConfig(AppConfig):
 
         self._patch_admin_user_creation_form()
         self._patch_activation_email()
+        self._connect_signal_forwarder()
+
+    def _connect_signal_forwarder(self):
+        """Connecte les signaux OpenEdX au forwarder Qualiopi."""
+        try:
+            from .signal_forwarder import connect_signals
+            connect_signals()
+        except Exception as exc:
+            import logging
+            logging.getLogger(__name__).warning(
+                "[MF-SIGNALS] Signal forwarder failed to connect: %s", exc
+            )
 
     def _patch_admin_user_creation_form(self):
         """
