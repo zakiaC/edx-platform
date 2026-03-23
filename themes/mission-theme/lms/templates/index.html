@@ -229,7 +229,24 @@
         pass
     _hp_courses = list(_hp_courses_qs[:6])
 %>
-<style>:root { --bleu: ${_tenant_primary} !important; --vert: ${_tenant_secondary} !important; }</style>
+<style>
+:root { --bleu: ${_tenant_primary} !important; --vert: ${_tenant_secondary} !important; }
+.mf-hero__bg { background: linear-gradient(135deg, #0a2540 0%, ${_tenant_primary} 60%, ${_tenant_secondary} 100%) !important; }
+.mf-btn--grad { background: linear-gradient(135deg, ${_tenant_primary} 0%, ${_tenant_secondary} 100%) !important; }
+.mf-btn--outline:hover { border-color: ${_tenant_secondary} !important; color: ${_tenant_secondary} !important; }
+.mf-btn--white { color: ${_tenant_primary} !important; }
+.mf-hero__badge { color: ${_tenant_secondary} !important; }
+.mf-hero__title em { color: ${_tenant_secondary} !important; }
+.mf-feat__icon { background: linear-gradient(135deg, ${_tenant_primary} 0%, ${_tenant_secondary} 100%) !important; }
+.mf-feat { border-image: linear-gradient(135deg, ${_tenant_primary} 0%, ${_tenant_secondary} 100%) 1 !important; }
+.mf-tag { color: ${_tenant_primary} !important; }
+.mf-card__org { color: ${_tenant_primary} !important; }
+.mf-card__cta { color: ${_tenant_primary} !important; }
+.mf-card__img::after { background: linear-gradient(135deg, ${_tenant_primary} 0%, ${_tenant_secondary} 100%) !important; }
+.mf-cta__box { background: linear-gradient(135deg, #0a2540 0%, ${_tenant_primary} 60%, ${_tenant_secondary} 100%) !important; }
+.mf-footer__logo { background: linear-gradient(135deg, ${_tenant_primary} 0%, ${_tenant_secondary} 100%) !important; }
+.mf-search__in:focus { border-color: ${_tenant_primary} !important; }
+</style>
 <div class="mf-home">
 
 <!-- HERO -->
