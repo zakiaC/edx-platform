@@ -75,8 +75,9 @@ hooks.Filters.ENV_PATCHES.add_item(
 )
 
 # Route /qualiopi/* vers l'app Qualiopi (container qualiopi-app:8080)
+# Utilise handle (pas handle_path) pour garder le prefix /qualiopi dans la requete
 CADDY_QUALIOPI = """
-    handle_path /qualiopi/* {
+    handle /qualiopi/* {
         reverse_proxy qualiopi-app:8080
     }
 """.strip()
