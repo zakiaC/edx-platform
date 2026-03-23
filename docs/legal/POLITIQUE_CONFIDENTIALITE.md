@@ -11,7 +11,7 @@
 
 | Information | Detail |
 |-------------|--------|
-| Raison sociale | [A completer] |
+| Raison sociale | Mission Formations |
 | SIRET | [A completer] |
 | N° Declaration d'activite | [A completer] |
 | Adresse | [A completer] |
