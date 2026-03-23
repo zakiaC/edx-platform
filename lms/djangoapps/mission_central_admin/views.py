@@ -1564,11 +1564,17 @@ def academy_create(request):
                             "course_org_filter": [short_name],
                             "LMS_BASE": tenant_domain,
                         })
+                        theming_configs = json.dumps({
+                            "primary_color": primary_color,
+                            "secondary_color": secondary_color,
+                            "logo_url": "",
+                            "favicon_url": "",
+                        })
                         cursor.execute(
                             "INSERT INTO eox_tenant_tenantconfig "
                             "(external_key, lms_configs, studio_configs, theming_configs, meta) "
-                            "VALUES (%s, %s, '{}', '{}', '{}')",
-                            [tenant_domain, lms_configs]
+                            "VALUES (%s, %s, '{}', %s, '{}')",
+                            [tenant_domain, lms_configs, theming_configs]
                         )
                         cursor.execute(
                             "SELECT id FROM eox_tenant_tenantconfig WHERE external_key = %s",

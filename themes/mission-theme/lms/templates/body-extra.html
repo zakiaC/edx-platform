@@ -1,1 +1,26 @@
 <%page expression_filter="h"/>
+<%!
+def get_tenant_colors(request):
+    """Recupere les couleurs du tenant eox-tenant pour le sous-domaine actuel."""
+    try:
+        from eox_tenant.models import Route
+        host = request.get_host().split(':')[0]
+        route = Route.objects.filter(domain=host).select_related('config').first()
+        if route and route.config and route.config.theming_configs:
+            tc = route.config.theming_configs
+            return tc.get('primary_color', ''), tc.get('secondary_color', '')
+    except Exception:
+        pass
+    return '', ''
+%>
+<%
+    tenant_primary, tenant_secondary = get_tenant_colors(request)
+%>
+% if tenant_primary and tenant_secondary:
+<style>
+:root {
+    --bleu: ${tenant_primary} !important;
+    --vert: ${tenant_secondary} !important;
+}
+</style>
+% endif
