@@ -139,8 +139,11 @@ def _render_footer_html(request, show_openedx_logo, include_dependencies, includ
     bidi = 'rtl' if translation.get_language_bidi() else 'ltr'
     css_name = settings.FOOTER_CSS['openedx'][bidi]
 
+    # Mission Formations: toujours masquer le logo OpenEdX
+    show_openedx_logo = False
+
     context = {
-        'hide_openedx_link': not show_openedx_logo,
+        'hide_openedx_link': True,
         'footer_js_url': _footer_static_url(request, 'js/footer-edx.js'),
         'footer_css_urls': _footer_css_urls(request, css_name),
         'bidi': bidi,
@@ -259,8 +262,8 @@ def footer(request):
     # Use the content type to decide what representation to serve
     accepts = request.headers.get('Accept', '*/*')
 
-    # Show the OpenEdX logo in the footer
-    show_openedx_logo = bool(request.GET.get('show-openedx-logo', False))
+    # Mission Formations: toujours masquer le logo OpenEdX
+    show_openedx_logo = False
 
     # Include JS and CSS dependencies
     # This is useful for testing the end-point directly.
