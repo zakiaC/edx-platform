@@ -2,79 +2,115 @@
 <%page expression_filter="h"/>
 <%namespace name='static' file='../static_content.html'/>
 
-<header class="global-header" style="
-  position:sticky;top:0;z-index:1000;
-  background:#0a1628;
-  height:60px;display:flex;align-items:center;
-  padding:0 32px;
-  border-bottom:1px solid rgba(255,255,255,.04);
-  box-shadow:0 4px 24px rgba(0,0,0,.2);
-">
-  <div style="display:flex;align-items:center;gap:14px;flex:1">
-    <a href="https://missionformations.com" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:14px;text-decoration:none">
-      <div style="
-        width:36px;height:36px;
-        background:linear-gradient(135deg,#0965D0,#01E8AE);
-        border-radius:10px;
-        display:flex;align-items:center;justify-content:center;
-        font-family:'Ubuntu',sans-serif;font-size:18px;font-weight:900;color:#fff;
-      ">M</div>
-      <div style="font-family:'Ubuntu',sans-serif;font-size:15px;font-weight:700;color:#fff;">
-        Académie Mission<span style="color:rgba(255,255,255,.25);font-weight:400;font-size:12px;margin-left:6px;">Formations</span>
+<style>
+  .mf-header{position:sticky;top:0;z-index:1000;background:#0a1628;height:60px;display:flex;align-items:center;padding:0 32px;border-bottom:1px solid rgba(255,255,255,.04);box-shadow:0 4px 24px rgba(0,0,0,.2);font-family:'Ubuntu',sans-serif}
+  .mf-header-left{display:flex;align-items:center;gap:14px;flex:1}
+  .mf-header-brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+  .mf-header-logo{width:36px;height:36px;background:linear-gradient(135deg,#0965D0,#01E8AE);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff}
+  .mf-header-name{font-size:15px;font-weight:700;color:#fff}
+  .mf-header-name span{color:rgba(255,255,255,.25);font-weight:400;font-size:12px;margin-left:6px}
+  .mf-header-nav{display:flex;align-items:center;gap:4px}
+  .mf-header-nav a{font-size:12px;font-weight:600;color:rgba(255,255,255,.4);padding:8px 16px;border-radius:8px;transition:all .15s;text-decoration:none;font-family:'Ubuntu',sans-serif}
+  .mf-header-nav a:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+  .mf-header-actions{display:flex;align-items:center;gap:16px;margin-left:24px}
+  .mf-header-btn{font-size:12px;font-weight:700;color:#fff;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#0965D0,#01E8AE);text-decoration:none;transition:all .2s;font-family:'Ubuntu',sans-serif;box-shadow:0 4px 16px rgba(9,101,208,.2)}
+  .mf-header-btn:hover{box-shadow:0 6px 20px rgba(9,101,208,.3);transform:translateY(-1px);color:#fff}
+  .mf-header-user{font-size:12px;font-weight:600;color:rgba(255,255,255,.75);font-family:'Ubuntu',sans-serif}
+  .mf-header-link{font-size:12px;font-weight:600;color:rgba(255,255,255,.4);padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .15s;font-family:'Ubuntu',sans-serif}
+  .mf-header-link:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+  .mf-header-link--register{font-weight:700;color:#fff;padding:8px 20px;border-radius:10px;background:linear-gradient(135deg,#0965D0,#01E8AE);box-shadow:0 4px 16px rgba(9,101,208,.2)}
+  .mf-header-link--register:hover{box-shadow:0 6px 20px rgba(9,101,208,.3);transform:translateY(-1px);color:#fff}
+
+  /* Hamburger button */
+  .mf-burger{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:auto}
+  .mf-burger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+  .mf-burger span+span{margin-top:5px}
+
+  /* Mobile overlay menu */
+  .mf-mobile-menu{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,22,40,.97);flex-direction:column;padding:20px 24px;overflow-y:auto}
+  .mf-mobile-menu.open{display:flex}
+  .mf-mobile-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+  .mf-mobile-close{background:none;border:none;color:#fff;font-size:28px;cursor:pointer;padding:8px;line-height:1}
+  .mf-mobile-menu nav{display:flex;flex-direction:column;gap:4px}
+  .mf-mobile-menu nav a{font-family:'Ubuntu',sans-serif;font-size:16px;font-weight:600;color:rgba(255,255,255,.7);padding:14px 16px;border-radius:10px;text-decoration:none;transition:all .2s}
+  .mf-mobile-menu nav a:hover,.mf-mobile-menu nav a:active{color:#fff;background:rgba(255,255,255,.06)}
+  .mf-mobile-menu .mf-mobile-cta{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+  .mf-mobile-menu .mf-mobile-cta a{display:block;text-align:center;font-family:'Ubuntu',sans-serif;font-size:14px;font-weight:700;padding:14px;border-radius:10px;text-decoration:none;transition:all .2s}
+  .mf-mobile-menu .mf-mobile-cta .mf-mcta-primary{color:#fff;background:linear-gradient(135deg,#0965D0,#01E8AE);box-shadow:0 4px 16px rgba(9,101,208,.2)}
+  .mf-mobile-menu .mf-mobile-cta .mf-mcta-secondary{color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.15)}
+  .mf-mobile-menu .mf-mobile-user{margin-top:auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);font-family:'Ubuntu',sans-serif;font-size:13px;color:rgba(255,255,255,.5);text-align:center}
+
+  @media(max-width:768px){
+    .mf-header{padding:0 16px;height:56px}
+    .mf-header-nav,.mf-header-actions{display:none}
+    .mf-burger{display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .mf-header-name span{display:none}
+  }
+  @media(max-width:480px){
+    .mf-header{padding:0 12px}
+    .mf-header-name{font-size:13px}
+    .mf-header-logo{width:32px;height:32px;font-size:16px;border-radius:8px}
+  }
+</style>
+
+<header class="global-header mf-header">
+  <div class="mf-header-left">
+    <a href="https://missionformations.com" target="_blank" rel="noopener noreferrer" class="mf-header-brand">
+      <div class="mf-header-logo">M</div>
+      <div class="mf-header-name">
+        Académie Mission<span>Formations</span>
       </div>
     </a>
   </div>
 
-  <nav style="display:flex;align-items:center;gap:4px;">
-    <a href="/courses" style="
-      font-size:12px;font-weight:600;
-      color:rgba(255,255,255,.4);
-      padding:8px 16px;border-radius:8px;
-      transition:all .15s;text-decoration:none;
-      font-family:'Ubuntu',sans-serif;
-    ">Catalogue</a>
+  <nav class="mf-header-nav">
+    <a href="/courses">Catalogue</a>
   </nav>
 
-  <div style="display:flex;align-items:center;gap:16px;margin-left:24px;">
+  <div class="mf-header-actions">
     % if user.is_authenticated:
-      <a href="${'/admin/mission-dashboard/' if user.is_superuser else '/dashboard'}" style="
-        font-size:12px;font-weight:700;
-        color:#fff;
-        padding:8px 16px;border-radius:10px;
-        background:linear-gradient(135deg,#0965D0,#01E8AE);
-        text-decoration:none;transition:all .2s;
-        font-family:'Ubuntu',sans-serif;
-        box-shadow:0 4px 16px rgba(9,101,208,.2);
-      ">Mon dashboard</a>
-      <span style="
-        font-size:12px;font-weight:600;
-        color:rgba(255,255,255,.75);
-        font-family:'Ubuntu',sans-serif;
-      ">${user.username}</span>
-      <a href="/logout" style="
-        font-size:12px;font-weight:600;
-        color:rgba(255,255,255,.6);
-        padding:8px 16px;border-radius:8px;
-        text-decoration:none;transition:all .15s;
-        font-family:'Ubuntu',sans-serif;
-      ">Déconnexion</a>
+      <a href="${'/admin/mission-dashboard/' if user.is_superuser else '/dashboard'}" class="mf-header-btn">Mon dashboard</a>
+      <span class="mf-header-user">${user.username}</span>
+      <a href="/logout" class="mf-header-link">Déconnexion</a>
     % else:
-      <a href="/login" style="
-        font-size:12px;font-weight:600;
-        color:rgba(255,255,255,.5);
-        padding:8px 16px;border-radius:8px;
-        text-decoration:none;transition:all .15s;
-        font-family:'Ubuntu',sans-serif;
-      ">Se connecter</a>
-      <a href="/register" style="
-        font-size:12px;font-weight:700;
-        color:#fff;
-        padding:8px 20px;border-radius:10px;
-        background:linear-gradient(135deg,#0965D0,#01E8AE);
-        text-decoration:none;transition:all .2s;
-        font-family:'Ubuntu',sans-serif;
-        box-shadow:0 4px 16px rgba(9,101,208,.2);
-      ">S'inscrire</a>
+      <a href="/login" class="mf-header-link">Se connecter</a>
+      <a href="/register" class="mf-header-link mf-header-link--register">S'inscrire</a>
     % endif
   </div>
+
+  <button class="mf-burger" id="mf-burger-btn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- Mobile menu overlay -->
+<div id="mf-mobile-menu" class="mf-mobile-menu">
+  <div class="mf-mobile-top">
+    <a href="https://missionformations.com" target="_blank" rel="noopener noreferrer" class="mf-header-brand">
+      <div class="mf-header-logo">M</div>
+      <div class="mf-header-name">Académie Mission</div>
+    </a>
+    <button class="mf-mobile-close" id="mf-mobile-close-btn" aria-label="Fermer">&times;</button>
+  </div>
+
+  <nav>
+    <a href="/courses">Catalogue</a>
+    % if user.is_authenticated:
+      <a href="${'/admin/mission-dashboard/' if user.is_superuser else '/dashboard'}" onclick="document.getElementById('mf-mobile-menu').classList.remove('open')">Mon dashboard</a>
+    % endif
+  </nav>
+
+  <div class="mf-mobile-cta">
+    % if user.is_authenticated:
+      <a href="${'/admin/mission-dashboard/' if user.is_superuser else '/dashboard'}" class="mf-mcta-primary">Mon dashboard</a>
+      <a href="/logout" class="mf-mcta-secondary">Déconnexion</a>
+    % else:
+      <a href="/register" class="mf-mcta-primary">S'inscrire</a>
+      <a href="/login" class="mf-mcta-secondary">Se connecter</a>
+    % endif
+  </div>
+
+  % if user.is_authenticated:
+    <div class="mf-mobile-user">${user.username}</div>
+  % endif
+</div>

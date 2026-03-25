@@ -24,3 +24,42 @@ def get_tenant_colors(request):
 }
 </style>
 % endif
+
+## Mobile burger menu toggle
+<script>
+(function(){
+  var menu = document.getElementById('mf-mobile-menu');
+  var openBtn = document.getElementById('mf-burger-btn');
+  var closeBtn = document.getElementById('mf-mobile-close-btn');
+  if (!menu || !openBtn) return;
+  openBtn.addEventListener('click', function(){ menu.classList.add('open'); });
+  if (closeBtn) closeBtn.addEventListener('click', function(){ menu.classList.remove('open'); });
+  // Close menu when clicking a nav link inside it
+  var links = menu.querySelectorAll('nav a, .mf-mobile-cta a');
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener('click', function(){ menu.classList.remove('open'); });
+  }
+})();
+</script>
+
+## Mobile sidebar toggle for dashboard
+<script>
+(function(){
+  var sb = document.querySelector('.sidebar');
+  if (!sb) return;
+  // Create toggle button
+  var btn = document.createElement('button');
+  btn.className = 'mf-sidebar-toggle';
+  btn.setAttribute('aria-label', 'Menu');
+  btn.innerHTML = '<span></span><span></span><span></span>';
+  // Create overlay
+  var ov = document.createElement('div');
+  ov.className = 'mf-sidebar-overlay';
+  document.body.appendChild(btn);
+  document.body.appendChild(ov);
+  function open() { sb.classList.add('open'); ov.classList.add('open'); btn.style.display = 'none'; }
+  function close() { sb.classList.remove('open'); ov.classList.remove('open'); btn.style.display = ''; }
+  btn.addEventListener('click', open);
+  ov.addEventListener('click', close);
+})();
+</script>

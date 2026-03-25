@@ -665,6 +665,44 @@
     }
   }
 
+  /* Mobile hamburger for homepage nav */
+  .mf-nav__burger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .mf-nav__burger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #3B3B3B;
+    border-radius: 2px;
+    transition: all .3s;
+  }
+  .mf-nav__burger span + span {
+    margin-top: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .mf-nav__links {
+      display: none;
+    }
+    .mf-nav__burger {
+      display: flex;
+    }
+    .mf-nav {
+      padding: 12px 16px;
+    }
+    .mf-wrap {
+      padding: 0 16px;
+    }
+  }
+
   @media (max-width: 600px) {
     .mf-hero__title {
       font-size: 1.7rem;
@@ -677,10 +715,7 @@
       width: 100%;
     }
     .mf-nav {
-      padding: 12px 16px;
-    }
-    .mf-nav__links {
-      gap: 4px;
+      padding: 10px 14px;
     }
   }
 
