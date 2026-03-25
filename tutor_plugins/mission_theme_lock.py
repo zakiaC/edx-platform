@@ -22,6 +22,21 @@ LEARNER_HOME_MFE_REDIRECT_PERCENTAGE = 0
 # MFE Learning URL (obligatoire — sans ca, les redirections /courses/.../course/ → 404)
 LEARNING_MICROFRONTEND_URL = "https://apps.academie.staging.missionformations.com/learning"
 
+# Supprimer le logo OpenEdX de toutes les pages (LMS, CMS, MFEs)
+LOGO_POWERED_BY_OPEN_EDX_URL = False
+LOGO_POWERED_BY_OPEN_EDX_URL_DARK = False
+ENABLE_FOOTER_MOBILE_APP_LINKS = False
+FOOTER_OPENEDX_URL = None
+FOOTER_OPENEDX_LOGO_IMAGE = None
+
+# MFE footer config — supprimer "Powered by Open edX"
+MFE_CONFIG = {
+    **globals().get('MFE_CONFIG', {}),
+    'LOGO_POWERED_BY_OPEN_EDX_URL': False,
+    'SHOW_POWERED_BY_OPENEDX': False,
+    'FOOTER_POWERED_BY_OPENEDX': False,
+}
+
 if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
     COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")
 if "/openedx/themes/mission-theme/lms/static" not in STATICFILES_DIRS:
@@ -31,6 +46,10 @@ if "/openedx/themes/mission-theme/lms/static" not in STATICFILES_DIRS:
 CMS_PATCH_CONTENT = """
 # mission_theme_lock: keep CMS aligned on Mission default theme
 DEFAULT_SITE_THEME = "mission-theme"
+LOGO_POWERED_BY_OPEN_EDX_URL = False
+LOGO_POWERED_BY_OPEN_EDX_URL_DARK = False
+FOOTER_OPENEDX_URL = None
+FOOTER_OPENEDX_LOGO_IMAGE = None
 if "/openedx/themes" not in COMPREHENSIVE_THEME_DIRS:
     COMPREHENSIVE_THEME_DIRS.append("/openedx/themes")
 """.strip()
