@@ -695,7 +695,7 @@ body.view-login.mode-password-reset #mf-brand-title {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .mf-auth-layout {
     grid-template-columns: 1fr;
   }
@@ -705,20 +705,6 @@ body.view-login.mode-password-reset #mf-brand-title {
   }
 
   .mf-form-panel {
-    padding: 24px 20px;
-  }
-
-  .form-head h1 {
-    font-size: 22px;
-  }
-}
-
-@media (max-width: 480px) {
-  .mf-form-panel {
-    padding: 20px 16px;
-  }
-
-  .mf-form-shell {
-    max-width: 100%;
+    padding: 24px;
   }
 }

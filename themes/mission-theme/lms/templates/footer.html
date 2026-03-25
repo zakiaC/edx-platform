@@ -224,59 +224,18 @@
 <style>
   /* WeWill bubble position — bas droite, au-dessus du footer */
   .woot-widget-bubble { z-index: 1100 !important; }
-  /* Verrouillage branding Chatwoot — triple couche CSS */
-  .branding--link,
-  a[href*="chatwoot.com"],
-  a[href*="chatwoot.io"],
-  [class*="branding"],
-  .chat-powered-by,
-  .powered-by-chatwoot,
-  .woot--powered-by {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    pointer-events: none !important;
+  /* Masquer le branding Chatwoot et afficher WeWill */
+  .branding--link, a[href*="chatwoot.com"] { visibility: hidden !important; position: relative !important; }
+  .branding--link::after, a[href*="chatwoot.com"]::after {
+    content: "Propulse par WeWill";
+    visibility: visible;
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: inherit; color: inherit; text-decoration: none;
+    pointer-events: none;
   }
 </style>
-<script>
-  /* Verrouillage branding Chatwoot — surveillance continue (MutationObserver) */
-  (function(){
-    function removeChatwootBranding(){
-      /* Supprimer tout element qui mentionne Chatwoot */
-      document.querySelectorAll('a[href*="chatwoot"], [class*="branding"], .powered-by-chatwoot, .woot--powered-by').forEach(function(el){
-        el.style.display='none';
-        el.style.visibility='hidden';
-      });
-      /* Chercher dans les iframes du widget */
-      document.querySelectorAll('iframe').forEach(function(iframe){
-        try{
-          var doc=iframe.contentDocument||iframe.contentWindow.document;
-          if(doc){
-            doc.querySelectorAll('a[href*="chatwoot"], [class*="branding"], .powered-by-chatwoot').forEach(function(el){
-              el.style.display='none';
-            });
-          }
-        }catch(e){}
-      });
-    }
-    /* Executer au chargement */
-    removeChatwootBranding();
-    /* Surveiller les changements DOM (Chatwoot injecte son branding apres le chargement) */
-    var observer=new MutationObserver(function(mutations){
-      removeChatwootBranding();
-    });
-    observer.observe(document.body,{childList:true,subtree:true});
-    /* Backup : re-executer toutes les 2 secondes pendant 30 secondes */
-    var count=0;
-    var interval=setInterval(function(){
-      removeChatwootBranding();
-      count++;
-      if(count>15) clearInterval(interval);
-    },2000);
-  })();
-</script>
 % if footer_css_urls:
   % for url in footer_css_urls:
     <link rel="stylesheet" type="text/css" href="${url}"></link>
