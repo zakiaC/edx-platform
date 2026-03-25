@@ -137,6 +137,22 @@ from django.conf import settings
   }
 </style>
 
+<!-- Verrouillage branding : masquer tout footer OpenEdX natif -->
+<style>
+  .footer-about-openedx,
+  .footer-about-copyright,
+  .footer-content-secondary,
+  a[href*="edx.org"],
+  a[href*="openedx.org"],
+  img[alt*="Open edX"],
+  img[alt*="openedx"],
+  img[src*="openedx"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+</style>
 <div class="wrapper-footer wrapper mf-studio-footer-shell">
   <footer class="primary mf-studio-footer" role="contentinfo">
     <div class="mf-studio-footer-top">
