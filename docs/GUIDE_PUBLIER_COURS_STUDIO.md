@@ -77,7 +77,68 @@ Cours
 
 ---
 
-## 5. Publier le cours
+## 5. Ajouter un cours manuellement (sans import OLX)
+
+Si vous creez un cours de zero ou ajoutez du contenu a un cours existant :
+
+### Etape 1 : Creer la structure
+
+1. Ouvrir le cours dans Studio
+2. Cliquer **"+ Nouvelle section"** pour chaque module/chapitre
+3. Dans chaque section, cliquer **"+ Nouvelle sous-section"** pour chaque lecon
+4. Dans chaque sous-section, cliquer **"+ Nouvelle unite"** pour chaque page
+
+### Etape 2 : Ajouter le contenu a une unite
+
+Chaque unite peut contenir plusieurs composants :
+
+**Ajouter un texte d'introduction :**
+1. Dans l'unite, cliquer **"+ Ajouter un composant"** → **"Texte"**
+2. Ecrire ou coller le contenu dans l'editeur HTML
+3. Cliquer **"Enregistrer"**
+
+**Ajouter une video YouTube :**
+1. Cliquer **"+ Ajouter un composant"** → **"Video"**
+2. Cliquer sur **"Modifier"** (icone crayon)
+3. Coller le lien YouTube dans le champ URL
+4. Remplir le titre
+5. Cliquer **"Enregistrer"**
+
+**Ajouter un quiz :**
+1. Cliquer **"+ Ajouter un composant"** → **"Probleme"**
+2. Choisir le type : QCM, reponse libre, vrai/faux, etc.
+3. Remplir la question, les reponses et la bonne reponse
+4. Cliquer **"Enregistrer"**
+
+### Etape 3 : Reorganiser le contenu
+
+- **Glisser-deposer** les sections, sous-sections et unites pour changer l'ordre
+- Cliquer sur les **3 barres** (icone hamburger) a gauche d'un element et le faire glisser
+- La reorganisation est sauvegardee automatiquement
+
+### Etape 4 : Publier
+
+- Apres chaque ajout ou modification, cliquer **"Publier"** sur la section concernee
+- Un indicateur jaune signale du contenu non publie
+
+### Exemple concret : ajouter une video manquante
+
+Scenario : le Module 2 du cours "Strategie Commerciale" n'a pas la video 2.1.
+
+1. Ouvrir le cours dans Studio
+2. Cliquer sur **Module 2 — Connaitre le parcours d'achat**
+3. En haut de la sous-section, cliquer **"+ Nouvelle unite"**
+4. Nommer l'unite : "Prerequis — Le parcours d'achat en 4 etapes"
+5. Ajouter un composant **Texte** avec l'introduction :
+   > Avant de plonger dans le parcours d'achat, decouvrez les 4 etapes fondamentales
+   > que traverse chaque client : prise de conscience, consideration, decision et fidelisation.
+6. Ajouter un composant **Video** avec le lien YouTube : `https://youtu.be/G08amhiHG-s`
+7. **Publier** l'unite
+8. **Glisser-deposer** l'unite en premiere position du module 2
+
+---
+
+## 6. Publier le cours
 
 ### Publier section par section
 1. Ouvrir le cours dans Studio
@@ -99,7 +160,7 @@ Cours
 
 ---
 
-## 6. Rattacher un cours a une academie
+## 7. Rattacher un cours a une academie
 
 ### Via le dashboard admin LMS
 
@@ -141,7 +202,7 @@ AcademyCourse.objects.create(academy=academy, course_id=course_key, featured=Tru
 
 ---
 
-## 7. Inscrire des apprenants
+## 8. Inscrire des apprenants
 
 ### Inscription manuelle (Studio)
 
@@ -162,7 +223,7 @@ Si le cours est rattache a une academie et visible dans le catalogue :
 
 ---
 
-## 8. Guide par role
+## 9. Guide par role
 
 ### Pour le formateur
 1. Se connecter a Studio
@@ -189,7 +250,7 @@ Si le cours est rattache a une academie et visible dans le catalogue :
 
 ---
 
-## 9. Checklist publication d'un cours
+## 10. Checklist publication d'un cours
 
 - [ ] Cours cree dans Studio (org, numero, session)
 - [ ] Contenu importe ou cree manuellement
