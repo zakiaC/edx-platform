@@ -57,6 +57,13 @@ def _course_specialty(course_name):
         return "Marketing digital"
     if any(token in name_l for token in ("management", "business")):
         return "Management"
+    if any(token in name_l for token in (
+        "scolaire", "maths", "math", "francais", "anglais",
+        "college", "lycee", "primaire", "cm2",
+        "6eme", "5eme", "4eme", "3eme",
+        "seconde", "premiere", "terminale",
+    )):
+        return "Soutien Scolaire"
     return "Formation professionnelle"
 
 
