@@ -1194,7 +1194,24 @@ def catalogue_view(request):
             return "devperso", "Dev. perso"
         if "git" in n or "devops" in n:
             return "git", "DevOps"
+        if any(kw in n for kw in ("scolaire", "cm2", "6eme", "5eme", "4eme", "3eme",
+                                   "seconde", "premiere", "terminale")):
+            return "scolaire", "Scolaire"
         return "vtc", "Formation"
+
+    # Detect scolaire level for grouping
+    SCOLAIRE_LEVELS = [
+        ("CM2", "Primaire"),
+        ("6eme", "College"), ("5eme", "College"), ("4eme", "College"), ("3eme", "College"),
+        ("Seconde", "Lycee"), ("Premiere", "Lycee"), ("Terminale", "Lycee"),
+    ]
+
+    def _detect_scolaire_level(name):
+        n = (name or "").lower()
+        for level, cycle in SCOLAIRE_LEVELS:
+            if level.lower() in n:
+                return level, cycle
+        return None, None
 
     courses = []
     domain_counts = {}
@@ -1224,6 +1241,8 @@ def catalogue_view(request):
         if co.course_image_url and "asset" in str(co.course_image_url):
             image_url = co.course_image_url
 
+        scolaire_level, scolaire_cycle = _detect_scolaire_level(name)
+
         courses.append({
             "course_key": course_key,
             "name": name,
@@ -1235,10 +1254,31 @@ def catalogue_view(request):
             "start_date": start_date,
             "image_url": image_url,
             "about_url": f"/courses/{course_key}/about",
+            "scolaire_level": scolaire_level,
+            "scolaire_cycle": scolaire_cycle,
         })
+
+    # Group scolaire courses by level
+    scolaire_groups = []
+    level_order = ["CM2", "6eme", "5eme", "4eme", "3eme", "Seconde", "Premiere", "Terminale"]
+    for level in level_order:
+        group_courses = [c for c in courses if c["scolaire_level"] == level]
+        if group_courses:
+            cycle = group_courses[0]["scolaire_cycle"]
+            scolaire_groups.append({
+                "level": level,
+                "cycle": cycle,
+                "courses": group_courses,
+            })
+
+    # Non-scolaire courses
+    other_courses = [c for c in courses if c["scolaire_level"] is None]
 
     context = {
         "courses": courses,
+        "other_courses": other_courses,
+        "scolaire_groups": scolaire_groups,
+        "has_scolaire": len(scolaire_groups) > 0,
         "total_courses": len(courses),
         "domain_counts": domain_counts,
         "total_domains": len(domain_counts),
