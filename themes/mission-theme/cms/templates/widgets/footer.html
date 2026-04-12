@@ -1,5 +1,6 @@
 ## mako
 <%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
 <%!
 from django.utils.translation import gettext as _
 from django.conf import settings
@@ -35,17 +36,8 @@ from django.conf import settings
     text-decoration: none;
   }
   .mf-studio-logo {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: linear-gradient(135deg,#0965D0,#01E8AE);
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    font-weight: 900;
+    width: 32px;
+    height: auto;
   }
   .mf-studio-brand-text {
     font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
@@ -157,7 +149,7 @@ from django.conf import settings
   <footer class="primary mf-studio-footer" role="contentinfo">
     <div class="mf-studio-footer-top">
       <a href="https://missionformations.com" class="mf-studio-brand" rel="external" target="_blank">
-        <span class="mf-studio-logo">M</span>
+        <img class="mf-studio-logo" src="${static.url('images/studio-logo.png')}" alt="Mission Formations" />
         <span class="mf-studio-brand-text">Académie Mission<span>Formations</span></span>
       </a>
 
@@ -176,7 +168,7 @@ from django.conf import settings
 
     <div class="mf-studio-bottom" aria-label="${_('Legal')}">
       <p class="mf-studio-copy">
-        © Academie Mission Formation. Tous droits exclusivement réservés à l'entreprise We Will.
+        Donnez du sens à votre parcours!
       </p>
     </div>
   </footer>
