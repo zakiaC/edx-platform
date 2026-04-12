@@ -468,4 +468,12 @@ MFE_CONFIG["PARAGON_THEME_URLS"] = {"variants": {"light": {"urls": {"default": "
 MFE_CONFIG['INDIGO_ENABLE_DARK_TOGGLE'] = True
 MFE_CONFIG['INDIGO_FOOTER_NAV_LINKS'] = [{'title': 'Qui sommes-nous', 'url': 'https://missionformations.com/a-propos/qui-sommes-nous/'}, {'title': 'Catalogue', 'url': '/catalogue/'}, {'title': "Centre d'aide", 'url': '/aide/'}, {'title': 'Contact', 'url': '/contact/'}, {'title': 'CGU / CGV', 'url': 'https://missionformations.com/mission-formation-cgu-cgv/'}, {'title': 'Mentions legales', 'url': 'https://missionformations.com/mentions-legales/'}]
 
+# Branding MFE — supprimer toute mention edX/OpenEdX
+MFE_CONFIG['LOGO_POWERED_BY_OPEN_EDX_URL'] = False
+MFE_CONFIG['SHOW_POWERED_BY_OPENEDX'] = False
+MFE_CONFIG['FOOTER_POWERED_BY_OPENEDX'] = False
+MFE_CONFIG['INDIGO_FOOTER_LEGAL_LINKS'] = []
+MFE_CONFIG['INDIGO_FOOTER_EXTRA_LINKS'] = []
+MFE_CONFIG['INDIGO_FOOTER_SLOGAN'] = 'Donnez du sens à votre parcours!'
+
 PIPELINE['JS_COMPRESSOR'] = None

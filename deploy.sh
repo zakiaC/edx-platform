@@ -106,10 +106,10 @@ elif [ "$ENV" = "staging" ]; then
 
   echo "--- 6/11 Sync theme → CMS container ---"
   ssh staging-openedx "\
-    docker exec $CMS_CONTAINER mkdir -p /openedx/edx-platform/themes/mission-theme/cms/templates/widgets/ \
-      /openedx/edx-platform/themes/mission-theme/cms/static/images/ 2>/dev/null; \
+    docker exec $CMS_CONTAINER mkdir -p /openedx/themes/mission-theme/cms/templates/widgets/ \
+      /openedx/themes/mission-theme/cms/static/images/ 2>/dev/null; \
     docker cp $EDX_ROOT/themes/mission-theme/cms/ \
-      $CMS_CONTAINER:/openedx/edx-platform/themes/mission-theme/cms/ && \
+      $CMS_CONTAINER:/openedx/themes/mission-theme/cms/ && \
     echo 'Sync CMS OK: theme copie dans le container CMS'"
 
   echo "--- 7/11 Collectstatic CMS ---"
