@@ -39,23 +39,24 @@ if [ "$ENV" = "local" ]; then
 
 elif [ "$ENV" = "staging" ]; then
   CONTAINER="tutor_local-lms-1"
+  CMS_CONTAINER="tutor_local-cms-1"
   THEME_HOST="/root/edx-platform/themes/mission-theme"
   EDX_ROOT="/root/edx-platform"
   STAGING_URL="https://academie.staging.missionformations.com"
 
   # PRE-DEPLOY: tag git + backup settings serveur
-  echo "--- 0/8 Pre-deploy: tag git + backup settings ---"
+  echo "--- 0/11 Pre-deploy: tag git + backup settings ---"
   git tag "pre-deploy-$(date +%Y%m%d-%H%M%S)" 2>/dev/null || true
   ssh staging-openedx "\
     cp ~/.local/share/tutor/env/apps/openedx/settings/lms/production.py \
        /tmp/production.py.pre-deploy-$(date +%Y%m%d) 2>/dev/null || true"
   echo "Tag git cree + settings sauvegardes"
 
-  echo "--- 1/8 Permissions ---"
+  echo "--- 1/11 Permissions ---"
   ssh staging-openedx \
     "chown -R 1000:1000 $THEME_HOST && chmod -R 775 $THEME_HOST"
 
-  echo "--- 2/8 Sync code disque → container ---"
+  echo "--- 2/11 Sync code disque → LMS container ---"
   # CRITIQUE: le git pull met a jour /root/edx-platform (disque)
   # mais le container Docker a sa propre copie dans /openedx/edx-platform.
   # Sans ce docker cp, le container sert l'ancien code → pages manquantes.
@@ -73,18 +74,18 @@ elif [ "$ENV" = "staging" ]; then
     docker exec $CONTAINER pip install pytest -q 2>/dev/null && \
     echo 'Sync OK: plugin + theme + config + tests copies dans le container'"
 
-  echo "--- 3/8 Compilation Sass ---"
+  echo "--- 3/11 Compilation Sass ---"
   ssh staging-openedx \
     "docker exec $CONTAINER bash -c \
     'npm run compile-sass -- --skip-default 2>&1 | tail -5'"
 
-  echo "--- 4/8 Vérification CSS ---"
+  echo "--- 4/11 Vérification CSS ---"
   COUNT=$(ssh staging-openedx \
     "grep -c 'mf-' $THEME_HOST/lms/static/css/lms-main-v1.css || echo 0")
   echo "mf- occurrences: $COUNT"
   [ "$COUNT" = "0" ] && echo "ERREUR: CSS vide" && exit 1
 
-  echo "--- 5/8 Collectstatic + force-copy theme CSS ---"
+  echo "--- 5/11 Collectstatic LMS + force-copy theme CSS ---"
   # IMPORTANT: PAS de --clear sinon webpack-stats.json est supprime → 500 sur toutes les pages
   ssh staging-openedx \
     "docker exec $CONTAINER \
@@ -103,12 +104,27 @@ elif [ "$ENV" = "staging" ]; then
   echo "    mf-hero in staticfiles: $POST_COUNT"
   [ "$POST_COUNT" = "0" ] && echo "ERREUR: CSS theme absent de staticfiles apres force-copy" && exit 1
 
-  echo "--- 6/8 Vider cache Mako + Restart ---"
+  echo "--- 6/11 Sync theme → CMS container ---"
+  ssh staging-openedx "\
+    docker exec $CMS_CONTAINER mkdir -p /openedx/edx-platform/themes/mission-theme/cms/templates/widgets/ \
+      /openedx/edx-platform/themes/mission-theme/cms/static/images/ 2>/dev/null; \
+    docker cp $EDX_ROOT/themes/mission-theme/cms/ \
+      $CMS_CONTAINER:/openedx/edx-platform/themes/mission-theme/cms/ && \
+    echo 'Sync CMS OK: theme copie dans le container CMS'"
+
+  echo "--- 7/11 Collectstatic CMS ---"
+  ssh staging-openedx \
+    "docker exec $CMS_CONTAINER \
+    ./manage.py cms collectstatic --noinput 2>&1 | tail -3"
+
+  echo "--- 8/11 Vider cache Mako + Restart LMS + CMS ---"
   ssh staging-openedx "\
     docker exec $CONTAINER bash -c 'find /tmp -name \"*.mako.py\" -delete' && \
-    docker restart $CONTAINER"
+    docker exec $CMS_CONTAINER bash -c 'find /tmp -name \"*.mako.py\" -delete' && \
+    docker restart $CONTAINER && \
+    docker restart $CMS_CONTAINER"
 
-  echo "--- 7/8 Commit CSS compilés ---"
+  echo "--- 9/11 Commit CSS compilés ---"
   ssh staging-openedx "cd $EDX_ROOT && \
     git config user.email 'deploy@missionformations.com' && \
     git config user.name 'Deploy Bot' && \
@@ -117,7 +133,7 @@ elif [ "$ENV" = "staging" ]; then
     git commit -m 'build: CSS compilés mission-theme [$(date +%Y-%m-%d)]' || \
     echo 'Rien à commiter'"
 
-  echo "--- 8/8 Tests post-deploy (smoke) ---"
+  echo "--- 10/11 Tests post-deploy (smoke) ---"
   FAIL=0
 
   # Test homepage
@@ -144,6 +160,12 @@ elif [ "$ENV" = "staging" ]; then
   HTTP_CSS=$(ssh staging-openedx "curl -s -o /dev/null -w '%{http_code}' '$STAGING_URL/static/css/lms-main-v1.css' 2>/dev/null")
   echo "    CSS principal: $HTTP_CSS"
   [ "$HTTP_CSS" = "404" ] && echo "    ERREUR: CSS introuvable" && FAIL=1
+
+  # Test Studio
+  STUDIO_URL="https://studio.staging.missionformations.com"
+  HTTP_STUDIO=$(ssh staging-openedx "curl -s -o /dev/null -w '%{http_code}' -L '$STUDIO_URL/' 2>/dev/null")
+  echo "    Studio: $HTTP_STUDIO"
+  [ "$HTTP_STUDIO" != "200" ] && [ "$HTTP_STUDIO" != "302" ] && echo "    ERREUR: Studio $HTTP_STUDIO" && FAIL=1
 
   if [ "$FAIL" = "1" ]; then
     echo ""
