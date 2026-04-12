@@ -184,6 +184,61 @@ Chaque academie (VTC, Scolaire, IA, etc.) a son propre branding dans le MFE.
 
 ---
 
+## Sprint Studio 4 — Application mobile brandee Mission Formations
+
+### Objectif
+Publier une application mobile iOS + Android brandee Mission Formations sur les stores.
+L'app se connecte a l'instance OpenEdX et charge le branding du client via MFE_CONFIG.
+
+### Repos sources
+- Android : https://github.com/openedx/openedx-app-android
+- iOS : https://github.com/openedx/openedx-app-ios
+
+### Taches
+
+#### Tache 9 — Fork et branding Android
+- Forker openedx-app-android
+- Remplacer logo, splash screen, icone app
+- Couleurs Mission Formations
+- Nom de l'app : "Academie Mission Formations" (ou nom a definir)
+- Configurer l'URL par defaut : academie.missionformations.com
+- Builder l'APK / AAB
+
+#### Tache 10 — Fork et branding iOS
+- Forker openedx-app-ios
+- Remplacer logo, splash screen, icone app
+- Couleurs Mission Formations
+- Nom de l'app : "Academie Mission Formations"
+- Configurer l'URL par defaut
+- Builder l'IPA
+
+#### Tache 11 — Publication stores
+- Compte developpeur Apple (99$/an) — requis
+- Compte developpeur Google Play (25$ une fois) — requis
+- Fiche store : description, screenshots, icone, categorisation
+- Soumission review Apple (delai 1-3 jours)
+- Publication Google Play (delai 1-2 jours)
+
+#### Tache 12 — Multi-tenant mobile
+- L'app detecte le sous-domaine du client
+- Charge le branding (logo, couleurs) via l'API MFE_CONFIG
+- Chaque client marque blanche voit son branding dans l'app
+
+### Livrables design pour Chloe (Sprint 4)
+- [ ] Icone app (1024x1024 PNG)
+- [ ] Splash screen (logo centre sur fond couleur)
+- [ ] Screenshots store (6 ecrans min, iPhone + Android)
+- [ ] Description store (texte marketing)
+- [ ] Feature graphic Google Play (1024x500)
+
+### Pre-requis
+- Sprint 1 termine (branding MFE fonctionnel)
+- Compte Apple Developer
+- Compte Google Play Developer
+- API mobile OpenEdX activee sur le serveur
+
+---
+
 ## Implementation technique
 
 ### Fichiers a modifier (Sprint 1)
